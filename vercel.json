@@ -10,7 +10,7 @@
     {
       "src": "/api/(.*)",
       "dest": "/dist/index.js",
-      "methods": "*",
+      "methods": ["*"],
       "headers": {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "*",
