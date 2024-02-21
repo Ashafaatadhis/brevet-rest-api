@@ -10,8 +10,7 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "routes/index.ts"
+      "dest": "routes/api/index.ts"
     }
-  ],
-  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
+  ]
 }
