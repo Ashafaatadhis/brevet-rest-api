@@ -1,11 +1,11 @@
 import express, { Errback, NextFunction, Request, Response } from "express";
-import routes from "./routes/api";
+import routes from "../routes/api";
 import cors from "cors";
-import logger from "./middleware/logger";
+import logger from "../middleware/logger";
 import methodOverrider from "method-override";
 import cookieParser from "cookie-parser";
 import expressSession from "express-session";
-import config from "./config/config";
+import config from "../config/config";
 import passport from "passport";
 
 const app = express();
