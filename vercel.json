@@ -2,15 +2,23 @@
   "version": 2,
   "builds": [
     {
-      "src": "./index.ts",
-      "dest": "./dist/index.ts",
+      "src": "index.ts",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/api"
+      "dest": "/dist/index.js",
+      "methods": "*",
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "*",
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+      }
+    },
+    {
+      "handle": "filesystem"
     }
   ]
 }
