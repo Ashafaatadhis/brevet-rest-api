@@ -9,7 +9,6 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/api",
       "methods": ["*"],
       "headers": {
         "Access-Control-Allow-Origin": "*",
