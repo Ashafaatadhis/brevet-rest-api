@@ -24,7 +24,7 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         const hashing = yield (0, bcrypt_1.hashPassword)(req.body.password);
         if (!req.body.image)
             return next(new HttpError_1.default(400, "Image not found"));
-        yield prisma_1.default.user.create({
+        const user = yield prisma_1.default.user.create({
             data: {
                 email: req.body.email,
                 fullname: req.body.email,
@@ -33,7 +33,20 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                 username: req.body.username,
             },
         });
-        return res.status(200).json({ success: true });
+        return res.status(200).json({
+            success: true,
+            data: {
+                id: user.id,
+                username: user.username,
+                role: user.role,
+                email: user.email,
+                fullname: user.fullname,
+                image: user.image,
+                created_at: user.createdAt,
+                updated_at: user.updatedAt,
+                deletedAt: user.deletedAt,
+            },
+        });
     }
     res.status(422).json({ success: false, error: errors.array() });
 });

@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const jwt_1 = __importDefault(require("../../../middleware/jwt"));
+const authJwt_1 = __importDefault(require("../../../middleware/authJwt"));
 const router = express_1.default.Router();
 // router.post(
 //   "/register",
@@ -13,8 +13,7 @@ const router = express_1.default.Router();
 //     res.json({ msg: "woi" });
 //   }
 // );
-router.get("/", jwt_1.default.authenticate("jwt", { session: false }), (req, res) => {
-    console.log(req.user, "WWW");
+router.get("/", authJwt_1.default, (req, res) => {
     res.json({ msg: "welkam" });
 });
 exports.default = router;

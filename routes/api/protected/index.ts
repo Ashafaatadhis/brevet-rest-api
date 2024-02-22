@@ -5,7 +5,7 @@ import express, {
   NextFunction,
 } from "express";
 
-import passport from "../../../middleware/jwt";
+import authJwt from "../../../middleware/authJwt";
 const router = express.Router();
 
 // router.post(
@@ -16,13 +16,8 @@ const router = express.Router();
 //   }
 // );
 
-router.get(
-  "/",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    console.log(req.user, "WWW");
-    res.json({ msg: "welkam" });
-  }
-);
+router.get("/", authJwt, (req: Request, res: Response) => {
+  res.json({ msg: "welkam" });
+});
 
 export default router;

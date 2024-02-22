@@ -12,7 +12,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     const hashing = await hashPassword(req.body.password);
     if (!req.body.image) return next(new HttpError(400, "Image not found"));
 
-    await prisma.user.create({
+    const user = await prisma.user.create({
       data: {
         email: req.body.email,
         fullname: req.body.email,
@@ -21,7 +21,20 @@ export default async (req: Request, res: Response, next: NextFunction) => {
         username: req.body.username,
       },
     });
-    return res.status(200).json({ success: true });
+    return res.status(200).json({
+      success: true,
+      data: {
+        id: user.id,
+        username: user.username,
+        role: user.role,
+        email: user.email,
+        fullname: user.fullname,
+        image: user.image,
+        created_at: user.createdAt,
+        updated_at: user.updatedAt,
+        deletedAt: user.deletedAt,
+      },
+    });
   }
 
   res.status(422).json({ success: false, error: errors.array() });

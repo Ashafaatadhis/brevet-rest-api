@@ -5,6 +5,8 @@ import config from "../config/config";
 
 export default async (req: Request, res: Response, next: NextFunction) => {
   const refreshToken = req.cookies?.["refreshToken"];
+
+  console.log("HIT", req.headers);
   if (!refreshToken) {
     return next(new HttpError(401, "Token not valid"));
   }

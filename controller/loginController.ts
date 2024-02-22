@@ -54,13 +54,29 @@ export default async (req: Request, res: Response, next: NextFunction) => {
           maxAge: 60 * 60 * 24 * 1000, // 1 day
         });
 
-        return res.status(200).json({ success: true, accessToken });
+        return res.status(200).json({
+          success: true,
+          accessToken,
+          data: {
+            id: isExistUser.id,
+            username: isExistUser.username,
+            role: isExistUser.role,
+            email: isExistUser.email,
+            fullname: isExistUser.fullname,
+            image: isExistUser.image,
+            created_at: isExistUser.createdAt,
+            updated_at: isExistUser.updatedAt,
+            deletedAt: isExistUser.deletedAt,
+          },
+        });
       }
     } catch (err: any) {
       return next(err);
     }
 
-    return res.status(200).json({ success: true });
+    return res
+      .status(400)
+      .json({ success: false, message: "username / password incorrect" });
   }
 
   res.status(422).json({ success: false, error: errors.array() });
