@@ -20,10 +20,12 @@ const envVarsSchema = joi_1.default
     GOOGLE_CLIENT_ID: joi_1.default.string().required(),
     GOOGLE_CLIENT_SECRET: joi_1.default.string().required(),
     GOOGLE_CALLBACK_URL: joi_1.default.string().required(),
+    // FACEBOOK_APP_ID: joi.string().required(),
+    // FACEBOOK_APP_SECRET: joi.string().required(),
+    // FACEBOOK_CALLBACK_URL: joi.string().required(),
     CLOUDINARY_CLOUD_NAME: joi_1.default.string().required(),
     CLOUDINARY_API_KEY: joi_1.default.string().required(),
     CLOUDINARY_API_SECRET: joi_1.default.string().required(),
-    CALLBACK_URL: joi_1.default.string().required().default("http://localhost/"),
 })
     .unknown();
 const { value: envVars, error } = envVarsSchema
@@ -45,10 +47,14 @@ exports.default = {
         google_client_secret: envVars.GOOGLE_CLIENT_SECRET,
         google_callback_url: envVars.GOOGLE_CALLBACK_URL,
     },
+    // facebook: {
+    //   facebook_app_id: envVars.FACEBOOK_APP_ID,
+    //   facebook_app_secret: envVars.FACEBOOK_APP_SECRET,
+    //   facebook_callback_url: envVars.FACEBOOK_CALLBACK_URL,
+    // },
     cloudinary: {
         cloudinary_cloud_name: envVars.CLOUDINARY_CLOUD_NAME,
         cloudinary_api_key: envVars.CLOUDINARY_API_KEY,
         cloudinary_api_secret: envVars.CLOUDINARY_API_SECRET,
     },
-    callbackUrl: envVars.CALLBACK_URL,
 };

@@ -4,20 +4,9 @@ import {
   StrategyOptionsWithoutRequest,
 } from "passport-jwt";
 
-import jwt from "jsonwebtoken";
-
-import { hashPassword } from "../utils/bcrypt";
-
-import {
-  Strategy as GoogleStrategy,
-  VerifyCallback,
-  VerifyFunctionWithRequest,
-} from "passport-google-oauth2";
-
 import passport from "passport";
 import config from "../config/config";
 import prisma from "../config/prisma";
-import { Request } from "express";
 
 const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -32,6 +21,9 @@ passport.use(
       const user = await prisma.user.findFirstOrThrow({
         where: {
           id: jwt_payload.id,
+          deletedAt: {
+            isSet: false,
+          },
         },
       });
 

@@ -6,9 +6,32 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const google_1 = __importDefault(require("../../../middleware/google/"));
+// import passportFB from "../../../middleware/facebook";
 const config_1 = __importDefault(require("../../../config/config"));
+const loginController_1 = __importDefault(require("../../../controller/auth/google/loginController"));
+const registerController_1 = __importDefault(require("../../../controller/auth/google/registerController"));
+const errorHandler_1 = __importDefault(require("../../../middleware/errorHandler"));
 const router = express_1.default.Router();
 let back = "";
+// router.get(
+//   "/facebook",
+//   (req: Request, res, next) => {
+//     back = req.query["back"] as string;
+//     next();
+//   },
+//   passportFB.authenticate("facebook")
+// );
+// router.get(
+//   "/facebook/callback",
+//   passport.authenticate("facebook", {
+//     session: false,
+//   }),
+//   (req: Request, res: Response, next: NextFunction) => {
+//     console.log("inoi", req.user);
+//   }
+// );
+router.post("/google/signin", (0, errorHandler_1.default)(loginController_1.default));
+router.post("/google/signup", (0, errorHandler_1.default)(registerController_1.default));
 router.get("/google", (req, res, next) => {
     back = req.query["back"];
     next();
@@ -47,6 +70,7 @@ router.get("/google/callback", google_1.default.authenticate("google", {
     });
     res.cookie("accessToken", accessToken, {
         // domain: config.callbackUrl,
+        secure: config_1.default.env !== "development",
         maxAge: 1000 * 30 /* 30s */,
     });
     res.cookie("refreshToken", refreshToken, {

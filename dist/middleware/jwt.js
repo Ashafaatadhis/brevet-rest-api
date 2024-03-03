@@ -28,6 +28,9 @@ passport_1.default.use(new passport_jwt_1.Strategy(opts, function (jwt_payload, 
             const user = yield prisma_1.default.user.findFirstOrThrow({
                 where: {
                     id: jwt_payload.id,
+                    deletedAt: {
+                        isSet: false,
+                    },
                 },
             });
             return done(null, user);

@@ -11,7 +11,7 @@ import passport from "passport";
 const app = express();
 
 app.use(logger);
-app.use(cors({ credentials: true }));
+app.use(cors({ credentials: true, origin: ["http://localhost:3000"] }));
 app.use(
   expressSession({
     secret: config.secret.session_secret,

@@ -30,6 +30,9 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
             const isExistUser = yield prisma_1.default.user.findFirstOrThrow({
                 where: {
                     username: req.body.username,
+                    deletedAt: {
+                        isSet: false,
+                    },
                 },
             });
             //   if password correct
@@ -73,8 +76,10 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
             }
         }
         catch (err) {
-            return next(err);
+            console.log(err);
+            return next(new HttpError_1.default(400, "username / password incorrect"));
         }
+        console.log("WOI");
         return res
             .status(400)
             .json({ success: false, message: "username / password incorrect" });

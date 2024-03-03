@@ -15,20 +15,64 @@ function runMiddleware(req: Request, res: Response, fn: any) {
   });
 }
 
-export default async (req: Request, res: Response, next: NextFunction) => {
-  await runMiddleware(req, res, multer.single("image"));
-  if (!req?.file) return next(new HttpError(400, "File not found"));
-  console.log(req?.file?.buffer);
-  const stream = cloudinary.uploader.upload_stream(
-    {
-      folder: "user",
-    },
-    (error, result) => {
-      if (error) return console.error(error);
+export const uploadSingle = async (req: Request, folder: string) => {
+  // await runMiddleware(req, res, multer.single("image"));
 
-      req.body.image = result?.secure_url;
-      next();
+  return new Promise((resolve, reject) => {
+    if (!req?.file) {
+      return resolve(false);
     }
-  );
-  streamifier.createReadStream(req.file.buffer).pipe(stream);
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        folder,
+      },
+      (error, result) => {
+        if (error) return console.error(error);
+
+        return resolve(result?.secure_url);
+      }
+    );
+    streamifier.createReadStream(req.file.buffer).pipe(stream);
+  });
 };
+export const uploadMultiple = async (req: Request, folder: string) => {
+  // await runMiddleware(req, res, multer.single("image"));
+
+  return new Promise((resolve, reject) => {
+    if (req?.files?.length == 0) {
+      return resolve(false);
+    }
+
+    if (Array.isArray(req.files)) {
+      const newAll: any[] = [];
+
+      req.files.forEach((file, index) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            resource_type: "auto",
+            folder,
+          },
+          (error, result) => {
+            if (error) return console.error(error);
+            newAll.push({
+              name: file.originalname,
+              file: result?.secure_url,
+            });
+
+            if (newAll.length == req.files?.length) {
+              return resolve(newAll);
+            }
+          }
+        );
+
+        streamifier.createReadStream(file.buffer).pipe(stream);
+      });
+    } else {
+      throw Error("Files Not Array");
+    }
+
+    // streamifier.createReadStream(req.file.buffer).pipe(stream);
+  });
+};
+
+export default { uploadMultiple, uploadSingle };

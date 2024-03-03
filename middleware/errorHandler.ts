@@ -1,15 +1,14 @@
 import { Request, Response, NextFunction } from "express";
-import CustomErrorType from "../interface/CustomError.interface";
+import HttpError from "../utils/errors/HttpError";
 
-const errorHandler = (
-  err: CustomErrorType,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  if (err) {
-    res.status(err.code).json({ success: false, msg: err.message });
-  }
+const errorHandler = (fn: Function) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await fn(req, res, next);
+    } catch (err: any) {
+      next(new HttpError(500, err));
+    }
+  };
 };
 
 export default errorHandler;

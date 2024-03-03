@@ -12,8 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const HttpError_1 = __importDefault(require("../utils/errors/HttpError"));
-const multer_1 = __importDefault(require("../config/multer"));
+exports.uploadMultiple = exports.uploadSingle = void 0;
 const cloudinary_1 = __importDefault(require("../config/cloudinary"));
 const streamifier_1 = __importDefault(require("streamifier"));
 function runMiddleware(req, res, fn) {
@@ -26,19 +25,56 @@ function runMiddleware(req, res, fn) {
         });
     });
 }
-exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    yield runMiddleware(req, res, multer_1.default.single("image"));
-    if (!(req === null || req === void 0 ? void 0 : req.file))
-        return next(new HttpError_1.default(400, "File not found"));
-    console.log((_a = req === null || req === void 0 ? void 0 : req.file) === null || _a === void 0 ? void 0 : _a.buffer);
-    const stream = cloudinary_1.default.uploader.upload_stream({
-        folder: "user",
-    }, (error, result) => {
-        if (error)
-            return console.error(error);
-        req.body.image = result === null || result === void 0 ? void 0 : result.secure_url;
-        next();
+const uploadSingle = (req, folder) => __awaiter(void 0, void 0, void 0, function* () {
+    // await runMiddleware(req, res, multer.single("image"));
+    return new Promise((resolve, reject) => {
+        if (!(req === null || req === void 0 ? void 0 : req.file)) {
+            return resolve(false);
+        }
+        const stream = cloudinary_1.default.uploader.upload_stream({
+            folder,
+        }, (error, result) => {
+            if (error)
+                return console.error(error);
+            return resolve(result === null || result === void 0 ? void 0 : result.secure_url);
+        });
+        streamifier_1.default.createReadStream(req.file.buffer).pipe(stream);
     });
-    streamifier_1.default.createReadStream(req.file.buffer).pipe(stream);
 });
+exports.uploadSingle = uploadSingle;
+const uploadMultiple = (req, folder) => __awaiter(void 0, void 0, void 0, function* () {
+    // await runMiddleware(req, res, multer.single("image"));
+    return new Promise((resolve, reject) => {
+        var _a;
+        if (((_a = req === null || req === void 0 ? void 0 : req.files) === null || _a === void 0 ? void 0 : _a.length) == 0) {
+            return resolve(false);
+        }
+        if (Array.isArray(req.files)) {
+            const newAll = [];
+            req.files.forEach((file, index) => {
+                const stream = cloudinary_1.default.uploader.upload_stream({
+                    resource_type: "auto",
+                    folder,
+                }, (error, result) => {
+                    var _a;
+                    if (error)
+                        return console.error(error);
+                    newAll.push({
+                        name: file.originalname,
+                        file: result === null || result === void 0 ? void 0 : result.secure_url,
+                    });
+                    if (newAll.length == ((_a = req.files) === null || _a === void 0 ? void 0 : _a.length)) {
+                        return resolve(newAll);
+                    }
+                });
+                streamifier_1.default.createReadStream(file.buffer).pipe(stream);
+            });
+        }
+        else {
+            throw Error("Files Not Array");
+        }
+        // streamifier.createReadStream(req.file.buffer).pipe(stream);
+    });
+});
+exports.uploadMultiple = uploadMultiple;
+exports.default = { uploadMultiple: exports.uploadMultiple, uploadSingle: exports.uploadSingle };

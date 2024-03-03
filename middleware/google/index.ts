@@ -27,15 +27,15 @@ passport.use(
       profile: any,
       done: VerifyCallback
     ) {
-      // console.log(
-      //   "accessToken",
-      //   accessToken,
-      //   "refreshToken",
-      //   refreshToken,
-      //   "profile",
-      //   profile
-      // );
-
+      console.log(
+        "accessToken",
+        accessToken,
+        "refreshToken",
+        refreshToken,
+        "profile",
+        profile
+      );
+      return;
       const email = profile.emails![0].value;
 
       if (!email) {
@@ -48,6 +48,9 @@ passport.use(
           AND: {
             email,
             provider: "GOOGLE",
+            deletedAt: {
+              isSet: false,
+            },
           },
         },
       });

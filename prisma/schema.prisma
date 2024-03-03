@@ -10,54 +10,131 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// model Post {
-//   id       String    @id @default(auto()) @map("_id") @db.ObjectId
-//   slug     String    @unique
-//   title    String
-//   body     String
-//   author   User      @relation(fields: [authorId], references: [id])
-//   authorId String    @db.ObjectId
-//   comments Comment[]
-// }
-
+ 
 model User {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
   email   String  
   fullname String
-  username    String
-  password String
+  username    String @unique  
+  password String 
   provider Provider @default(LOCAL)
-  image String
+  image String?
+  phoneNumber String?
+  userCourses UserCourses[]
+  NPM String?
+  golongan Golongan @default(UMUM)
   role Role @default(STUDENT)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
   deletedAt   DateTime?
-  @@unique([email, provider])
+  @@unique([email, provider, deletedAt])
+}
+
+
+
+model Batch {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  name  String
+  start_register DateTime
+  end_register DateTime
+  kuota Int
+  userCourses UserCourses[]
+  courseId String @db.ObjectId
+  course Course @relation(fields: [courseId], references: [id]) 
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  deletedAt   DateTime?
+
+}
+
+model Course {
+    id      String   @id @default(auto()) @map("_id") @db.ObjectId
+    name String
+    category CourseCategory
+    batch Batch[]
+    courseFolder CourseFolder[]
+    methode  CourseMethode
+    price Float
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @default(now())
+    deletedAt   DateTime?
+}
+
+model CourseFolder {
+    id      String   @id @default(auto()) @map("_id") @db.ObjectId
+    name  String
+    courseId String @db.ObjectId
+    course Course @relation(fields: [courseId], references: [id]) 
+    courseFile CourseFile[]
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @default(now())
+    deletedAt   DateTime?
+}
+
+model CourseFile {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  file  String
+  name String
+  courseFolderId String @db.ObjectId
+  courseFolder CourseFolder @relation(fields: [courseFolderId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  deletedAt   DateTime? 
+}
+
+model UserCourses {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  user User @relation(fields: [userId], references: [id]) 
+  batchId String @db.ObjectId
+  batch Batch @relation(fields: [batchId], references: [id]) 
+  paymentId String @db.ObjectId
+  payment Payment @relation(fields: [paymentId], references: [id]) 
+  tgl_daftar DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  deletedAt   DateTime?
+}
+
+model Payment {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  bank String
+  atas_nama String
+  no_rek String
+  bukti_bayar String
+  userCourses UserCourses[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  deletedAt   DateTime?
+}
+
+enum Golongan {
+  ALUMNI
+  UMUM
+  MAHASISWA
+}
+
+enum CourseMethode {
+  OFFLINE
+  ONLINE
+}
+
+enum CourseCategory {
+  KURSUS
+  WORKSHOP
 }
 
 enum Provider {
   LOCAL
   GOOGLE
+  FACEBOOK
 }
 
 enum Role {
+  SUPERADMIN
   ADMIN
   TEACHER
   STUDENT
 }
-
-// model Role {
-//   id String @id @default(auto()) @map("_id") @db.ObjectId
-//   name String
-// }
-
- 
-
-// model Comment {
-//   id      String @id @default(auto()) @map("_id") @db.ObjectId
-//   comment String
-//   post    Post   @relation(fields: [postId], references: [id])
-//   postId  String @db.ObjectId
-// }
 
  

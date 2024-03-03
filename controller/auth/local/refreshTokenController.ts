@@ -1,12 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import HttpError from "../utils/errors/HttpError";
-import config from "../config/config";
+import HttpError from "../../../utils/errors/HttpError";
+import config from "../../../config/config";
 
 export default async (req: Request, res: Response, next: NextFunction) => {
   const refreshToken = req.cookies?.["refreshToken"];
 
-  console.log("HIT", req.headers);
   if (!refreshToken) {
     return next(new HttpError(401, "Token not valid"));
   }
@@ -27,7 +26,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
       },
       config.secret.access_token_secret,
       {
-        expiresIn: "30s",
+        expiresIn: "1h",
       }
     );
     return res.status(200).json({ status: true, accessToken });

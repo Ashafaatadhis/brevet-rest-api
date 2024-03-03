@@ -1,12 +1,45 @@
 import prisma from "../config/prisma";
+import { hashPassword } from "../utils/bcrypt";
 async function main() {
+  await prisma.user.deleteMany();
   await prisma.user.create({
     data: {
-      email: "test@gmail.com",
-      fullname: "Testing",
-      image: "Test",
-      password: "test",
-      username: "test",
+      email: "teacher@gmail.com",
+      fullname: "teacher",
+
+      password: (await hashPassword("teacher@123")) as string,
+      username: "teacher",
+      role: "TEACHER",
+    },
+  });
+  await prisma.user.create({
+    data: {
+      email: "student@gmail.com",
+      fullname: "student",
+
+      password: (await hashPassword("student@123")) as string,
+      username: "student",
+      role: "STUDENT",
+    },
+  });
+  await prisma.user.create({
+    data: {
+      email: "admin@gmail.com",
+      fullname: "admin",
+
+      password: (await hashPassword("admin@123")) as string,
+      username: "admin",
+      role: "ADMIN",
+    },
+  });
+  await prisma.user.create({
+    data: {
+      email: "superadmin@gmail.com",
+      fullname: "superadmin",
+
+      password: (await hashPassword("superadmin@123")) as string,
+      username: "superadmin",
+      role: "SUPERADMIN",
     },
   });
 

@@ -24,14 +24,8 @@ passport_1.default.use(new passport_google_oauth2_1.Strategy({
     passReqToCallback: true,
 }, function (request, accessToken, refreshToken, profile, done) {
     return __awaiter(this, void 0, void 0, function* () {
-        // console.log(
-        //   "accessToken",
-        //   accessToken,
-        //   "refreshToken",
-        //   refreshToken,
-        //   "profile",
-        //   profile
-        // );
+        console.log("accessToken", accessToken, "refreshToken", refreshToken, "profile", profile);
+        return;
         const email = profile.emails[0].value;
         if (!email) {
             throw "User does not have email";
@@ -42,6 +36,9 @@ passport_1.default.use(new passport_google_oauth2_1.Strategy({
                 AND: {
                     email,
                     provider: "GOOGLE",
+                    deletedAt: {
+                        isSet: false,
+                    },
                 },
             },
         });

@@ -18,7 +18,6 @@ const config_1 = __importDefault(require("../config/config"));
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const refreshToken = (_a = req.cookies) === null || _a === void 0 ? void 0 : _a["refreshToken"];
-    console.log("HIT", req.headers);
     if (!refreshToken) {
         return next(new HttpError_1.default(401, "Token not valid"));
     }
@@ -31,7 +30,7 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
             role: decode.role,
             email: decode.email,
         }, config_1.default.secret.access_token_secret, {
-            expiresIn: "30s",
+            expiresIn: "1h",
         });
         return res.status(200).json({ status: true, accessToken });
     }

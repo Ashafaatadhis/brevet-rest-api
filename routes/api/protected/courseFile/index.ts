@@ -1,0 +1,27 @@
+import express from "express";
+import errorHandler from "../../../../middleware/errorHandler";
+
+import {
+  addCourseFileController,
+  deleteCourseFileController,
+  editCourseFileController,
+  getAllCourseFileController,
+  getByIdCourseFileController,
+} from "../../../../controller/protected/courseFile";
+import multerFile from "../../../../config/multerFile";
+import { addCourseFileValidator } from "../../../../utils/validator";
+
+const router = express.Router();
+
+router.post(
+  "/",
+  multerFile.array("file", 10),
+  addCourseFileValidator,
+  errorHandler(addCourseFileController)
+);
+router.put("/:id", errorHandler(editCourseFileController));
+router.delete("/:id", errorHandler(deleteCourseFileController));
+router.get("/", errorHandler(getAllCourseFileController));
+router.get("/:id", errorHandler(getByIdCourseFileController));
+
+export default router;

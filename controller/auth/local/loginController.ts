@@ -1,23 +1,26 @@
 import { Request, Response, NextFunction } from "express";
 import { validationResult } from "express-validator";
-import prisma from "../config/prisma";
+import prisma from "../../../config/prisma";
 import jwt from "jsonwebtoken";
-import { comparePassword } from "../utils/bcrypt";
-import config from "../config/config";
-import HttpError from "../utils/errors/HttpError";
+import { comparePassword } from "../../../utils/bcrypt";
+import config from "../../../config/config";
+import HttpError from "../../../utils/errors/HttpError";
 
 export default async (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req);
   if (errors.isEmpty()) {
-    if (req.cookies?.["refreshToken"]) {
-      return next(new HttpError(200, "User has been logged in"));
-    }
+    // if (req.cookies?.["refreshToken"]) {
+    //   return next(new HttpError(200, "User has been logged in"));
+    // }
     // in case request params meet the validation criteria
 
     try {
       const isExistUser = await prisma.user.findFirstOrThrow({
         where: {
           username: req.body.username,
+          deletedAt: {
+            isSet: false,
+          },
         },
       });
 
@@ -49,7 +52,9 @@ export default async (req: Request, res: Response, next: NextFunction) => {
         );
 
         res.cookie("refreshToken", refreshToken, {
+          sameSite: config.env !== "development" ? "none" : "lax",
           httpOnly: true,
+          // secure: true,
           secure: config.env !== "development",
           maxAge: 60 * 60 * 24 * 1000, // 1 day
         });
@@ -71,9 +76,10 @@ export default async (req: Request, res: Response, next: NextFunction) => {
         });
       }
     } catch (err: any) {
-      return next(err);
+      console.log(err);
+      return next(new HttpError(400, "username / password incorrect"));
     }
-
+    console.log("WOI");
     return res
       .status(400)
       .json({ success: false, message: "username / password incorrect" });
