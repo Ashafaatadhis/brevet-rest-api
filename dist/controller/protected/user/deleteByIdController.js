@@ -17,7 +17,10 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req === null || req === void 0 ? void 0 : req.user;
     const id = req.params.id;
     if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
-        return res.status(401).json({ status: false, message: "Unauthorized" });
+        // if user.role != admin
+        if (id !== user.id) {
+            return res.status(401).json({ status: false, message: "Unauthorized" });
+        }
     }
     try {
         yield prisma_1.default.user.update({

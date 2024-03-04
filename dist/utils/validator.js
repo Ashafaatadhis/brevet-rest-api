@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginValidator = exports.updateValidator = exports.registerValidator = exports.addCourseValidator = exports.addCourseFileValidator = exports.addCourseFolderValidator = exports.addBatchValidator = void 0;
+exports.loginValidator = exports.updateValidator = exports.changePasswordValidator = exports.registerValidator = exports.addCourseValidator = exports.addCourseFileValidator = exports.addCourseFolderValidator = exports.addBatchValidator = void 0;
 const express_validator_1 = require("express-validator");
 exports.addBatchValidator = [
     (0, express_validator_1.check)("name", "Invalid does not Empty").not().isEmpty(),
@@ -59,6 +59,37 @@ exports.registerValidator = [
         }
     })),
 ];
+const changePasswordValidator = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = req.user;
+    if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
+        yield (0, express_validator_1.check)("oldPassword", "Invalid does not Empty")
+            .not()
+            .isEmpty()
+            .run(req);
+    }
+    yield (0, express_validator_1.check)("password", "Invalid does not Empty").not().isEmpty().run(req);
+    yield (0, express_validator_1.check)("password", "Password must be between 4 to 16 characters")
+        .isLength({
+        min: 4,
+        max: 16,
+    })
+        .run(req);
+    yield (0, express_validator_1.check)("confirmPassword")
+        .isLength({
+        min: 4,
+        max: 16,
+    })
+        .withMessage("Password must be between 4 to 16 characters")
+        .custom((confirmPassword, { req }) => __awaiter(void 0, void 0, void 0, function* () {
+        const password = req.body.password;
+        if (password !== confirmPassword) {
+            throw new Error("Passwords must be same");
+        }
+    }))
+        .run(req);
+    next();
+});
+exports.changePasswordValidator = changePasswordValidator;
 exports.updateValidator = [
     (0, express_validator_1.check)("fullname", "Invalid does not Empty").not().isEmpty(),
     (0, express_validator_1.check)("username", "Invalid does not Empty").not().isEmpty(),

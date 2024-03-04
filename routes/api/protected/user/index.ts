@@ -5,18 +5,23 @@ import express, {
   NextFunction,
 } from "express";
 
-import { updateValidator } from "../../../../utils/validator";
+import {
+  changePasswordValidator,
+  updateValidator,
+} from "../../../../utils/validator";
 
 import errorHandler from "../../../../middleware/errorHandler";
 
 import multer from "../../../../config/multer";
 import {
+  changePasswordByIdController,
   deleteByIdController,
   editByIdController,
   getAllController,
   getByIdController,
 } from "../../../../controller/protected/user";
 import HttpError from "../../../../utils/errors/HttpError";
+import { check } from "express-validator";
 const router = express.Router();
 
 // router.post(
@@ -36,5 +41,10 @@ router.put(
 );
 router.get("/:id", errorHandler(getByIdController));
 router.get("/", errorHandler(getAllController));
+router.put(
+  "/change-password/:id",
+  changePasswordValidator,
+  errorHandler(changePasswordByIdController)
+);
 
 export default router;

@@ -1,4 +1,6 @@
+import { NextFunction, Request, Response } from "express";
 import { check } from "express-validator";
+import { isNull } from "util";
 
 export const addBatchValidator = [
   check("name", "Invalid does not Empty").not().isEmpty(),
@@ -52,6 +54,45 @@ export const registerValidator = [
       }
     }),
 ];
+
+export const changePasswordValidator = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const user: any = req.user;
+  if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
+    await check("oldPassword", "Invalid does not Empty")
+      .not()
+      .isEmpty()
+      .run(req);
+  }
+
+  await check("password", "Invalid does not Empty").not().isEmpty().run(req);
+
+  await check("password", "Password must be between 4 to 16 characters")
+    .isLength({
+      min: 4,
+      max: 16,
+    })
+    .run(req);
+
+  await check("confirmPassword")
+    .isLength({
+      min: 4,
+      max: 16,
+    })
+    .withMessage("Password must be between 4 to 16 characters")
+    .custom(async (confirmPassword: any, { req }) => {
+      const password = req.body.password;
+      if (password !== confirmPassword) {
+        throw new Error("Passwords must be same");
+      }
+    })
+    .run(req);
+
+  next();
+};
 
 export const updateValidator = [
   check("fullname", "Invalid does not Empty").not().isEmpty(),

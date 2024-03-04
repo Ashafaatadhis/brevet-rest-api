@@ -22,6 +22,9 @@ export default async (req: Request, res: Response, next: NextFunction) => {
             isSet: false,
           },
         },
+        include: {
+          userCourses: true,
+        },
       });
 
       //   if password correct
@@ -64,13 +67,18 @@ export default async (req: Request, res: Response, next: NextFunction) => {
           accessToken,
           data: {
             id: isExistUser.id,
-            username: isExistUser.username,
-            role: isExistUser.role,
             email: isExistUser.email,
             fullname: isExistUser.fullname,
+            username: isExistUser.username,
+            provider: isExistUser.provider,
             image: isExistUser.image,
-            created_at: isExistUser.createdAt,
-            updated_at: isExistUser.updatedAt,
+            phoneNumber: isExistUser.phoneNumber,
+            role: isExistUser.role,
+            golongan: isExistUser.golongan,
+            NPM: isExistUser.NPM,
+            userCourses: isExistUser.userCourses,
+            createdAt: isExistUser.createdAt,
+            updatedAt: isExistUser.updatedAt,
             deletedAt: isExistUser.deletedAt,
           },
         });

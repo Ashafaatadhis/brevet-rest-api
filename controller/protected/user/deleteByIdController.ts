@@ -4,8 +4,12 @@ import prisma from "../../../config/prisma";
 export default async (req: Request, res: Response) => {
   const user: any = req?.user;
   const id: string = req.params.id;
+
   if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
-    return res.status(401).json({ status: false, message: "Unauthorized" });
+    // if user.role != admin
+    if (id !== user.id) {
+      return res.status(401).json({ status: false, message: "Unauthorized" });
+    }
   }
   try {
     await prisma.user.update({

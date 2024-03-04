@@ -8,18 +8,51 @@ export default async (req: Request, res: Response) => {
   if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
     return res.status(401).json({ status: false, message: "Unauthorized" });
   }
+
+  if (user.role === "ADMIN") {
+    const data = await prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        fullname: true,
+        username: true,
+        provider: true,
+        image: true,
+        phoneNumber: true,
+        role: true,
+        golongan: true,
+        NPM: true,
+        userCourses: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
+      },
+      where: {
+        role: {
+          not: {
+            equals: "SUPERADMIN",
+          },
+        },
+        deletedAt: {
+          isSet: false,
+        },
+      },
+    }); // if role admin
+    res.json({ status: 200, data });
+  }
   const data = await prisma.user.findMany({
     select: {
       id: true,
       email: true,
       fullname: true,
       username: true,
-      password: false,
-      provider: false,
+      provider: true,
       image: true,
-      role: true,
-      NPM: true,
       phoneNumber: true,
+      role: true,
+      golongan: true,
+      NPM: true,
+      userCourses: true,
       createdAt: true,
       updatedAt: true,
       deletedAt: true,

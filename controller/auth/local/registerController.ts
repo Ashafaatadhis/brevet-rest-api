@@ -40,17 +40,26 @@ export default async (req: Request, res: Response, next: NextFunction) => {
           password: hashing as string,
           username: req.body.username,
         },
+        include: {
+          userCourses: true,
+        },
       });
       return res.status(200).json({
         success: true,
         data: {
           id: user.id,
-          username: user.username,
-          role: user.role,
           email: user.email,
           fullname: user.fullname,
-          created_at: user.createdAt,
-          updated_at: user.updatedAt,
+          username: user.username,
+          provider: user.provider,
+          image: user.image,
+          phoneNumber: user.phoneNumber,
+          role: user.role,
+          golongan: user.golongan,
+          NPM: user.NPM,
+          userCourses: user.userCourses,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
           deletedAt: user.deletedAt,
         },
       });

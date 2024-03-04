@@ -21,7 +21,7 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         const user = req === null || req === void 0 ? void 0 : req.user;
         const id = req.params.id;
         // req.body["confirmPassword"] = undefined;
-        if (user.role === "ADMIN") {
+        if (["ADMIN", "SUPERADMIN"].includes(user.role)) {
             const thisUser = yield prisma_1.default.user.findUnique({
                 select: {
                     provider: true,

@@ -11,7 +11,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     const id: string = req.params.id;
     // req.body["confirmPassword"] = undefined;
 
-    if (user.role === "ADMIN") {
+    if (["ADMIN", "SUPERADMIN"].includes(user.role)) {
       const thisUser = await prisma.user.findUnique({
         select: {
           provider: true,
