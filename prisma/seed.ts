@@ -1,7 +1,18 @@
 import prisma from "../config/prisma";
 import { hashPassword } from "../utils/bcrypt";
 async function main() {
-  await prisma.user.deleteMany();
+  // await prisma.user.deleteMany();
+  for (let i = 1; i <= 30; i++) {
+    await prisma.user.create({
+      data: {
+        email: `student${i}@gmail.com`,
+        fullname: `student${i}`,
+        password: (await hashPassword(`student${i}@123`)) as string,
+        username: `student${i}`,
+        role: "STUDENT",
+      },
+    });
+  }
   await prisma.user.create({
     data: {
       email: "teacher@gmail.com",

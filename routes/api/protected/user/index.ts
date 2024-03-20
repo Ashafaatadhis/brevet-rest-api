@@ -1,10 +1,3 @@
-import express, {
-  ErrorRequestHandler,
-  Request,
-  Response,
-  NextFunction,
-} from "express";
-
 import {
   changePasswordValidator,
   updateValidator,
@@ -18,10 +11,13 @@ import {
   deleteByIdController,
   editByIdController,
   getAllController,
+  getBatchController,
   getByIdController,
+  getCoursesController,
 } from "../../../../controller/protected/user";
-import HttpError from "../../../../utils/errors/HttpError";
-import { check } from "express-validator";
+
+import express from "express";
+
 const router = express.Router();
 
 // router.post(
@@ -34,17 +30,22 @@ const router = express.Router();
 
 router.delete("/:id", errorHandler(deleteByIdController));
 router.put(
+  "/change-password/:id",
+  changePasswordValidator,
+  errorHandler(changePasswordByIdController)
+);
+router.put(
   "/:id",
   multer.single("image"),
   updateValidator,
   errorHandler(editByIdController)
 );
+router.get("/get-batch", errorHandler(getBatchController));
 router.get("/:id", errorHandler(getByIdController));
-router.get("/", errorHandler(getAllController));
-router.put(
-  "/change-password/:id",
-  changePasswordValidator,
-  errorHandler(changePasswordByIdController)
+router.get(
+  "/get-courses/:batchId/:courseId",
+  errorHandler(getCoursesController)
 );
+router.get("/", errorHandler(getAllController));
 
 export default router;

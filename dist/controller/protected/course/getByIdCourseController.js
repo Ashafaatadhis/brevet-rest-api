@@ -24,7 +24,11 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                 },
             },
             include: {
-                batch: true,
+                courseFolder: {
+                    include: {
+                        courseFile: true,
+                    },
+                },
             },
         });
         return res.json({ success: true, data });

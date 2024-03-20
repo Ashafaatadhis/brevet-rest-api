@@ -31,12 +31,12 @@ export default async (req: Request, res: Response, next: NextFunction) => {
           .json({ success: false, message: "This User can't be update" });
       }
       //   req.body["password"] = (await hashPassword(req.body.password)) as string;
-      const urlImage = await uploadSingle(req, "user");
+      const urlImage: any = await uploadSingle(req, "user");
 
       if (!urlImage) {
         req.body.image = thisUser.image;
       } else {
-        req.body.image = urlImage;
+        req.body.image = urlImage.secure_url;
       }
 
       const data = await prisma.user.update({
@@ -78,12 +78,12 @@ export default async (req: Request, res: Response, next: NextFunction) => {
         .status(400)
         .json({ success: false, message: "This User can't be update" });
     }
-    const urlImage = await uploadSingle(req, "user");
+    const urlImage: any = await uploadSingle(req, "user");
 
     if (!urlImage) {
       req.body.image = thisUser.image;
     } else {
-      req.body.image = urlImage;
+      req.body.image = urlImage.secure_url;
     }
     req.body.role = thisUser.role;
     const data = await prisma.user.update({

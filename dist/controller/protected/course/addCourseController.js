@@ -21,13 +21,13 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         if (!["ADMIN", "SUPERADMIN"].includes(user.role))
             return res.status(401).json({ success: false, message: "Unauthorized" });
         try {
-            req.body.price = parseFloat(req.body.price);
             const data = yield prisma_1.default.course.create({
                 data: req.body,
             });
             return res.json({ success: true, data });
         }
         catch (err) {
+            console.log(err);
             return res
                 .status(400)
                 .json({ success: false, message: "Failed Add Course" });

@@ -32,11 +32,16 @@ const uploadSingle = (req, folder) => __awaiter(void 0, void 0, void 0, function
             return resolve(false);
         }
         const stream = cloudinary_1.default.uploader.upload_stream({
+            resource_type: "auto",
             folder,
         }, (error, result) => {
+            var _a;
             if (error)
                 return console.error(error);
-            return resolve(result === null || result === void 0 ? void 0 : result.secure_url);
+            return resolve({
+                secure_url: result === null || result === void 0 ? void 0 : result.secure_url,
+                name: (_a = req.file) === null || _a === void 0 ? void 0 : _a.originalname,
+            });
         });
         streamifier_1.default.createReadStream(req.file.buffer).pipe(stream);
     });

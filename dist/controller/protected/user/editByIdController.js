@@ -45,7 +45,7 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                 req.body.image = thisUser.image;
             }
             else {
-                req.body.image = urlImage;
+                req.body.image = urlImage.secure_url;
             }
             const data = yield prisma_1.default.user.update({
                 data: Object.assign(Object.assign({}, req.body), { updatedAt: new Date().toISOString() }),
@@ -85,7 +85,7 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
             req.body.image = thisUser.image;
         }
         else {
-            req.body.image = urlImage;
+            req.body.image = urlImage.secure_url;
         }
         req.body.role = thisUser.role;
         const data = yield prisma_1.default.user.update({

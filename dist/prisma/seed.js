@@ -16,7 +16,18 @@ const prisma_1 = __importDefault(require("../config/prisma"));
 const bcrypt_1 = require("../utils/bcrypt");
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield prisma_1.default.user.deleteMany();
+        // await prisma.user.deleteMany();
+        for (let i = 1; i <= 30; i++) {
+            yield prisma_1.default.user.create({
+                data: {
+                    email: `student${i}@gmail.com`,
+                    fullname: `student${i}`,
+                    password: (yield (0, bcrypt_1.hashPassword)(`student${i}@123`)),
+                    username: `student${i}`,
+                    role: "STUDENT",
+                },
+            });
+        }
         yield prisma_1.default.user.create({
             data: {
                 email: "teacher@gmail.com",

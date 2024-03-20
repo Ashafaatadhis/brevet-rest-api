@@ -19,7 +19,11 @@ router.post(
   addCourseFileValidator,
   errorHandler(addCourseFileController)
 );
-router.put("/:id", errorHandler(editCourseFileController));
+router.put(
+  "/:id",
+  multerFile.single("file"),
+  errorHandler(editCourseFileController)
+);
 router.delete("/:id", errorHandler(deleteCourseFileController));
 router.get("/", errorHandler(getAllCourseFileController));
 router.get("/:id", errorHandler(getByIdCourseFileController));

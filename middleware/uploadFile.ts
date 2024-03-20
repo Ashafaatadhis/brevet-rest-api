@@ -24,12 +24,16 @@ export const uploadSingle = async (req: Request, folder: string) => {
     }
     const stream = cloudinary.uploader.upload_stream(
       {
+        resource_type: "auto",
         folder,
       },
       (error, result) => {
         if (error) return console.error(error);
 
-        return resolve(result?.secure_url);
+        return resolve({
+          secure_url: result?.secure_url,
+          name: req.file?.originalname,
+        });
       }
     );
     streamifier.createReadStream(req.file.buffer).pipe(stream);

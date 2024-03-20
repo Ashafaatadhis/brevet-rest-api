@@ -14,7 +14,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../../../config/prisma"));
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = req.user;
     try {
+        if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
         const data = yield prisma_1.default.courseFolder.findMany({
             where: {
                 deletedAt: {

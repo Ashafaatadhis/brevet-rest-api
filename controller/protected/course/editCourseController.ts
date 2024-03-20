@@ -10,7 +10,6 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     if (!["ADMIN", "SUPERADMIN"].includes(user.role))
       return res.status(401).json({ success: false, message: "Unauthorized" });
     try {
-      req.body.price = parseFloat(req.body.price);
       const data = await prisma.course.update({
         data: {
           ...req.body,

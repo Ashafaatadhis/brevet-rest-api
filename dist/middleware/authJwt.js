@@ -11,6 +11,7 @@ exports.default = (req, res, next) => {
     }, function (err, user, info) {
         if (err)
             return next(new HttpError_1.default(500, err.message));
+        console.log(user);
         if (!user) {
             throw new HttpError_1.default(401, info === null || info === void 0 ? void 0 : info.toString());
         }

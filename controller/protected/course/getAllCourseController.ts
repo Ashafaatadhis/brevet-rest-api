@@ -10,9 +10,6 @@ export default async (req: Request, res: Response, next: NextFunction) => {
           isSet: false,
         },
       },
-      include: {
-        batch: true,
-      },
     });
 
     return res.json({ success: true, data });

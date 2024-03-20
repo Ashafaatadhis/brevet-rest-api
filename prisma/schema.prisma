@@ -38,23 +38,35 @@ model Batch {
   start_register DateTime
   end_register DateTime
   kuota Int
+  price Float
   userCourses UserCourses[]
-  courseId String @db.ObjectId
-  course Course @relation(fields: [courseId], references: [id]) 
+  batchCourse BatchCourse[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
   deletedAt   DateTime?
 
 }
 
+model BatchCourse {
+    id      String   @id @default(auto()) @map("_id") @db.ObjectId
+    start_schedule DateTime
+   end_schedule DateTime
+  courseId String @db.ObjectId
+  course Course @relation(fields: [courseId], references: [id]) 
+    batchId String @db.ObjectId
+  batch Batch @relation(fields: [batchId], references: [id]) 
+   createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  deletedAt   DateTime?
+}
+
 model Course {
     id      String   @id @default(auto()) @map("_id") @db.ObjectId
     name String
     category CourseCategory
-    batch Batch[]
+    batchCourse BatchCourse[]
     courseFolder CourseFolder[]
     methode  CourseMethode
-    price Float
     createdAt   DateTime @default(now())
     updatedAt   DateTime @default(now())
     deletedAt   DateTime?
@@ -88,9 +100,7 @@ model UserCourses {
   user User @relation(fields: [userId], references: [id]) 
   batchId String @db.ObjectId
   batch Batch @relation(fields: [batchId], references: [id]) 
-  paymentId String @db.ObjectId
-  payment Payment @relation(fields: [paymentId], references: [id]) 
-  tgl_daftar DateTime
+  payment Payment?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
   deletedAt   DateTime?
@@ -100,13 +110,18 @@ model Payment {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
   bank String
   atas_nama String
+  
   no_rek String
+  status Boolean @default(false)
   bukti_bayar String
-  userCourses UserCourses[]
+  userCoursesId String @db.ObjectId @unique
+  userCourses UserCourses @relation(fields: [userCoursesId], references: [id])  
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
   deletedAt   DateTime?
 }
+ 
 
 enum Golongan {
   ALUMNI

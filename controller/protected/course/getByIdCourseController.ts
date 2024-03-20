@@ -14,7 +14,11 @@ export default async (req: Request, res: Response, next: NextFunction) => {
         },
       },
       include: {
-        batch: true,
+        courseFolder: {
+          include: {
+            courseFile: true,
+          },
+        },
       },
     });
 

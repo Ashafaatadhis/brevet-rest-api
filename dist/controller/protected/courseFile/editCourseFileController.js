@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_validator_1 = require("express-validator");
 const prisma_1 = __importDefault(require("../../../config/prisma"));
+const uploadFile_1 = require("../../../middleware/uploadFile");
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = (0, express_validator_1.validationResult)(req);
     if (errors.isEmpty()) {
@@ -22,6 +23,26 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         if (!["ADMIN", "SUPERADMIN"].includes(user.role))
             return res.status(401).json({ success: false, message: "Unauthorized" });
         try {
+            const thisUser = yield prisma_1.default.courseFile.findUnique({
+                select: {
+                    file: true,
+                },
+                where: {
+                    id,
+                    deletedAt: {
+                        isSet: false,
+                    },
+                },
+            });
+            const urlImage = yield (0, uploadFile_1.uploadSingle)(req, "courseFile");
+            console.log(urlImage);
+            if (!urlImage) {
+                req.body.file = thisUser === null || thisUser === void 0 ? void 0 : thisUser.file;
+            }
+            else {
+                req.body.file = urlImage.secure_url;
+                req.body.name = urlImage.name;
+            }
             const data = yield prisma_1.default.courseFile.update({
                 data: Object.assign(Object.assign({}, req.body), { updatedAt: new Date().toISOString() }),
                 where: {

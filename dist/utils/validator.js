@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginValidator = exports.updateValidator = exports.changePasswordValidator = exports.registerValidator = exports.addCourseValidator = exports.addCourseFileValidator = exports.addCourseFolderValidator = exports.addBatchValidator = void 0;
+exports.loginValidator = exports.updateValidator = exports.changePasswordValidator = exports.registerValidator = exports.addCourseValidator = exports.addCourseFileValidator = exports.addCourseFolderValidator = exports.addUserCourseValidator = exports.addBatchCourseValidator = exports.addBatchValidator = void 0;
 const express_validator_1 = require("express-validator");
 exports.addBatchValidator = [
     (0, express_validator_1.check)("name", "Invalid does not Empty").not().isEmpty(),
@@ -17,8 +17,23 @@ exports.addBatchValidator = [
     (0, express_validator_1.check)("start_register", "Invalid format Date").isISO8601().toDate(),
     (0, express_validator_1.check)("end_register", "Invalid does not Empty").not().isEmpty(),
     (0, express_validator_1.check)("end_register", "Invalid format Date").isISO8601().toDate(),
+    (0, express_validator_1.check)("price", "Invalid does not Empty").not().isEmpty(),
+    (0, express_validator_1.check)("price", "Numeric only").isNumeric(),
     (0, express_validator_1.check)("kuota", "Invalid does not Empty").not().isEmpty(),
+];
+exports.addBatchCourseValidator = [
+    (0, express_validator_1.check)("start_schedule", "Invalid does not Empty").not().isEmpty(),
+    (0, express_validator_1.check)("start_schedule", "Invalid format Date").isISO8601().toDate(),
+    (0, express_validator_1.check)("end_schedule", "Invalid does not Empty").not().isEmpty(),
+    (0, express_validator_1.check)("end_schedule", "Invalid format Date").isISO8601().toDate(),
     (0, express_validator_1.check)("courseId", "Invalid does not Empty").not().isEmpty(),
+    (0, express_validator_1.check)("batchId", "Invalid does not Empty").not().isEmpty(),
+];
+exports.addUserCourseValidator = [
+    (0, express_validator_1.check)("batchId", "Invalid does not Empty").not().isEmpty(),
+    (0, express_validator_1.check)("bank", "Invalid does not Empty").not().isEmpty(),
+    (0, express_validator_1.check)("no_rek", "Invalid does not Empty").not().isEmpty(),
+    (0, express_validator_1.check)("atas_nama", "Invalid does not Empty").not().isEmpty(),
 ];
 exports.addCourseFolderValidator = [
     (0, express_validator_1.check)("name", "Invalid does not Empty").not().isEmpty(),
@@ -33,8 +48,6 @@ exports.addCourseValidator = [
     (0, express_validator_1.check)("category", "Invalid does value category").isIn(["KURSUS", "WORKSHOP"]),
     (0, express_validator_1.check)("methode", "Invalid does not Empty").not().isEmpty(),
     (0, express_validator_1.check)("methode", "Invalid does value category").isIn(["OFFLINE", "ONLINE"]),
-    (0, express_validator_1.check)("price", "Invalid does not Empty").not().isEmpty(),
-    (0, express_validator_1.check)("price", "Numeric only").isNumeric(),
 ];
 exports.registerValidator = [
     (0, express_validator_1.check)("fullname", "Invalid does not Empty").not().isEmpty(),
@@ -90,17 +103,25 @@ const changePasswordValidator = (req, res, next) => __awaiter(void 0, void 0, vo
     next();
 });
 exports.changePasswordValidator = changePasswordValidator;
-exports.updateValidator = [
-    (0, express_validator_1.check)("fullname", "Invalid does not Empty").not().isEmpty(),
-    (0, express_validator_1.check)("username", "Invalid does not Empty").not().isEmpty(),
-    (0, express_validator_1.check)("phoneNumber", "Invalid does not Empty").not().isEmpty(),
-    (0, express_validator_1.check)("role", "Invalid does not Empty").not().isEmpty(),
-    (0, express_validator_1.check)("role", "Invalid does value role").isIn([
-        "STUDENT",
-        "TEACHER",
-        "ADMIN",
-    ]),
-];
+const updateValidator = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = req.user;
+    yield (0, express_validator_1.check)("fullname", "Invalid does not Empty").not().isEmpty().run(req);
+    yield (0, express_validator_1.check)("username", "Invalid does not Empty").not().isEmpty().run(req);
+    yield (0, express_validator_1.check)("phoneNumber", "Invalid does not Empty").not().isEmpty().run(req);
+    yield (0, express_validator_1.check)("role", "Invalid does not Empty").not().isEmpty().run(req);
+    if (user.role === "SUPERADMIN") {
+        yield (0, express_validator_1.check)("role", "Invalid does value role")
+            .isIn(["STUDENT", "TEACHER", "ADMIN", "SUPERADMIN"])
+            .run(req);
+    }
+    else {
+        yield (0, express_validator_1.check)("role", "Invalid does value role")
+            .isIn(["STUDENT", "TEACHER", "ADMIN"])
+            .run(req);
+    }
+    next();
+});
+exports.updateValidator = updateValidator;
 exports.loginValidator = [
     (0, express_validator_1.check)("username", "Invalid does not Empty").not().isEmpty(),
     //   check("image", "Invalid does not Empty").not().isEmpty(),

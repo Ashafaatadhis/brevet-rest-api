@@ -14,6 +14,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
       info?: object | string | Array<string | undefined>
     ) {
       if (err) return next(new HttpError(500, err.message));
+      console.log(user);
       if (!user) {
         throw new HttpError(401, info?.toString());
       }

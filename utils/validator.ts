@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { check } from "express-validator";
-import { isNull } from "util";
 
 export const addBatchValidator = [
   check("name", "Invalid does not Empty").not().isEmpty(),
@@ -8,8 +7,25 @@ export const addBatchValidator = [
   check("start_register", "Invalid format Date").isISO8601().toDate(),
   check("end_register", "Invalid does not Empty").not().isEmpty(),
   check("end_register", "Invalid format Date").isISO8601().toDate(),
+  check("price", "Invalid does not Empty").not().isEmpty(),
+  check("price", "Numeric only").isNumeric(),
   check("kuota", "Invalid does not Empty").not().isEmpty(),
+];
+
+export const addBatchCourseValidator = [
+  check("start_schedule", "Invalid does not Empty").not().isEmpty(),
+  check("start_schedule", "Invalid format Date").isISO8601().toDate(),
+  check("end_schedule", "Invalid does not Empty").not().isEmpty(),
+  check("end_schedule", "Invalid format Date").isISO8601().toDate(),
   check("courseId", "Invalid does not Empty").not().isEmpty(),
+  check("batchId", "Invalid does not Empty").not().isEmpty(),
+];
+
+export const addUserCourseValidator = [
+  check("batchId", "Invalid does not Empty").not().isEmpty(),
+  check("bank", "Invalid does not Empty").not().isEmpty(),
+  check("no_rek", "Invalid does not Empty").not().isEmpty(),
+  check("atas_nama", "Invalid does not Empty").not().isEmpty(),
 ];
 
 export const addCourseFolderValidator = [
@@ -26,9 +42,6 @@ export const addCourseValidator = [
   check("category", "Invalid does value category").isIn(["KURSUS", "WORKSHOP"]),
   check("methode", "Invalid does not Empty").not().isEmpty(),
   check("methode", "Invalid does value category").isIn(["OFFLINE", "ONLINE"]),
-
-  check("price", "Invalid does not Empty").not().isEmpty(),
-  check("price", "Numeric only").isNumeric(),
 ];
 
 export const registerValidator = [
@@ -94,17 +107,29 @@ export const changePasswordValidator = async (
   next();
 };
 
-export const updateValidator = [
-  check("fullname", "Invalid does not Empty").not().isEmpty(),
-  check("username", "Invalid does not Empty").not().isEmpty(),
-  check("phoneNumber", "Invalid does not Empty").not().isEmpty(),
-  check("role", "Invalid does not Empty").not().isEmpty(),
-  check("role", "Invalid does value role").isIn([
-    "STUDENT",
-    "TEACHER",
-    "ADMIN",
-  ]),
-];
+export const updateValidator = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const user: any = req.user;
+  await check("fullname", "Invalid does not Empty").not().isEmpty().run(req);
+  await check("username", "Invalid does not Empty").not().isEmpty().run(req);
+  await check("phoneNumber", "Invalid does not Empty").not().isEmpty().run(req);
+  await check("role", "Invalid does not Empty").not().isEmpty().run(req);
+
+  if (user.role === "SUPERADMIN") {
+    await check("role", "Invalid does value role")
+      .isIn(["STUDENT", "TEACHER", "ADMIN", "SUPERADMIN"])
+      .run(req);
+  } else {
+    await check("role", "Invalid does value role")
+      .isIn(["STUDENT", "TEACHER", "ADMIN"])
+      .run(req);
+  }
+
+  next();
+};
 
 export const loginValidator = [
   check("username", "Invalid does not Empty").not().isEmpty(),

@@ -22,7 +22,7 @@ const opts = {
 };
 passport_1.default.use(new passport_jwt_1.Strategy(opts, function (jwt_payload, done) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("HIT");
+        console.log("HIT", jwt_payload);
         // console.log(jwt_payload);
         try {
             const user = yield prisma_1.default.user.findFirstOrThrow({
