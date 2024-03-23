@@ -5,8 +5,6 @@ import prisma from "../../../config/prisma";
 export default async (req: Request, res: Response, next: NextFunction) => {
   const id: string = req.params.id;
   const by = req.query.by;
-  console.log("QO", by);
-  //where batch id get by batchID
 
   const user: any = req.user;
   try {

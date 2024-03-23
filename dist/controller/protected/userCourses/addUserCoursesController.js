@@ -25,6 +25,27 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
             if (!urlImage) {
                 return next(new HttpError_1.default(404, "File not found"));
             }
+            const count = yield prisma_1.default.userCourses.findMany({
+                where: {
+                    deletedAt: {
+                        isSet: false,
+                    },
+                    payment: {
+                        status: {
+                            equals: true,
+                        },
+                    },
+                },
+            });
+            const batchKuota = yield prisma_1.default.batch.findFirst({
+                select: {
+                    kuota: true,
+                },
+                where: {
+                    id: req.body.batchId,
+                },
+            });
+            const kuota = (batchKuota === null || batchKuota === void 0 ? void 0 : batchKuota.kuota) ? batchKuota === null || batchKuota === void 0 ? void 0 : batchKuota.kuota : 0;
             const dataUserCourses = yield prisma_1.default.userCourses.create({
                 data: {
                     batchId: req.body.batchId,
@@ -34,6 +55,13 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                     id: true,
                 },
             });
+            // kuota is terpenuhi
+            if (!(count.length < kuota)) {
+                return res.json({
+                    success: false,
+                    message: "Quota Batch is fulfilled",
+                });
+            }
             yield prisma_1.default.payment.create({
                 data: {
                     atas_nama: req.body.atas_nama,

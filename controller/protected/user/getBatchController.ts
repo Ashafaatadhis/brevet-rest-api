@@ -3,7 +3,7 @@ import prisma from "../../../config/prisma";
 
 export default async (req: Request, res: Response) => {
   const user: any = req.user;
-  console.log("WOI", user);
+
   try {
     const data = await prisma.userCourses.findMany({
       where: {

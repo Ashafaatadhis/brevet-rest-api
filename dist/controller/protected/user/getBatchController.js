@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../../../config/prisma"));
 exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.user;
-    console.log("WOI", user);
     try {
         const data = yield prisma_1.default.userCourses.findMany({
             where: {

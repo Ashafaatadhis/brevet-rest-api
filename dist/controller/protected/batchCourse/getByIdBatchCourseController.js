@@ -16,8 +16,6 @@ const prisma_1 = __importDefault(require("../../../config/prisma"));
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     const by = req.query.by;
-    console.log("QO", by);
-    //where batch id get by batchID
     const user = req.user;
     try {
         let data;

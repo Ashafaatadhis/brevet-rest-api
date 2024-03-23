@@ -15,6 +15,31 @@ export default async (req: Request, res: Response, next: NextFunction) => {
       if (!urlImage) {
         return next(new HttpError(404, "File not found"));
       }
+
+      const count = await prisma.userCourses.findMany({
+        where: {
+          deletedAt: {
+            isSet: false,
+          },
+          payment: {
+            status: {
+              equals: true,
+            },
+          },
+        },
+      });
+
+      const batchKuota = await prisma.batch.findFirst({
+        select: {
+          kuota: true,
+        },
+        where: {
+          id: req.body.batchId,
+        },
+      });
+
+      const kuota = batchKuota?.kuota ? batchKuota?.kuota : 0;
+
       const dataUserCourses = await prisma.userCourses.create({
         data: {
           batchId: req.body.batchId,
@@ -24,6 +49,15 @@ export default async (req: Request, res: Response, next: NextFunction) => {
           id: true,
         },
       });
+
+      // kuota is terpenuhi
+      if (!(count.length < kuota)) {
+        return res.json({
+          success: false,
+          message: "Quota Batch is fulfilled",
+        });
+      }
+
       await prisma.payment.create({
         data: {
           atas_nama: req.body.atas_nama,
