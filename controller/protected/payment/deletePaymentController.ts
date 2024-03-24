@@ -8,7 +8,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
   if (!["ADMIN", "SUPERADMIN"].includes(user.role))
     return res.status(401).json({ success: false, message: "Unauthorized" });
   try {
-    const data = await prisma.payment.update({
+    await prisma.payment.update({
       data: {
         deletedAt: new Date().toISOString(),
       },

@@ -16,23 +16,10 @@ export default async (req: Request, res: Response, next: NextFunction) => {
         return next(new HttpError(404, "File not found"));
       }
 
-      // if (!urlImage) {
-      //   // req.body.image = thisUser.image;
-      // } else {
-      //   req.body.image = urlImage;
-      // }
-      // urlImage.forEach(async (value: any) => {
-      //   req.body.name = value.originalName;
-      //   req.body.file = value.link;
-
       req.body.bukti_bayar = urlImage.secure_url;
 
-      const newData = urlImage.map((value: any) => {
-        return { ...value, courseFolderId: req.body.courseFolderId };
-      });
-
       await prisma.payment.createMany({
-        data: [...newData],
+        data: req.body,
       });
 
       return res.json({ success: true, message: "File success Uploaded" });

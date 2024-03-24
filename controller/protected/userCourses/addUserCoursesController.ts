@@ -21,6 +21,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
           deletedAt: {
             isSet: false,
           },
+          batchId: req.body.batchId,
           payment: {
             status: {
               equals: true,

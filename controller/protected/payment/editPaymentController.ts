@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 import prisma from "../../../config/prisma";
+import { uploadSingle } from "../../../middleware/uploadFile";
 
 export default async (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req);
@@ -10,6 +11,24 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     if (!["ADMIN", "SUPERADMIN"].includes(user.role))
       return res.status(401).json({ success: false, message: "Unauthorized" });
     try {
+      const thisUser = await prisma.payment.findFirst({
+        select: {
+          bukti_bayar: true,
+        },
+        where: {
+          id,
+          deletedAt: {
+            isSet: false,
+          },
+        },
+      });
+      const urlImage: any = await uploadSingle(req, "payment");
+
+      if (!urlImage) {
+        req.body.image = thisUser?.bukti_bayar;
+      } else {
+        req.body.image = urlImage.secure_url;
+      }
       const data = await prisma.payment.update({
         data: { ...req.body, updatedAt: new Date().toISOString() },
         where: {

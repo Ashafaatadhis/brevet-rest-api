@@ -14,15 +14,39 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../../../config/prisma"));
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const count = req.query.count ? parseInt(req.query.count) : 10;
+    const page = req.query.page ? parseInt(req.query.page) : 1;
     try {
         const data = yield prisma_1.default.course.findMany({
+            take: count,
+            skip: count * (page - 1),
             where: {
                 deletedAt: {
                     isSet: false,
                 },
             },
         });
-        return res.json({ success: true, data });
+        const dataCount = yield prisma_1.default.course.count({
+            where: {
+                deletedAt: {
+                    isSet: false,
+                },
+            },
+        });
+        const hasNext = yield prisma_1.default.course.findMany({
+            take: 1,
+            skip: count * (page + 1 - 1),
+            where: {
+                deletedAt: {
+                    isSet: false,
+                },
+            },
+        });
+        return res.json({
+            status: 200,
+            data,
+            meta: { hasNextPage: hasNext.length > 0, count: dataCount },
+        });
     }
     catch (err) {
         return res

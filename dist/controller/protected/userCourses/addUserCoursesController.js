@@ -30,6 +30,7 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                     deletedAt: {
                         isSet: false,
                     },
+                    batchId: req.body.batchId,
                     payment: {
                         status: {
                             equals: true,

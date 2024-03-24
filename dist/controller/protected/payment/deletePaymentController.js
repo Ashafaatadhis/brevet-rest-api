@@ -19,7 +19,7 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     if (!["ADMIN", "SUPERADMIN"].includes(user.role))
         return res.status(401).json({ success: false, message: "Unauthorized" });
     try {
-        const data = yield prisma_1.default.payment.update({
+        yield prisma_1.default.payment.update({
             data: {
                 deletedAt: new Date().toISOString(),
             },

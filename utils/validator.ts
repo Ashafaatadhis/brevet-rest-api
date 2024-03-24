@@ -11,6 +11,12 @@ export const addBatchValidator = [
   check("price", "Numeric only").isNumeric(),
   check("kuota", "Invalid does not Empty").not().isEmpty(),
 ];
+export const addPaymentValidator = [
+  check("bank", "Invalid does not Empty").not().isEmpty(),
+  check("atas_nama", "Invalid does not Empty").not().isEmpty(),
+  check("no_rek", "Invalid does not Empty").not().isEmpty(),
+  check("userCoursesId", "Invalid does not Empty").not().isEmpty(),
+];
 
 export const addBatchCourseValidator = [
   check("start_schedule", "Invalid does not Empty").not().isEmpty(),

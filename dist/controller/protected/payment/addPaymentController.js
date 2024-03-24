@@ -25,20 +25,9 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
             if (!urlImage) {
                 return next(new HttpError_1.default(404, "File not found"));
             }
-            // if (!urlImage) {
-            //   // req.body.image = thisUser.image;
-            // } else {
-            //   req.body.image = urlImage;
-            // }
-            // urlImage.forEach(async (value: any) => {
-            //   req.body.name = value.originalName;
-            //   req.body.file = value.link;
             req.body.bukti_bayar = urlImage.secure_url;
-            const newData = urlImage.map((value) => {
-                return Object.assign(Object.assign({}, value), { courseFolderId: req.body.courseFolderId });
-            });
             yield prisma_1.default.payment.createMany({
-                data: [...newData],
+                data: req.body,
             });
             return res.json({ success: true, message: "File success Uploaded" });
         }
