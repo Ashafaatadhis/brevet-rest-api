@@ -16,7 +16,6 @@ const express_validator_1 = require("express-validator");
 const prisma_1 = __importDefault(require("../../../config/prisma"));
 const bcrypt_1 = require("../../../utils/bcrypt");
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("WOOOWW");
     const errors = (0, express_validator_1.validationResult)(req);
     if (errors.isEmpty()) {
         // in case request params meet the validation criteria
@@ -46,9 +45,6 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                     password: hashing,
                     username: req.body.username,
                 },
-                include: {
-                    userCourses: true,
-                },
             });
             return res.status(200).json({
                 success: true,
@@ -63,7 +59,6 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                     role: user.role,
                     golongan: user.golongan,
                     NPM: user.NPM,
-                    userCourses: user.userCourses,
                     createdAt: user.createdAt,
                     updatedAt: user.updatedAt,
                     deletedAt: user.deletedAt,
@@ -71,6 +66,7 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
             });
         }
         catch (err) {
+            console.log(err);
             return res
                 .status(409)
                 .json({ success: false, message: "User already exist" });

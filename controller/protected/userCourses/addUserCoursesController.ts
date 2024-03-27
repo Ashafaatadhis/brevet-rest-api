@@ -23,8 +23,13 @@ export default async (req: Request, res: Response, next: NextFunction) => {
           },
           batchId: req.body.batchId,
           payment: {
-            status: {
-              equals: true,
+            every: {
+              status: {
+                equals: true,
+              },
+              deletedAt: {
+                isSet: false,
+              },
             },
           },
         },
@@ -41,6 +46,14 @@ export default async (req: Request, res: Response, next: NextFunction) => {
 
       const kuota = batchKuota?.kuota ? batchKuota?.kuota : 0;
 
+      // kuota is terpenuhi
+      if (count.length >= kuota) {
+        return res.json({
+          success: false,
+          message: "Quota Batch is fulfilled",
+        });
+      }
+
       const dataUserCourses = await prisma.userCourses.create({
         data: {
           batchId: req.body.batchId,
@@ -50,14 +63,6 @@ export default async (req: Request, res: Response, next: NextFunction) => {
           id: true,
         },
       });
-
-      // kuota is terpenuhi
-      if (!(count.length < kuota)) {
-        return res.json({
-          success: false,
-          message: "Quota Batch is fulfilled",
-        });
-      }
 
       await prisma.payment.create({
         data: {

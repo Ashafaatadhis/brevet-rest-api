@@ -6,7 +6,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
   const user: any = req.user;
   try {
     if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
-      return res.status(401).json({ message: "Unauthorized" });
+      return res.status(401).json({ success: false, message: "Unauthorized" });
     }
     const data = await prisma.userCourses.findMany({
       where: {

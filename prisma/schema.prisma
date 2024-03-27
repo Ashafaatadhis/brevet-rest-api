@@ -15,7 +15,7 @@ model User {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
   email   String  
   fullname String
-  username    String @unique  
+  username    String
   password String 
   provider Provider @default(LOCAL)
   image String?
@@ -28,6 +28,7 @@ model User {
   updatedAt   DateTime @default(now())
   deletedAt   DateTime?
   @@unique([email, provider, deletedAt])
+  @@unique([provider, deletedAt, username])
 }
 
 
@@ -66,6 +67,7 @@ model Course {
     category CourseCategory
     batchCourse BatchCourse[]
     courseFolder CourseFolder[]
+    link String?
     methode  CourseMethode
     createdAt   DateTime @default(now())
     updatedAt   DateTime @default(now())
@@ -100,7 +102,7 @@ model UserCourses {
   user User @relation(fields: [userId], references: [id]) 
   batchId String @db.ObjectId
   batch Batch @relation(fields: [batchId], references: [id]) 
-  payment Payment?
+  payment Payment[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
   deletedAt   DateTime?
@@ -114,12 +116,14 @@ model Payment {
   no_rek String
   status Boolean @default(false)
   bukti_bayar String
-  userCoursesId String @db.ObjectId @unique
+  userCoursesId String @db.ObjectId
   userCourses UserCourses @relation(fields: [userCoursesId], references: [id])  
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
   deletedAt   DateTime?
+
+  @@unique([deletedAt, userCoursesId])
 }
  
 

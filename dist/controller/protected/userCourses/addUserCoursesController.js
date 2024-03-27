@@ -32,8 +32,13 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                     },
                     batchId: req.body.batchId,
                     payment: {
-                        status: {
-                            equals: true,
+                        every: {
+                            status: {
+                                equals: true,
+                            },
+                            deletedAt: {
+                                isSet: false,
+                            },
                         },
                     },
                 },
@@ -47,6 +52,13 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                 },
             });
             const kuota = (batchKuota === null || batchKuota === void 0 ? void 0 : batchKuota.kuota) ? batchKuota === null || batchKuota === void 0 ? void 0 : batchKuota.kuota : 0;
+            // kuota is terpenuhi
+            if (count.length >= kuota) {
+                return res.json({
+                    success: false,
+                    message: "Quota Batch is fulfilled",
+                });
+            }
             const dataUserCourses = yield prisma_1.default.userCourses.create({
                 data: {
                     batchId: req.body.batchId,
@@ -56,13 +68,6 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                     id: true,
                 },
             });
-            // kuota is terpenuhi
-            if (!(count.length < kuota)) {
-                return res.json({
-                    success: false,
-                    message: "Quota Batch is fulfilled",
-                });
-            }
             yield prisma_1.default.payment.create({
                 data: {
                     atas_nama: req.body.atas_nama,

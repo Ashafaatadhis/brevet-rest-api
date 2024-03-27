@@ -30,11 +30,11 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                 },
             },
         });
-        return res.json({ success: true, message: "Success deleted course" });
+        return res.json({ success: true, message: "Success deleted Payment" });
     }
     catch (err) {
         return res
             .status(400)
-            .json({ success: false, message: "Failed Delete Course" });
+            .json({ success: false, message: "Failed Delete Payment" });
     }
 });

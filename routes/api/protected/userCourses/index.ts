@@ -5,6 +5,7 @@ import {
   addBatchValidator,
   addCourseValidator,
   addUserCourseValidator,
+  editUserCourseValidator,
 } from "../../../../utils/validator";
 import {
   addUserCoursesController,
@@ -22,7 +23,12 @@ router.post(
   addUserCourseValidator,
   errorHandler(addUserCoursesController)
 );
-router.put("/:id", addBatchValidator, errorHandler(editUserCoursesController));
+router.put(
+  "/:id",
+  multer.single("bukti_bayar"),
+  editUserCourseValidator,
+  errorHandler(editUserCoursesController)
+);
 router.delete("/:id", errorHandler(deleteUserCoursesController));
 router.get("/", errorHandler(getAllUserCoursesController));
 router.get("/:id", errorHandler(getByIdUserCoursesController));

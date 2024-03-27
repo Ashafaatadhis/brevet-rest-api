@@ -16,10 +16,11 @@ const prisma_1 = __importDefault(require("../../../config/prisma"));
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req === null || req === void 0 ? void 0 : req.user;
     const id = req.params.id;
-    if (!["ADMIN", "SUPERADMIN"].includes(user.role))
+    if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
         return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
     try {
-        const data = yield prisma_1.default.userCourses.update({
+        yield prisma_1.default.userCourses.update({
             data: {
                 deletedAt: new Date().toISOString(),
             },

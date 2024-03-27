@@ -52,26 +52,15 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                     isSet: false,
                 },
             },
-            include: {
+        });
+        const filecourse = yield prisma_1.default.courseFile.findMany({
+            where: {
                 courseFolder: {
-                    where: {
-                        deletedAt: {
-                            isSet: false,
-                        },
-                    },
-                    include: {
-                        courseFile: {
-                            where: {
-                                deletedAt: {
-                                    isSet: false,
-                                },
-                            },
-                        },
-                    },
+                    courseId: data === null || data === void 0 ? void 0 : data.id,
                 },
             },
         });
-        res.json({ status: true, data });
+        res.json({ status: true, data: filecourse });
     }
     catch (err) {
         res.status(404).json({ status: false, message: "Courses not found" });

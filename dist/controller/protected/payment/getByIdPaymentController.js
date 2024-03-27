@@ -29,6 +29,6 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     catch (err) {
         return res
             .status(400)
-            .json({ success: false, message: "Course not exist" });
+            .json({ success: false, message: "Payment not exist" });
     }
 });

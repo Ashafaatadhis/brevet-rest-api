@@ -20,10 +20,10 @@ export default async (req: Request, res: Response, next: NextFunction) => {
       },
     });
 
-    return res.json({ success: true, message: "Success deleted course" });
+    return res.json({ success: true, message: "Success deleted Payment" });
   } catch (err) {
     return res
       .status(400)
-      .json({ success: false, message: "Failed Delete Course" });
+      .json({ success: false, message: "Failed Delete Payment" });
   }
 };

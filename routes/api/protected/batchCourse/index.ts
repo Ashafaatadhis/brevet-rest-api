@@ -7,6 +7,7 @@ import {
   deleteBatchCourseController,
   editBatchCourseController,
   getAllBatchCourseController,
+  getAllByIdBatchCourseController,
   getByIdBatchCourseController,
 } from "../../../../controller/protected/batchCourse";
 const router = express.Router();
@@ -22,6 +23,7 @@ router.put(
   errorHandler(editBatchCourseController)
 );
 router.delete("/:id", errorHandler(deleteBatchCourseController));
+router.get("/all/:id", errorHandler(getAllByIdBatchCourseController));
 router.get("/", errorHandler(getAllBatchCourseController));
 router.get("/:id", errorHandler(getByIdBatchCourseController));
 

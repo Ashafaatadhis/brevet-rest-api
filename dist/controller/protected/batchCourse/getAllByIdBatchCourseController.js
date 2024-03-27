@@ -14,23 +14,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../../../config/prisma"));
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = req.user;
+    const id = req.params.id;
+    const by = req.query.by;
     try {
-        if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
-            return res.status(401).json({ success: false, message: "Unauthorized" });
-        }
-        const data = yield prisma_1.default.userCourses.findMany({
-            where: {
-                deletedAt: {
+        const data = yield prisma_1.default.batchCourse.findMany({
+            where: Object.assign(Object.assign({}, (by === "batchId" ? { batchId: id } : { id })), { deletedAt: {
                     isSet: false,
-                },
-            },
+                } }),
         });
         return res.json({ success: true, data });
     }
     catch (err) {
         return res
             .status(400)
-            .json({ success: false, message: "User Courses Error occured" });
+            .json({ success: false, message: "Course not exist" });
     }
 });

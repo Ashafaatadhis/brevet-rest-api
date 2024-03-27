@@ -17,6 +17,11 @@ export const addPaymentValidator = [
   check("no_rek", "Invalid does not Empty").not().isEmpty(),
   check("userCoursesId", "Invalid does not Empty").not().isEmpty(),
 ];
+export const editPaymentValidator = [
+  check("bank", "Invalid does not Empty").not().isEmpty(),
+  check("atas_nama", "Invalid does not Empty").not().isEmpty(),
+  check("no_rek", "Invalid does not Empty").not().isEmpty(),
+];
 
 export const addBatchCourseValidator = [
   check("start_schedule", "Invalid does not Empty").not().isEmpty(),
@@ -32,6 +37,9 @@ export const addUserCourseValidator = [
   check("bank", "Invalid does not Empty").not().isEmpty(),
   check("no_rek", "Invalid does not Empty").not().isEmpty(),
   check("atas_nama", "Invalid does not Empty").not().isEmpty(),
+];
+export const editUserCourseValidator = [
+  check("batchId", "Invalid does not Empty").not().isEmpty(),
 ];
 
 export const addCourseFolderValidator = [

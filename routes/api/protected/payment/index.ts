@@ -1,7 +1,10 @@
 import express from "express";
 import errorHandler from "../../../../middleware/errorHandler";
 
-import { addPaymentValidator } from "../../../../utils/validator";
+import {
+  addPaymentValidator,
+  editPaymentValidator,
+} from "../../../../utils/validator";
 import {
   addPaymentController,
   deletePaymentController,
@@ -9,10 +12,21 @@ import {
   getAllPaymentController,
   getByIdPaymentController,
 } from "../../../../controller/protected/payment";
+import multer from "../../../../config/multer";
 const router = express.Router();
 
-router.post("/", addPaymentValidator, errorHandler(addPaymentController));
-router.put("/:id", addPaymentValidator, errorHandler(editPaymentController));
+router.post(
+  "/",
+  multer.single("bukti_bayar"),
+  addPaymentValidator,
+  errorHandler(addPaymentController)
+);
+router.put(
+  "/:id",
+  multer.single("bukti_bayar"),
+  addPaymentValidator,
+  errorHandler(editPaymentController)
+);
 router.delete("/:id", errorHandler(deletePaymentController));
 router.get("/", errorHandler(getAllPaymentController));
 router.get("/:id", errorHandler(getByIdPaymentController));

@@ -13,12 +13,61 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../../../config/prisma"));
+const checkPayment = (id, user) => __awaiter(void 0, void 0, void 0, function* () {
+    const data = yield prisma_1.default.courseFile.findFirst({
+        select: {
+            courseFolder: {
+                select: {
+                    course: {
+                        select: { id: true },
+                    },
+                },
+            },
+        },
+        where: {
+            id,
+            deletedAt: {
+                isSet: false,
+            },
+        },
+    });
+    const lemm = yield prisma_1.default.batchCourse.findFirst({
+        where: {
+            courseId: data === null || data === void 0 ? void 0 : data.courseFolder.course.id,
+            deletedAt: {
+                isSet: false,
+            },
+        },
+    });
+    const bukti = yield prisma_1.default.userCourses.findMany({
+        where: {
+            userId: user.id,
+            deletedAt: {
+                isSet: false,
+            },
+            batchId: lemm === null || lemm === void 0 ? void 0 : lemm.batchId,
+            payment: {
+                every: {
+                    status: {
+                        equals: true,
+                    },
+                },
+            },
+        },
+    });
+    return bukti.length;
+});
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     const user = req.user;
     try {
         if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
-            return res.status(401).json({ message: "Unauthorized" });
+            const paymentCheck = yield checkPayment(id, user);
+            if (!paymentCheck) {
+                return res
+                    .status(400)
+                    .json({ success: false, message: "User not purchased this course" });
+            }
         }
         const data = yield prisma_1.default.courseFile.findFirst({
             where: {

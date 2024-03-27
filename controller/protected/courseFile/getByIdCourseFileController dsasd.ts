@@ -4,14 +4,12 @@ import prisma from "../../../config/prisma";
 
 export default async (req: Request, res: Response, next: NextFunction) => {
   const id: string = req.params.id;
-  const by: string = req.params.by;
   const user: any = req.user;
   try {
     if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
-      return res.status(401).json({ success: false, message: "Unauthorized" });
+      return res.status(401).json({ message: "Unauthorized" });
     }
-
-    const data = await prisma.userCourses.findFirst({
+    const data = await prisma.courseFile.findFirst({
       where: {
         id,
         deletedAt: {

@@ -19,11 +19,12 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     if (errors.isEmpty()) {
         const user = req === null || req === void 0 ? void 0 : req.user;
         const id = req.params.id;
-        if (!["ADMIN", "SUPERADMIN"].includes(user.role))
+        if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
             return res.status(401).json({ success: false, message: "Unauthorized" });
+        }
         try {
-            const data = yield prisma_1.default.userCourses.update({
-                data: Object.assign(Object.assign({}, req.body), { updatedAt: new Date().toISOString() }),
+            const data = yield prisma_1.default.userCourses.updateMany({
+                data: Object.assign(Object.assign({}, req.body), { userId: user.id, updatedAt: new Date().toISOString() }),
                 where: {
                     id,
                     deletedAt: {
@@ -31,9 +32,13 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                     },
                 },
             });
-            return res.json({ success: true, data });
+            return res.json({
+                success: true,
+                message: "Success Updated User Courses",
+            });
         }
         catch (err) {
+            console.log(err);
             return res
                 .status(400)
                 .json({ success: false, message: "Failed Edit User Courses Folder" });

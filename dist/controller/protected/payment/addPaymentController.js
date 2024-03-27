@@ -26,15 +26,16 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                 return next(new HttpError_1.default(404, "File not found"));
             }
             req.body.bukti_bayar = urlImage.secure_url;
-            yield prisma_1.default.payment.createMany({
+            const data = yield prisma_1.default.payment.create({
                 data: req.body,
             });
-            return res.json({ success: true, message: "File success Uploaded" });
+            return res.json({ success: true, data });
         }
         catch (err) {
+            console.log(err);
             return res
                 .status(400)
-                .json({ success: false, message: "Failed Add Course Folder" });
+                .json({ success: false, message: "Failed Add Payment" });
         }
     }
     res.status(422).json({ success: false, error: errors.array() });

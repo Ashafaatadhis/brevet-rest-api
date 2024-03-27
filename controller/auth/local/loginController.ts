@@ -76,7 +76,6 @@ export default async (req: Request, res: Response, next: NextFunction) => {
             role: isExistUser.role,
             golongan: isExistUser.golongan,
             NPM: isExistUser.NPM,
-            userCourses: isExistUser.userCourses,
             createdAt: isExistUser.createdAt,
             updatedAt: isExistUser.updatedAt,
             deletedAt: isExistUser.deletedAt,

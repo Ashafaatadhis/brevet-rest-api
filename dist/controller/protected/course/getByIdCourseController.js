@@ -13,25 +13,43 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../../../config/prisma"));
+const superUser = (res, id) => __awaiter(void 0, void 0, void 0, function* () {
+    const data = yield prisma_1.default.course.findFirst({
+        where: {
+            id,
+            deletedAt: {
+                isSet: false,
+            },
+        },
+        include: {
+            courseFolder: {
+                include: {
+                    courseFile: true,
+                },
+            },
+        },
+    });
+    return res.json({ success: true, data });
+});
+const userBasic = (res, id) => __awaiter(void 0, void 0, void 0, function* () {
+    const data = yield prisma_1.default.course.findFirst({
+        where: {
+            id,
+            deletedAt: {
+                isSet: false,
+            },
+        },
+    });
+    return res.json({ success: true, data });
+});
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
+    const user = req.user;
     try {
-        const data = yield prisma_1.default.course.findFirst({
-            where: {
-                id,
-                deletedAt: {
-                    isSet: false,
-                },
-            },
-            include: {
-                courseFolder: {
-                    include: {
-                        courseFile: true,
-                    },
-                },
-            },
-        });
-        return res.json({ success: true, data });
+        if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
+            return userBasic(res, id);
+        }
+        return superUser(res, id);
     }
     catch (err) {
         return res

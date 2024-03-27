@@ -23,8 +23,13 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 },
                 userId: user.id,
                 payment: {
-                    status: {
-                        equals: true,
+                    every: {
+                        status: {
+                            equals: true,
+                        },
+                        deletedAt: {
+                            isSet: false,
+                        },
                     },
                 },
             },

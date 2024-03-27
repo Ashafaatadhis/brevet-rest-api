@@ -7,11 +7,16 @@ export default async (req: Request, res: Response, next: NextFunction) => {
   if (errors.isEmpty()) {
     const user: any = req?.user;
     const id: string = req.params.id;
-    if (!["ADMIN", "SUPERADMIN"].includes(user.role))
+    if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
       return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
     try {
-      const data = await prisma.userCourses.update({
-        data: { ...req.body, updatedAt: new Date().toISOString() },
+      const data = await prisma.userCourses.updateMany({
+        data: {
+          ...req.body,
+          userId: user.id,
+          updatedAt: new Date().toISOString(),
+        },
         where: {
           id,
           deletedAt: {
@@ -20,8 +25,12 @@ export default async (req: Request, res: Response, next: NextFunction) => {
         },
       });
 
-      return res.json({ success: true, data });
+      return res.json({
+        success: true,
+        message: "Success Updated User Courses",
+      });
     } catch (err) {
+      console.log(err);
       return res
         .status(400)
         .json({ success: false, message: "Failed Edit User Courses Folder" });

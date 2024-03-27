@@ -6,29 +6,15 @@ export default async (req: Request, res: Response, next: NextFunction) => {
   const id: string = req.params.id;
   const by = req.query.by;
 
-  const user: any = req.user;
   try {
-    let data;
-    if (!by) {
-      data = await prisma.batchCourse.findFirst({
-        where: {
-          id,
-          deletedAt: {
-            isSet: false,
-          },
+    const data = await prisma.batchCourse.findFirst({
+      where: {
+        ...(by === "batchId" ? { batchId: id } : { id }),
+        deletedAt: {
+          isSet: false,
         },
-      });
-    } else if (by === "batchId") {
-      console.log("WOO");
-      data = await prisma.batchCourse.findFirst({
-        where: {
-          batchId: id,
-          deletedAt: {
-            isSet: false,
-          },
-        },
-      });
-    }
+      },
+    });
 
     return res.json({ success: true, data });
   } catch (err) {

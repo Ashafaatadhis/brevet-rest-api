@@ -15,10 +15,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../../../config/prisma"));
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
+    const by = req.params.by;
     const user = req.user;
     try {
         if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
-            return res.status(401).json({ message: "Unauthorized" });
+            return res.status(401).json({ success: false, message: "Unauthorized" });
         }
         const data = yield prisma_1.default.userCourses.findFirst({
             where: {

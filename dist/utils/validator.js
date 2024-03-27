@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginValidator = exports.updateValidator = exports.changePasswordValidator = exports.registerValidator = exports.addCourseValidator = exports.addCourseFileValidator = exports.addCourseFolderValidator = exports.addUserCourseValidator = exports.addBatchCourseValidator = exports.addPaymentValidator = exports.addBatchValidator = void 0;
+exports.loginValidator = exports.updateValidator = exports.changePasswordValidator = exports.registerValidator = exports.addCourseValidator = exports.addCourseFileValidator = exports.addCourseFolderValidator = exports.editUserCourseValidator = exports.addUserCourseValidator = exports.addBatchCourseValidator = exports.editPaymentValidator = exports.addPaymentValidator = exports.addBatchValidator = void 0;
 const express_validator_1 = require("express-validator");
 exports.addBatchValidator = [
     (0, express_validator_1.check)("name", "Invalid does not Empty").not().isEmpty(),
@@ -27,6 +27,11 @@ exports.addPaymentValidator = [
     (0, express_validator_1.check)("no_rek", "Invalid does not Empty").not().isEmpty(),
     (0, express_validator_1.check)("userCoursesId", "Invalid does not Empty").not().isEmpty(),
 ];
+exports.editPaymentValidator = [
+    (0, express_validator_1.check)("bank", "Invalid does not Empty").not().isEmpty(),
+    (0, express_validator_1.check)("atas_nama", "Invalid does not Empty").not().isEmpty(),
+    (0, express_validator_1.check)("no_rek", "Invalid does not Empty").not().isEmpty(),
+];
 exports.addBatchCourseValidator = [
     (0, express_validator_1.check)("start_schedule", "Invalid does not Empty").not().isEmpty(),
     (0, express_validator_1.check)("start_schedule", "Invalid format Date").isISO8601().toDate(),
@@ -40,6 +45,9 @@ exports.addUserCourseValidator = [
     (0, express_validator_1.check)("bank", "Invalid does not Empty").not().isEmpty(),
     (0, express_validator_1.check)("no_rek", "Invalid does not Empty").not().isEmpty(),
     (0, express_validator_1.check)("atas_nama", "Invalid does not Empty").not().isEmpty(),
+];
+exports.editUserCourseValidator = [
+    (0, express_validator_1.check)("batchId", "Invalid does not Empty").not().isEmpty(),
 ];
 exports.addCourseFolderValidator = [
     (0, express_validator_1.check)("name", "Invalid does not Empty").not().isEmpty(),

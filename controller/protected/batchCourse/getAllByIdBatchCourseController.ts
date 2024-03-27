@@ -4,11 +4,12 @@ import prisma from "../../../config/prisma";
 
 export default async (req: Request, res: Response, next: NextFunction) => {
   const id: string = req.params.id;
+  const by = req.query.by;
 
   try {
-    const data = await prisma.batchCourse.findFirst({
+    const data = await prisma.batchCourse.findMany({
       where: {
-        batchId: id,
+        ...(by === "batchId" ? { batchId: id } : { id }),
         deletedAt: {
           isSet: false,
         },

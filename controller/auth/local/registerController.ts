@@ -2,11 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 import prisma from "../../../config/prisma";
 import { hashPassword } from "../../../utils/bcrypt";
-import HttpError from "../../../utils/errors/HttpError";
-import uploadFile from "../../../middleware/uploadFile";
 
 export default async (req: Request, res: Response, next: NextFunction) => {
-  console.log("WOOOWW");
   const errors = validationResult(req);
   if (errors.isEmpty()) {
     // in case request params meet the validation criteria
@@ -40,9 +37,6 @@ export default async (req: Request, res: Response, next: NextFunction) => {
           password: hashing as string,
           username: req.body.username,
         },
-        include: {
-          userCourses: true,
-        },
       });
       return res.status(200).json({
         success: true,
@@ -57,13 +51,14 @@ export default async (req: Request, res: Response, next: NextFunction) => {
           role: user.role,
           golongan: user.golongan,
           NPM: user.NPM,
-          userCourses: user.userCourses,
+
           createdAt: user.createdAt,
           updatedAt: user.updatedAt,
           deletedAt: user.deletedAt,
         },
       });
     } catch (err) {
+      console.log(err);
       return res
         .status(409)
         .json({ success: false, message: "User already exist" });

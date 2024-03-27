@@ -12,8 +12,13 @@ export default async (req: Request, res: Response) => {
         },
         userId: user.id,
         payment: {
-          status: {
-            equals: true,
+          every: {
+            status: {
+              equals: true,
+            },
+            deletedAt: {
+              isSet: false,
+            },
           },
         },
       },

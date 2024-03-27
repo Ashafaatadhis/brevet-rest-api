@@ -42,26 +42,16 @@ export default async (req: Request, res: Response) => {
           isSet: false,
         },
       },
-      include: {
+    });
+
+    const filecourse = await prisma.courseFile.findMany({
+      where: {
         courseFolder: {
-          where: {
-            deletedAt: {
-              isSet: false,
-            },
-          },
-          include: {
-            courseFile: {
-              where: {
-                deletedAt: {
-                  isSet: false,
-                },
-              },
-            },
-          },
+          courseId: data?.id,
         },
       },
     });
-    res.json({ status: true, data });
+    res.json({ status: true, data: filecourse });
   } catch (err) {
     res.status(404).json({ status: false, message: "Courses not found" });
   }

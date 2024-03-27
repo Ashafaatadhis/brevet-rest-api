@@ -13,40 +13,105 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../../../config/prisma"));
+const userBasic = (res, count, page, search) => __awaiter(void 0, void 0, void 0, function* () {
+    const data = yield prisma_1.default.course.findMany({
+        take: count,
+        skip: count * (page - 1),
+        where: {
+            name: {
+                contains: search,
+            },
+            deletedAt: {
+                isSet: false,
+            },
+        },
+    });
+    const dataCount = yield prisma_1.default.course.count({
+        where: {
+            name: {
+                contains: search,
+            },
+            deletedAt: {
+                isSet: false,
+            },
+        },
+    });
+    const hasNext = yield prisma_1.default.course.findMany({
+        take: 1,
+        skip: count * (page + 1 - 1),
+        where: {
+            name: {
+                contains: search,
+            },
+            deletedAt: {
+                isSet: false,
+            },
+        },
+    });
+    return res.json({
+        status: 200,
+        data,
+        meta: { hasNextPage: hasNext.length > 0, count: dataCount },
+    });
+});
+const superUser = (res, count, page, search) => __awaiter(void 0, void 0, void 0, function* () {
+    const data = yield prisma_1.default.course.findMany({
+        take: count,
+        skip: count * (page - 1),
+        include: {
+            courseFolder: {
+                include: {
+                    courseFile: true,
+                },
+            },
+        },
+        where: {
+            name: {
+                contains: search,
+            },
+            deletedAt: {
+                isSet: false,
+            },
+        },
+    });
+    const dataCount = yield prisma_1.default.course.count({
+        where: {
+            name: {
+                contains: search,
+            },
+            deletedAt: {
+                isSet: false,
+            },
+        },
+    });
+    const hasNext = yield prisma_1.default.course.findMany({
+        take: 1,
+        skip: count * (page + 1 - 1),
+        where: {
+            name: {
+                contains: search,
+            },
+            deletedAt: {
+                isSet: false,
+            },
+        },
+    });
+    return res.json({
+        status: 200,
+        data,
+        meta: { hasNextPage: hasNext.length > 0, count: dataCount },
+    });
+});
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const count = req.query.count ? parseInt(req.query.count) : 10;
     const page = req.query.page ? parseInt(req.query.page) : 1;
+    const search = req.query.search ? req.query.search : "";
+    const user = req.user;
     try {
-        const data = yield prisma_1.default.course.findMany({
-            take: count,
-            skip: count * (page - 1),
-            where: {
-                deletedAt: {
-                    isSet: false,
-                },
-            },
-        });
-        const dataCount = yield prisma_1.default.course.count({
-            where: {
-                deletedAt: {
-                    isSet: false,
-                },
-            },
-        });
-        const hasNext = yield prisma_1.default.course.findMany({
-            take: 1,
-            skip: count * (page + 1 - 1),
-            where: {
-                deletedAt: {
-                    isSet: false,
-                },
-            },
-        });
-        return res.json({
-            status: 200,
-            data,
-            meta: { hasNextPage: hasNext.length > 0, count: dataCount },
-        });
+        if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
+            return userBasic(res, count, page, search);
+        }
+        return superUser(res, count, page, search);
     }
     catch (err) {
         return res

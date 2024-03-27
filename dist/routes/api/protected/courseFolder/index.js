@@ -13,4 +13,5 @@ router.put("/:id", validator_1.addCourseFolderValidator, (0, errorHandler_1.defa
 router.delete("/:id", (0, errorHandler_1.default)(courseFolder_1.deleteCourseFolderController));
 router.get("/", (0, errorHandler_1.default)(courseFolder_1.getAllCourseFolderController));
 router.get("/:id", (0, errorHandler_1.default)(courseFolder_1.getByIdCourseFolderController));
+router.get("/all/:id", (0, errorHandler_1.default)(courseFolder_1.getAllByIdCourseFolderController));
 exports.default = router;

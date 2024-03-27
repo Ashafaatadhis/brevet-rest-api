@@ -21,9 +21,6 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                     isSet: false,
                 },
             },
-            include: {
-                batchCourse: true,
-            },
         });
         return res.json({ success: true, data });
     }

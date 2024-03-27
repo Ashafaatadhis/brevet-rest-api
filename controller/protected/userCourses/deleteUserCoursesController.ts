@@ -5,10 +5,11 @@ import prisma from "../../../config/prisma";
 export default async (req: Request, res: Response, next: NextFunction) => {
   const user: any = req?.user;
   const id: string = req.params.id;
-  if (!["ADMIN", "SUPERADMIN"].includes(user.role))
+  if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
     return res.status(401).json({ success: false, message: "Unauthorized" });
+  }
   try {
-    const data = await prisma.userCourses.update({
+    await prisma.userCourses.update({
       data: {
         deletedAt: new Date().toISOString(),
       },

@@ -43,11 +43,6 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const data = yield prisma_1.default.course.findFirst({
             where: {
                 id: courseId,
-                batchCourse: {
-                    every: {
-                        batchId: isUserPurchased.batchId,
-                    },
-                },
                 deletedAt: {
                     isSet: false,
                 },

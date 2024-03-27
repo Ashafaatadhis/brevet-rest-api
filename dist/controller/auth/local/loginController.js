@@ -76,7 +76,6 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                         role: isExistUser.role,
                         golongan: isExistUser.golongan,
                         NPM: isExistUser.NPM,
-                        userCourses: isExistUser.userCourses,
                         createdAt: isExistUser.createdAt,
                         updatedAt: isExistUser.updatedAt,
                         deletedAt: isExistUser.deletedAt,

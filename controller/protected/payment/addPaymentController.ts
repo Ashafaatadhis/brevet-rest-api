@@ -18,15 +18,16 @@ export default async (req: Request, res: Response, next: NextFunction) => {
 
       req.body.bukti_bayar = urlImage.secure_url;
 
-      await prisma.payment.createMany({
+      const data = await prisma.payment.create({
         data: req.body,
       });
 
-      return res.json({ success: true, message: "File success Uploaded" });
+      return res.json({ success: true, data });
     } catch (err) {
+      console.log(err);
       return res
         .status(400)
-        .json({ success: false, message: "Failed Add Course Folder" });
+        .json({ success: false, message: "Failed Add Payment" });
     }
   }
   res.status(422).json({ success: false, error: errors.array() });

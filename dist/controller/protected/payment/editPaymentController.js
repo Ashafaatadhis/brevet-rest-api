@@ -36,11 +36,12 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
             });
             const urlImage = yield (0, uploadFile_1.uploadSingle)(req, "payment");
             if (!urlImage) {
-                req.body.image = thisUser === null || thisUser === void 0 ? void 0 : thisUser.bukti_bayar;
+                req.body.bukti_bayar = thisUser === null || thisUser === void 0 ? void 0 : thisUser.bukti_bayar;
             }
             else {
-                req.body.image = urlImage.secure_url;
+                req.body.bukti_bayar = urlImage.secure_url;
             }
+            console.log(req.body);
             const data = yield prisma_1.default.payment.update({
                 data: Object.assign(Object.assign({}, req.body), { updatedAt: new Date().toISOString() }),
                 where: {
@@ -53,9 +54,10 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
             return res.json({ success: true, data });
         }
         catch (err) {
+            console.log(err);
             return res
                 .status(400)
-                .json({ success: false, message: "Failed Edit Course Folder" });
+                .json({ success: false, message: "Failed Edit Payment" });
         }
     }
     res.status(422).json({ success: false, error: errors.array() });

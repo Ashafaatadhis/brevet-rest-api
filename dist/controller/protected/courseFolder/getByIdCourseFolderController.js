@@ -13,20 +13,66 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../../../config/prisma"));
-exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = req.params.id;
-    const user = req.user;
-    try {
-        if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
-            return res.status(401).json({ message: "Unauthorized" });
-        }
-        const data = yield prisma_1.default.courseFolder.findFirst({
-            where: {
-                id,
-                deletedAt: {
-                    isSet: false,
+const checkPayment = (id, user, by) => __awaiter(void 0, void 0, void 0, function* () {
+    const data = yield prisma_1.default.courseFolder.findFirst({
+        select: {
+            course: {
+                select: {
+                    id: true,
                 },
             },
+        },
+        where: Object.assign(Object.assign({}, (by === "courseId" ? { courseId: id } : { id })), { deletedAt: {
+                isSet: false,
+            } }),
+    });
+    const lemm = yield prisma_1.default.batchCourse.findFirst({
+        where: {
+            courseId: data === null || data === void 0 ? void 0 : data.course.id,
+            deletedAt: {
+                isSet: false,
+            },
+        },
+    });
+    const bukti = yield prisma_1.default.userCourses.findMany({
+        where: {
+            userId: user.id,
+            deletedAt: {
+                isSet: false,
+            },
+            batchId: lemm === null || lemm === void 0 ? void 0 : lemm.batchId,
+            payment: {
+                every: {
+                    status: {
+                        equals: true,
+                    },
+                },
+            },
+        },
+    });
+    return bukti.length;
+});
+exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
+    const id = req.params.id;
+    const user = req.user;
+    const by = ((_a = req.query.by) === null || _a === void 0 ? void 0 : _a.toString()) ? (_b = req.query.by) === null || _b === void 0 ? void 0 : _b.toString() : "";
+    try {
+        if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
+            const paymentCheck = yield checkPayment(id, user, by);
+            if (!paymentCheck) {
+                return res
+                    .status(400)
+                    .json({ success: false, message: "User not purchased this course" });
+            }
+        }
+        const data = yield prisma_1.default.courseFolder.findFirst({
+            include: {
+                courseFile: true,
+            },
+            where: Object.assign(Object.assign({}, (by === "courseId" ? { courseId: id } : { id })), { deletedAt: {
+                    isSet: false,
+                } }),
         });
         return res.json({ success: true, data });
     }

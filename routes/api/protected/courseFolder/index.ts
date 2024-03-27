@@ -6,6 +6,7 @@ import {
   addCourseFolderController,
   deleteCourseFolderController,
   editCourseFolderController,
+  getAllByIdCourseFolderController,
   getAllCourseFolderController,
   getByIdCourseFolderController,
 } from "../../../../controller/protected/courseFolder";
@@ -24,5 +25,6 @@ router.put(
 router.delete("/:id", errorHandler(deleteCourseFolderController));
 router.get("/", errorHandler(getAllCourseFolderController));
 router.get("/:id", errorHandler(getByIdCourseFolderController));
+router.get("/all/:id", errorHandler(getAllByIdCourseFolderController));
 
 export default router;

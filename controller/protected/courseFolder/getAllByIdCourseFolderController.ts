@@ -1,26 +1,40 @@
 import { NextFunction, Request, Response } from "express";
-import { validationResult } from "express-validator";
+
 import prisma from "../../../config/prisma";
 
-const paginationAdmin = async (page: number, count: number) => {
-  const data = await prisma.courseFile.findMany({
+const paginationAdmin = async (
+  page: number,
+  count: number,
+  by: any,
+  id: string
+) => {
+  const data = await prisma.courseFolder.findMany({
+    take: count,
+    skip: count * (page - 1),
     where: {
+      ...(by === "courseId" ? { courseId: id } : { id }),
+      deletedAt: {
+        isSet: false,
+      },
+    },
+    include: {
+      courseFile: true,
+    },
+  });
+  const dataCount = await prisma.courseFolder.count({
+    where: {
+      ...(by === "courseId" ? { courseId: id } : { id }),
       deletedAt: {
         isSet: false,
       },
     },
   });
-  const dataCount = await prisma.courseFile.count({
-    where: {
-      deletedAt: {
-        isSet: false,
-      },
-    },
-  });
-  const hasNext = await prisma.courseFile.findMany({
+
+  const hasNext = await prisma.courseFolder.findMany({
     take: 1,
     skip: count * (page + 1 - 1),
     where: {
+      ...(by === "courseId" ? { courseId: id } : { id }),
       deletedAt: {
         isSet: false,
       },
@@ -30,7 +44,13 @@ const paginationAdmin = async (page: number, count: number) => {
   return { data, dataCount, hasNext };
 };
 
-const paginationUser = async (page: number, count: number, user: any) => {
+const paginationUser = async (
+  page: number,
+  count: number,
+  user: any,
+  by: any,
+  id: string
+) => {
   const getCoursePurchased = await prisma.userCourses.findMany({
     select: {
       batchId: true,
@@ -55,14 +75,16 @@ const paginationUser = async (page: number, count: number, user: any) => {
     hasNext = { length: 0 };
 
   for (const { batchId } of getCoursePurchased) {
-    data = await prisma.courseFile.findMany({
+    data = await prisma.courseFolder.findMany({
+      include: {
+        courseFile: true,
+      },
       where: {
-        courseFolder: {
-          course: {
-            batchCourse: {
-              every: {
-                batchId,
-              },
+        ...(by === "courseId" ? { courseId: id } : { id }),
+        course: {
+          batchCourse: {
+            every: {
+              batchId,
             },
           },
         },
@@ -71,14 +93,13 @@ const paginationUser = async (page: number, count: number, user: any) => {
         },
       },
     });
-    dataCount = await prisma.courseFile.count({
+    dataCount = await prisma.courseFolder.count({
       where: {
-        courseFolder: {
-          course: {
-            batchCourse: {
-              every: {
-                batchId,
-              },
+        ...(by === "courseId" ? { courseId: id } : { id }),
+        course: {
+          batchCourse: {
+            every: {
+              batchId,
             },
           },
         },
@@ -87,16 +108,15 @@ const paginationUser = async (page: number, count: number, user: any) => {
         },
       },
     });
-    hasNext = await prisma.courseFile.findMany({
+    hasNext = await prisma.courseFolder.findMany({
       take: 1,
       skip: count * (page + 1 - 1),
       where: {
-        courseFolder: {
-          course: {
-            batchCourse: {
-              every: {
-                batchId,
-              },
+        ...(by === "courseId" ? { courseId: id } : { id }),
+        course: {
+          batchCourse: {
+            every: {
+              batchId,
             },
           },
         },
@@ -110,20 +130,35 @@ const paginationUser = async (page: number, count: number, user: any) => {
   return { data, dataCount, hasNext };
 };
 
-const pagination = async (page: number, count: number, user: any) => {
+const pagination = async (
+  page: number,
+  count: number,
+  user: any,
+  by: any,
+  id: string
+) => {
   if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
-    return await paginationUser(page, count, user);
+    return await paginationUser(page, count, user, by, id);
   }
 
-  return await paginationAdmin(page, count);
+  return await paginationAdmin(page, count, by, id);
 };
 
 export default async (req: Request, res: Response, next: NextFunction) => {
   const user: any = req.user;
   const count = req.query.count ? parseInt(req.query.count as string) : 10;
   const page = req.query.page ? parseInt(req.query.page as string) : 1;
+  const id: string = req.params.id;
+  const by = req.query.by;
   try {
-    const { data, dataCount, hasNext } = await pagination(page, count, user);
+    const { data, dataCount, hasNext } = await pagination(
+      page,
+      count,
+      user,
+      by,
+      id
+    );
+
     return res.json({
       status: 200,
       data,
