@@ -12,32 +12,29 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_validator_1 = require("express-validator");
 const prisma_1 = __importDefault(require("../../../config/prisma"));
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const errors = (0, express_validator_1.validationResult)(req);
-    if (errors.isEmpty()) {
-        const user = req === null || req === void 0 ? void 0 : req.user;
-        const id = req.params.id;
-        if (!["ADMIN", "SUPERADMIN"].includes(user.role))
-            return res.status(401).json({ success: false, message: "Unauthorized" });
-        try {
-            const data = yield prisma_1.default.courseFolder.update({
-                data: Object.assign(Object.assign({}, req.body), { updatedAt: new Date().toISOString() }),
-                where: {
-                    id,
-                    deletedAt: {
-                        isSet: false,
-                    },
+    const user = req === null || req === void 0 ? void 0 : req.user;
+    const id = req.params.id;
+    if (!["ADMIN", "SUPERADMIN"].includes(user.role))
+        return res.status(401).json({ success: false, message: "Unauthorized" });
+    try {
+        yield prisma_1.default.courseTask.update({
+            data: {
+                deletedAt: new Date().toISOString(),
+            },
+            where: {
+                id,
+                deletedAt: {
+                    isSet: false,
                 },
-            });
-            return res.json({ success: true, data });
-        }
-        catch (err) {
-            return res
-                .status(400)
-                .json({ success: false, message: "Failed Edit Course Folder" });
-        }
+            },
+        });
+        return res.json({ success: true, message: "Success deleted course Task" });
     }
-    res.status(422).json({ success: false, error: errors.array() });
+    catch (err) {
+        return res
+            .status(400)
+            .json({ success: false, message: "Failed Delete Course Task" });
+    }
 });

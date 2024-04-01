@@ -11,7 +11,12 @@ import passport from "passport";
 const app = express();
 
 app.use(logger);
-app.use(cors({ credentials: true, origin: ["http://localhost:3000"] }));
+app.use(
+  cors({
+    credentials: true,
+    origin: ["http://localhost:3000", "https://tax-center-brevet.vercel.app"],
+  })
+);
 app.use(
   expressSession({
     secret: config.secret.session_secret,

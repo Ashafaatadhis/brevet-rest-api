@@ -46,6 +46,11 @@ export const addCourseFolderValidator = [
   check("name", "Invalid does not Empty").not().isEmpty(),
   check("courseId", "Invalid does not Empty").not().isEmpty(),
 ];
+export const addCourseTaskValidator = [
+  check("title", "Invalid does not Empty").not().isEmpty(),
+  check("description", "Invalid does not Empty").not().isEmpty(),
+  check("courseFolderId", "Invalid does not Empty").not().isEmpty(),
+];
 export const addCourseFileValidator = [
   check("courseFolderId", "Invalid does not Empty").not().isEmpty(),
 ];

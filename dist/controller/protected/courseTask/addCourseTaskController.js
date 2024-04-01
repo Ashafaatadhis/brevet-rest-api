@@ -18,25 +18,18 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     const errors = (0, express_validator_1.validationResult)(req);
     if (errors.isEmpty()) {
         const user = req === null || req === void 0 ? void 0 : req.user;
-        const id = req.params.id;
         if (!["ADMIN", "SUPERADMIN"].includes(user.role))
             return res.status(401).json({ success: false, message: "Unauthorized" });
         try {
-            const data = yield prisma_1.default.courseFolder.update({
-                data: Object.assign(Object.assign({}, req.body), { updatedAt: new Date().toISOString() }),
-                where: {
-                    id,
-                    deletedAt: {
-                        isSet: false,
-                    },
-                },
+            const data = yield prisma_1.default.courseTask.create({
+                data: req.body,
             });
             return res.json({ success: true, data });
         }
         catch (err) {
             return res
                 .status(400)
-                .json({ success: false, message: "Failed Edit Course Folder" });
+                .json({ success: false, message: "Failed Add Course Task" });
         }
     }
     res.status(422).json({ success: false, error: errors.array() });

@@ -80,6 +80,7 @@ model CourseFolder {
     courseId String @db.ObjectId
     course Course @relation(fields: [courseId], references: [id]) 
     courseFile CourseFile[]
+    courseTask CourseTask[]
     createdAt   DateTime @default(now())
     updatedAt   DateTime @default(now())
     deletedAt   DateTime?
@@ -94,6 +95,43 @@ model CourseFile {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
   deletedAt   DateTime? 
+}
+
+model CourseTask {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  title String
+  description String
+  courseFolderId String @db.ObjectId
+  courseFolder CourseFolder @relation(fields: [courseFolderId], references: [id])
+  courseTaskFile CourseTaskFile[]
+  courseTaskSubmission CourseTaskSubmission[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  deletedAt   DateTime? 
+}
+
+model CourseTaskFile {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  file  String
+  name String
+  courseTaskId String @db.ObjectId
+  courseTask CourseTask @relation(fields: [courseTaskId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  deletedAt   DateTime? 
+}
+
+model CourseTaskSubmission {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  courseTaskId String @db.ObjectId
+  submission_status String?
+  grading_status String?
+  courseTask CourseTask @relation(fields: [courseTaskId], references: [id])
+  overdueAt   DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  deletedAt   DateTime? 
+  @@unique([courseTaskId, deletedAt])
 }
 
 model UserCourses {

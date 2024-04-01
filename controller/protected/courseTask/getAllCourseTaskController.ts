@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import prisma from "../../../config/prisma";
 
 const paginationAdmin = async (page: number, count: number) => {
-  const data = await prisma.courseFolder.findMany({
+  const data = await prisma.courseTask.findMany({
     take: count,
     skip: count * (page - 1),
     where: {
@@ -12,11 +12,11 @@ const paginationAdmin = async (page: number, count: number) => {
       },
     },
     include: {
-      courseTask: true,
-      courseFile: true,
+      courseTaskFile: true,
+      courseTaskSubmission: true,
     },
   });
-  const dataCount = await prisma.courseFolder.count({
+  const dataCount = await prisma.courseTask.count({
     where: {
       deletedAt: {
         isSet: false,
@@ -24,7 +24,7 @@ const paginationAdmin = async (page: number, count: number) => {
     },
   });
 
-  const hasNext = await prisma.courseFolder.findMany({
+  const hasNext = await prisma.courseTask.findMany({
     take: 1,
     skip: count * (page + 1 - 1),
     where: {
@@ -62,16 +62,18 @@ const paginationUser = async (page: number, count: number, user: any) => {
     hasNext = { length: 0 };
 
   for (const { batchId } of getCoursePurchased) {
-    data = await prisma.courseFolder.findMany({
+    data = await prisma.courseTask.findMany({
       include: {
-        courseFile: true,
-        courseTask: true,
+        courseTaskFile: true,
+        courseTaskSubmission: true,
       },
       where: {
-        course: {
-          batchCourse: {
-            every: {
-              batchId,
+        courseFolder: {
+          course: {
+            batchCourse: {
+              every: {
+                batchId,
+              },
             },
           },
         },
@@ -80,12 +82,14 @@ const paginationUser = async (page: number, count: number, user: any) => {
         },
       },
     });
-    dataCount = await prisma.courseFolder.count({
+    dataCount = await prisma.courseTask.count({
       where: {
-        course: {
-          batchCourse: {
-            every: {
-              batchId,
+        courseFolder: {
+          course: {
+            batchCourse: {
+              every: {
+                batchId,
+              },
             },
           },
         },
@@ -94,14 +98,16 @@ const paginationUser = async (page: number, count: number, user: any) => {
         },
       },
     });
-    hasNext = await prisma.courseFolder.findMany({
+    hasNext = await prisma.courseTask.findMany({
       take: 1,
       skip: count * (page + 1 - 1),
       where: {
-        course: {
-          batchCourse: {
-            every: {
-              batchId,
+        courseFolder: {
+          course: {
+            batchCourse: {
+              every: {
+                batchId,
+              },
             },
           },
         },
