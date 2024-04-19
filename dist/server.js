@@ -14,7 +14,10 @@ const config_1 = __importDefault(require("./config/config"));
 const passport_1 = __importDefault(require("passport"));
 const app = (0, express_1.default)();
 app.use(logger_1.default);
-app.use((0, cors_1.default)({ credentials: true, origin: ["http://localhost:3000"] }));
+app.use((0, cors_1.default)({
+    credentials: true,
+    origin: ["http://localhost:3000", "https://tax-center-brevet.vercel.app"],
+}));
 app.use((0, express_session_1.default)({
     secret: config_1.default.secret.session_secret,
     resave: false,

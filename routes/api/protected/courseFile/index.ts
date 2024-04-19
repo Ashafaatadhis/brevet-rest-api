@@ -6,6 +6,7 @@ import {
   deleteCourseFileController,
   editCourseFileController,
   getAllCourseFileController,
+  getAllByIdCourseFileController,
   getByIdCourseFileController,
 } from "../../../../controller/protected/courseFile";
 import multerFile from "../../../../config/multerFile";
@@ -26,6 +27,7 @@ router.put(
 );
 router.delete("/:id", errorHandler(deleteCourseFileController));
 router.get("/", errorHandler(getAllCourseFileController));
+router.get("/all/:id", errorHandler(getAllByIdCourseFileController));
 router.get("/:id", errorHandler(getByIdCourseFileController));
 
 export default router;

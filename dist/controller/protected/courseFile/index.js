@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getByIdCourseFileController = exports.getAllCourseFileController = exports.deleteCourseFileController = exports.editCourseFileController = exports.addCourseFileController = void 0;
+exports.getByIdCourseFileController = exports.getAllCourseFileController = exports.getAllByIdCourseFileController = exports.deleteCourseFileController = exports.editCourseFileController = exports.addCourseFileController = void 0;
 const addCourseFileController_1 = __importDefault(require("./addCourseFileController"));
 exports.addCourseFileController = addCourseFileController_1.default;
 const editCourseFileController_1 = __importDefault(require("./editCourseFileController"));
@@ -14,3 +14,5 @@ const getAllCourseFileController_1 = __importDefault(require("./getAllCourseFile
 exports.getAllCourseFileController = getAllCourseFileController_1.default;
 const getByIdCourseFileController_1 = __importDefault(require("./getByIdCourseFileController"));
 exports.getByIdCourseFileController = getByIdCourseFileController_1.default;
+const getAllByIdCourseFileController_1 = __importDefault(require("./getAllByIdCourseFileController"));
+exports.getAllByIdCourseFileController = getAllByIdCourseFileController_1.default;

@@ -13,5 +13,6 @@ router.post("/", multerFile_1.default.array("file", 10), validator_1.addCourseFi
 router.put("/:id", multerFile_1.default.single("file"), (0, errorHandler_1.default)(courseFile_1.editCourseFileController));
 router.delete("/:id", (0, errorHandler_1.default)(courseFile_1.deleteCourseFileController));
 router.get("/", (0, errorHandler_1.default)(courseFile_1.getAllCourseFileController));
+router.get("/all/:id", (0, errorHandler_1.default)(courseFile_1.getAllByIdCourseFileController));
 router.get("/:id", (0, errorHandler_1.default)(courseFile_1.getByIdCourseFileController));
 exports.default = router;

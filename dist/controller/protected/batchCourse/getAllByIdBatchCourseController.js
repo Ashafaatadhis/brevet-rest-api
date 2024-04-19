@@ -16,13 +16,33 @@ const prisma_1 = __importDefault(require("../../../config/prisma"));
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     const by = req.query.by;
+    const count = req.query.count ? parseInt(req.query.count) : 10;
+    const page = req.query.page ? parseInt(req.query.page) : 1;
     try {
-        const data = yield prisma_1.default.batchCourse.findMany({
+        const data = yield prisma_1.default.courseFile.findMany({
+            take: count,
+            skip: count * (page - 1),
             where: Object.assign(Object.assign({}, (by === "batchId" ? { batchId: id } : { id })), { deletedAt: {
                     isSet: false,
                 } }),
         });
-        return res.json({ success: true, data });
+        const dataCount = yield prisma_1.default.courseFile.count({
+            where: Object.assign(Object.assign({}, (by === "batchId" ? { batchId: id } : { id })), { deletedAt: {
+                    isSet: false,
+                } }),
+        });
+        const hasNext = yield prisma_1.default.courseFile.findMany({
+            take: 1,
+            skip: count * (page + 1 - 1),
+            where: Object.assign(Object.assign({}, (by === "batchId" ? { batchId: id } : { id })), { deletedAt: {
+                    isSet: false,
+                } }),
+        });
+        return res.json({
+            status: 200,
+            data,
+            meta: { hasNextPage: hasNext.length > 0, count: dataCount },
+        });
     }
     catch (err) {
         return res
