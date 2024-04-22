@@ -14,13 +14,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../../../config/prisma"));
 const checkPayment = (id, user) => __awaiter(void 0, void 0, void 0, function* () {
-    const data = yield prisma_1.default.courseTask.findFirst({
+    const data = yield prisma_1.default.courseTaskFile.findFirst({
         select: {
-            courseFolder: {
+            courseTask: {
                 select: {
-                    course: {
+                    courseFolder: {
                         select: {
-                            id: true,
+                            course: {
+                                select: { id: true },
+                            },
                         },
                     },
                 },
@@ -35,7 +37,7 @@ const checkPayment = (id, user) => __awaiter(void 0, void 0, void 0, function* (
     });
     const lemm = yield prisma_1.default.batchCourse.findFirst({
         where: {
-            courseId: data === null || data === void 0 ? void 0 : data.courseFolder.course.id,
+            courseId: data === null || data === void 0 ? void 0 : data.courseTask.courseFolder.course.id,
             deletedAt: {
                 isSet: false,
             },
@@ -62,7 +64,6 @@ const checkPayment = (id, user) => __awaiter(void 0, void 0, void 0, function* (
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     const user = req.user;
-    // const by: string = req.query.by?.toString() ? req.query.by?.toString() : "";
     try {
         if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
             const paymentCheck = yield checkPayment(id, user);
@@ -72,11 +73,7 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                     .json({ success: false, message: "User not purchased this course" });
             }
         }
-        const data = yield prisma_1.default.courseTask.findFirst({
-            include: {
-                courseTaskFile: true,
-                submissionFile: true,
-            },
+        const data = yield prisma_1.default.courseTaskFile.findFirst({
             where: {
                 id,
                 deletedAt: {

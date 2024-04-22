@@ -14,27 +14,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../../../config/prisma"));
 const paginationAdmin = (page, count) => __awaiter(void 0, void 0, void 0, function* () {
-    const data = yield prisma_1.default.courseTask.findMany({
-        take: count,
-        skip: count * (page - 1),
-        where: {
-            deletedAt: {
-                isSet: false,
-            },
-        },
-        include: {
-            courseTaskFile: true,
-            submissionFile: true,
-        },
-    });
-    const dataCount = yield prisma_1.default.courseTask.count({
+    const data = yield prisma_1.default.courseTaskFile.findMany({
         where: {
             deletedAt: {
                 isSet: false,
             },
         },
     });
-    const hasNext = yield prisma_1.default.courseTask.findMany({
+    const dataCount = yield prisma_1.default.courseTaskFile.count({
+        where: {
+            deletedAt: {
+                isSet: false,
+            },
+        },
+    });
+    const hasNext = yield prisma_1.default.courseTaskFile.findMany({
         take: 1,
         skip: count * (page + 1 - 1),
         where: {
@@ -66,17 +60,15 @@ const paginationUser = (page, count, user) => __awaiter(void 0, void 0, void 0, 
     });
     let data, dataCount = 0, hasNext = { length: 0 };
     for (const { batchId } of getCoursePurchased) {
-        data = yield prisma_1.default.courseTask.findMany({
-            include: {
-                courseTaskFile: true,
-                submissionFile: true,
-            },
+        data = yield prisma_1.default.courseTaskFile.findMany({
             where: {
-                courseFolder: {
-                    course: {
-                        batchCourse: {
-                            every: {
-                                batchId,
+                courseTask: {
+                    courseFolder: {
+                        course: {
+                            batchCourse: {
+                                every: {
+                                    batchId,
+                                },
                             },
                         },
                     },
@@ -86,13 +78,15 @@ const paginationUser = (page, count, user) => __awaiter(void 0, void 0, void 0, 
                 },
             },
         });
-        dataCount = yield prisma_1.default.courseTask.count({
+        dataCount = yield prisma_1.default.courseTaskFile.count({
             where: {
-                courseFolder: {
-                    course: {
-                        batchCourse: {
-                            every: {
-                                batchId,
+                courseTask: {
+                    courseFolder: {
+                        course: {
+                            batchCourse: {
+                                every: {
+                                    batchId,
+                                },
                             },
                         },
                     },
@@ -102,15 +96,17 @@ const paginationUser = (page, count, user) => __awaiter(void 0, void 0, void 0, 
                 },
             },
         });
-        hasNext = yield prisma_1.default.courseTask.findMany({
+        hasNext = yield prisma_1.default.courseTaskFile.findMany({
             take: 1,
             skip: count * (page + 1 - 1),
             where: {
-                courseFolder: {
-                    course: {
-                        batchCourse: {
-                            every: {
-                                batchId,
+                courseTask: {
+                    courseFolder: {
+                        course: {
+                            batchCourse: {
+                                every: {
+                                    batchId,
+                                },
                             },
                         },
                     },
@@ -144,6 +140,6 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     catch (err) {
         return res
             .status(400)
-            .json({ success: false, message: "Course Error occured" });
+            .json({ success: false, message: "File Error occured" });
     }
 });

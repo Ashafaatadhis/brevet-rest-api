@@ -1,30 +1,23 @@
 import { NextFunction, Request, Response } from "express";
-
+import { validationResult } from "express-validator";
 import prisma from "../../../config/prisma";
 
 const paginationAdmin = async (page: number, count: number) => {
-  const data = await prisma.courseTask.findMany({
-    take: count,
-    skip: count * (page - 1),
-    where: {
-      deletedAt: {
-        isSet: false,
-      },
-    },
-    include: {
-      courseTaskFile: true,
-      submissionFile: true,
-    },
-  });
-  const dataCount = await prisma.courseTask.count({
+  const data = await prisma.courseTaskFile.findMany({
     where: {
       deletedAt: {
         isSet: false,
       },
     },
   });
-
-  const hasNext = await prisma.courseTask.findMany({
+  const dataCount = await prisma.courseTaskFile.count({
+    where: {
+      deletedAt: {
+        isSet: false,
+      },
+    },
+  });
+  const hasNext = await prisma.courseTaskFile.findMany({
     take: 1,
     skip: count * (page + 1 - 1),
     where: {
@@ -62,17 +55,15 @@ const paginationUser = async (page: number, count: number, user: any) => {
     hasNext = { length: 0 };
 
   for (const { batchId } of getCoursePurchased) {
-    data = await prisma.courseTask.findMany({
-      include: {
-        courseTaskFile: true,
-        submissionFile: true,
-      },
+    data = await prisma.courseTaskFile.findMany({
       where: {
-        courseFolder: {
-          course: {
-            batchCourse: {
-              every: {
-                batchId,
+        courseTask: {
+          courseFolder: {
+            course: {
+              batchCourse: {
+                every: {
+                  batchId,
+                },
               },
             },
           },
@@ -82,13 +73,15 @@ const paginationUser = async (page: number, count: number, user: any) => {
         },
       },
     });
-    dataCount = await prisma.courseTask.count({
+    dataCount = await prisma.courseTaskFile.count({
       where: {
-        courseFolder: {
-          course: {
-            batchCourse: {
-              every: {
-                batchId,
+        courseTask: {
+          courseFolder: {
+            course: {
+              batchCourse: {
+                every: {
+                  batchId,
+                },
               },
             },
           },
@@ -98,15 +91,17 @@ const paginationUser = async (page: number, count: number, user: any) => {
         },
       },
     });
-    hasNext = await prisma.courseTask.findMany({
+    hasNext = await prisma.courseTaskFile.findMany({
       take: 1,
       skip: count * (page + 1 - 1),
       where: {
-        courseFolder: {
-          course: {
-            batchCourse: {
-              every: {
-                batchId,
+        courseTask: {
+          courseFolder: {
+            course: {
+              batchCourse: {
+                every: {
+                  batchId,
+                },
               },
             },
           },
@@ -135,7 +130,6 @@ export default async (req: Request, res: Response, next: NextFunction) => {
   const page = req.query.page ? parseInt(req.query.page as string) : 1;
   try {
     const { data, dataCount, hasNext } = await pagination(page, count, user);
-
     return res.json({
       status: 200,
       data,
@@ -144,6 +138,6 @@ export default async (req: Request, res: Response, next: NextFunction) => {
   } catch (err) {
     return res
       .status(400)
-      .json({ success: false, message: "Course Error occured" });
+      .json({ success: false, message: "File Error occured" });
   }
 };

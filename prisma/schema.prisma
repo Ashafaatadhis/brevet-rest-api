@@ -21,6 +21,7 @@ model User {
   image String?
   phoneNumber String?
   userCourses UserCourses[]
+  submissionFile SubmissionFile[]
   NPM String?
   golongan Golongan @default(UMUM)
   role Role @default(STUDENT)
@@ -104,7 +105,7 @@ model CourseTask {
   courseFolderId String @db.ObjectId
   courseFolder CourseFolder @relation(fields: [courseFolderId], references: [id])
   courseTaskFile CourseTaskFile[]
-  courseTaskSubmission CourseTaskSubmission[]
+  submissionFile SubmissionFile[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
   deletedAt   DateTime? 
@@ -121,17 +122,35 @@ model CourseTaskFile {
   deletedAt   DateTime? 
 }
 
-model CourseTaskSubmission {
+// model CourseTaskSubmission {
+//   id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  
+//   submission_status String?
+//   grading_status String?
+
+//   userId String @db.ObjectId
+//   user User @relation(fields: [userId], references: [id])
+//   courseTaskId String @db.ObjectId
+//   courseTask CourseTask @relation(fields: [courseTaskId], references: [id])
+//   submissionFile SubmissionFile[]
+//   overdueAt   DateTime
+//   createdAt   DateTime @default(now())
+//   updatedAt   DateTime @default(now())
+//   deletedAt   DateTime? 
+//   @@unique([courseTaskId, deletedAt])
+// }
+
+model SubmissionFile {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  courseTaskId String @db.ObjectId
-  submission_status String?
-  grading_status String?
-  courseTask CourseTask @relation(fields: [courseTaskId], references: [id])
-  overdueAt   DateTime
+  file  String
+  name String
+  taskId String @db.ObjectId
+  courseTask CourseTask @relation(fields: [taskId], references: [id])
+  userId String @db.ObjectId
+  user User @relation(fields: [userId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
   deletedAt   DateTime? 
-  @@unique([courseTaskId, deletedAt])
 }
 
 model UserCourses {

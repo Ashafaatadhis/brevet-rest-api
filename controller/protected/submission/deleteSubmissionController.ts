@@ -3,15 +3,15 @@ import { validationResult } from "express-validator";
 import prisma from "../../../config/prisma";
 
 export default async (req: Request, res: Response, next: NextFunction) => {
+  const user: any = req?.user;
   const id: string = req.params.id;
-  const user: any = req.user;
+  if (!["ADMIN", "SUPERADMIN"].includes(user.role))
+    return res.status(401).json({ success: false, message: "Unauthorized" });
   try {
-    if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    
-    const data = await prisma.courseFile.findFirst({
+    await prisma.submissionFile.update({
+      data: {
+        deletedAt: new Date().toISOString(),
+      },
       where: {
         id,
         deletedAt: {
@@ -20,10 +20,10 @@ export default async (req: Request, res: Response, next: NextFunction) => {
       },
     });
 
-    return res.json({ success: true, data });
+    return res.json({ success: true, message: "Success deleted course" });
   } catch (err) {
     return res
       .status(400)
-      .json({ success: false, message: "Course not exist" });
+      .json({ success: false, message: "Failed Delete Course" });
   }
 };

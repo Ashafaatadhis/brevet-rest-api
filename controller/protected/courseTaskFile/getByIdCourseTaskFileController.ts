@@ -1,15 +1,17 @@
 import { NextFunction, Request, Response } from "express";
-
+import { validationResult } from "express-validator";
 import prisma from "../../../config/prisma";
 
 const checkPayment = async (id: string, user: any) => {
-  const data = await prisma.courseTask.findFirst({
+  const data = await prisma.courseTaskFile.findFirst({
     select: {
-      courseFolder: {
+      courseTask: {
         select: {
-          course: {
+          courseFolder: {
             select: {
-              id: true,
+              course: {
+                select: { id: true },
+              },
             },
           },
         },
@@ -17,7 +19,6 @@ const checkPayment = async (id: string, user: any) => {
     },
     where: {
       id,
-
       deletedAt: {
         isSet: false,
       },
@@ -26,7 +27,7 @@ const checkPayment = async (id: string, user: any) => {
 
   const lemm = await prisma.batchCourse.findFirst({
     where: {
-      courseId: data?.courseFolder.course.id,
+      courseId: data?.courseTask.courseFolder.course.id,
       deletedAt: {
         isSet: false,
       },
@@ -56,8 +57,6 @@ const checkPayment = async (id: string, user: any) => {
 export default async (req: Request, res: Response, next: NextFunction) => {
   const id: string = req.params.id;
   const user: any = req.user;
-  // const by: string = req.query.by?.toString() ? req.query.by?.toString() : "";
-
   try {
     if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
       const paymentCheck = await checkPayment(id, user);
@@ -68,11 +67,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
       }
     }
 
-    const data = await prisma.courseTask.findFirst({
-      include: {
-        courseTaskFile: true,
-        submissionFile: true,
-      },
+    const data = await prisma.courseTaskFile.findFirst({
       where: {
         id,
         deletedAt: {
@@ -80,7 +75,6 @@ export default async (req: Request, res: Response, next: NextFunction) => {
         },
       },
     });
-
     return res.json({ success: true, data });
   } catch (err) {
     return res

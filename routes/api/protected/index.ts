@@ -14,6 +14,7 @@ import batchCourse from "./batchCourse";
 import payment from "./payment";
 import userCourses from "./userCourses";
 import courseTask from "./courseTask";
+import courseTaskFile from "./courseTaskFile";
 import authJwt from "../../../middleware/authJwt";
 const router = express.Router();
 
@@ -41,5 +42,6 @@ router.use("/batchCourse", batchCourse);
 router.use("/payment", payment);
 router.use("/userCourses", userCourses);
 router.use("/courseTask", courseTask);
+router.use("/courseTaskFile", courseTaskFile);
 
 export default router;

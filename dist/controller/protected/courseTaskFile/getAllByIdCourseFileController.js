@@ -13,39 +13,29 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../../../config/prisma"));
-const paginationAdmin = (page, count) => __awaiter(void 0, void 0, void 0, function* () {
-    const data = yield prisma_1.default.courseTask.findMany({
+const paginationAdmin = (page, count, by, id) => __awaiter(void 0, void 0, void 0, function* () {
+    const data = yield prisma_1.default.courseFile.findMany({
         take: count,
         skip: count * (page - 1),
-        where: {
-            deletedAt: {
+        where: Object.assign(Object.assign({}, (by === "courseFolderId" ? { courseFolderId: id } : { id })), { deletedAt: {
                 isSet: false,
-            },
-        },
-        include: {
-            courseTaskFile: true,
-            submissionFile: true,
-        },
+            } }),
     });
-    const dataCount = yield prisma_1.default.courseTask.count({
-        where: {
-            deletedAt: {
+    const dataCount = yield prisma_1.default.courseFile.count({
+        where: Object.assign(Object.assign({}, (by === "courseFolderId" ? { courseFolderId: id } : { id })), { deletedAt: {
                 isSet: false,
-            },
-        },
+            } }),
     });
-    const hasNext = yield prisma_1.default.courseTask.findMany({
+    const hasNext = yield prisma_1.default.courseFile.findMany({
         take: 1,
         skip: count * (page + 1 - 1),
-        where: {
-            deletedAt: {
+        where: Object.assign(Object.assign({}, (by === "courseFolderId" ? { courseFolderId: id } : { id })), { deletedAt: {
                 isSet: false,
-            },
-        },
+            } }),
     });
     return { data, dataCount, hasNext };
 });
-const paginationUser = (page, count, user) => __awaiter(void 0, void 0, void 0, function* () {
+const paginationUser = (page, count, user, by, id) => __awaiter(void 0, void 0, void 0, function* () {
     const getCoursePurchased = yield prisma_1.default.userCourses.findMany({
         select: {
             batchId: true,
@@ -66,13 +56,8 @@ const paginationUser = (page, count, user) => __awaiter(void 0, void 0, void 0, 
     });
     let data, dataCount = 0, hasNext = { length: 0 };
     for (const { batchId } of getCoursePurchased) {
-        data = yield prisma_1.default.courseTask.findMany({
-            include: {
-                courseTaskFile: true,
-                submissionFile: true,
-            },
-            where: {
-                courseFolder: {
+        data = yield prisma_1.default.courseFile.findMany({
+            where: Object.assign(Object.assign({}, (by === "courseFolderId" ? { courseFolderId: id } : { id })), { courseFolder: {
                     course: {
                         batchCourse: {
                             every: {
@@ -80,15 +65,12 @@ const paginationUser = (page, count, user) => __awaiter(void 0, void 0, void 0, 
                             },
                         },
                     },
-                },
-                deletedAt: {
+                }, deletedAt: {
                     isSet: false,
-                },
-            },
+                } }),
         });
-        dataCount = yield prisma_1.default.courseTask.count({
-            where: {
-                courseFolder: {
+        dataCount = yield prisma_1.default.courseFile.count({
+            where: Object.assign(Object.assign({}, (by === "courseFolderId" ? { courseFolderId: id } : { id })), { courseFolder: {
                     course: {
                         batchCourse: {
                             every: {
@@ -96,17 +78,14 @@ const paginationUser = (page, count, user) => __awaiter(void 0, void 0, void 0, 
                             },
                         },
                     },
-                },
-                deletedAt: {
+                }, deletedAt: {
                     isSet: false,
-                },
-            },
+                } }),
         });
-        hasNext = yield prisma_1.default.courseTask.findMany({
+        hasNext = yield prisma_1.default.courseFile.findMany({
             take: 1,
             skip: count * (page + 1 - 1),
-            where: {
-                courseFolder: {
+            where: Object.assign(Object.assign({}, (by === "courseFolderId" ? { courseFolderId: id } : { id })), { courseFolder: {
                     course: {
                         batchCourse: {
                             every: {
@@ -114,27 +93,27 @@ const paginationUser = (page, count, user) => __awaiter(void 0, void 0, void 0, 
                             },
                         },
                     },
-                },
-                deletedAt: {
+                }, deletedAt: {
                     isSet: false,
-                },
-            },
+                } }),
         });
     }
     return { data, dataCount, hasNext };
 });
-const pagination = (page, count, user) => __awaiter(void 0, void 0, void 0, function* () {
+const pagination = (page, count, user, by, id) => __awaiter(void 0, void 0, void 0, function* () {
     if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
-        return yield paginationUser(page, count, user);
+        return yield paginationUser(page, count, user, by, id);
     }
-    return yield paginationAdmin(page, count);
+    return yield paginationAdmin(page, count, by, id);
 });
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.user;
     const count = req.query.count ? parseInt(req.query.count) : 10;
     const page = req.query.page ? parseInt(req.query.page) : 1;
+    const id = req.params.id;
+    const by = req.query.by;
     try {
-        const { data, dataCount, hasNext } = yield pagination(page, count, user);
+        const { data, dataCount, hasNext } = yield pagination(page, count, user, by, id);
         return res.json({
             status: 200,
             data,

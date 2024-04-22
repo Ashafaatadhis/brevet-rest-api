@@ -13,6 +13,7 @@ const batchCourse_1 = __importDefault(require("./batchCourse"));
 const payment_1 = __importDefault(require("./payment"));
 const userCourses_1 = __importDefault(require("./userCourses"));
 const courseTask_1 = __importDefault(require("./courseTask"));
+const courseTaskFile_1 = __importDefault(require("./courseTaskFile"));
 const authJwt_1 = __importDefault(require("../../../middleware/authJwt"));
 const router = express_1.default.Router();
 // router.post(
@@ -36,4 +37,5 @@ router.use("/batchCourse", batchCourse_1.default);
 router.use("/payment", payment_1.default);
 router.use("/userCourses", userCourses_1.default);
 router.use("/courseTask", courseTask_1.default);
+router.use("/courseTaskFile", courseTaskFile_1.default);
 exports.default = router;
