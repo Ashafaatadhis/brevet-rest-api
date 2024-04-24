@@ -8,6 +8,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req);
   if (errors.isEmpty()) {
     const user: any = req?.user;
+    console.log(req.body);
     if (!["ADMIN", "SUPERADMIN"].includes(user.role))
       return res.status(401).json({ success: false, message: "Unauthorized" });
     try {
@@ -25,16 +26,15 @@ export default async (req: Request, res: Response, next: NextFunction) => {
       // urlImage.forEach(async (value: any) => {
       //   req.body.name = value.originalName;
       //   req.body.file = value.link;
-      console.log(urlImage);
+
       const newData = urlImage.map((value: any) => {
         return {
           ...value,
-          courseTaskId: req.body.courseTaskId,
           taskId: req.body.taskId,
           userId: user.id,
         };
       });
-      console.log(newData);
+
       await prisma.submissionFile.createMany({
         data: [...newData],
       });

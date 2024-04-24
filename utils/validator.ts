@@ -24,10 +24,10 @@ export const editPaymentValidator = [
 ];
 
 export const addBatchCourseValidator = [
-  check("start_schedule", "Invalid does not Empty").not().isEmpty(),
-  check("start_schedule", "Invalid format Date").isISO8601().toDate(),
-  check("end_schedule", "Invalid does not Empty").not().isEmpty(),
-  check("end_schedule", "Invalid format Date").isISO8601().toDate(),
+  // check("start_schedule", "Invalid does not Empty").not().isEmpty(),
+  // check("start_schedule", "Invalid format Date").isISO8601().toDate(),
+  // check("end_schedule", "Invalid does not Empty").not().isEmpty(),
+  // check("end_schedule", "Invalid format Date").isISO8601().toDate(),
   check("courseId", "Invalid does not Empty").not().isEmpty(),
   check("batchId", "Invalid does not Empty").not().isEmpty(),
 ];
@@ -53,6 +53,10 @@ export const addCourseTaskValidator = [
 ];
 export const addCourseFileValidator = [
   check("courseFolderId", "Invalid does not Empty").not().isEmpty(),
+];
+
+export const addSubmissionValidator = [
+  check("taskId", "Invalid does not Empty").not().isEmpty(),
 ];
 
 export const addCourseTaskFileValidator = [

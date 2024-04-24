@@ -15,6 +15,7 @@ import payment from "./payment";
 import userCourses from "./userCourses";
 import courseTask from "./courseTask";
 import courseTaskFile from "./courseTaskFile";
+import submission from "./submission";
 import authJwt from "../../../middleware/authJwt";
 const router = express.Router();
 
@@ -43,5 +44,6 @@ router.use("/payment", payment);
 router.use("/userCourses", userCourses);
 router.use("/courseTask", courseTask);
 router.use("/courseTaskFile", courseTaskFile);
+router.use("/submission", submission);
 
 export default router;

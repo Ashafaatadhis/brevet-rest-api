@@ -8,7 +8,7 @@ const paginationAdmin = async (
   by: any,
   id: string
 ) => {
-  const data = await prisma.courseTaskFile.findMany({
+  const data = await prisma.submissionFile.findMany({
     take: count,
     skip: count * (page - 1),
     where: {
@@ -18,7 +18,7 @@ const paginationAdmin = async (
       },
     },
   });
-  const dataCount = await prisma.courseTaskFile.count({
+  const dataCount = await prisma.submissionFile.count({
     where: {
       ...(by === "courseTaskId" ? { courseTaskId: id } : { id }),
       deletedAt: {
@@ -27,7 +27,7 @@ const paginationAdmin = async (
     },
   });
 
-  const hasNext = await prisma.courseTaskFile.findMany({
+  const hasNext = await prisma.submissionFile.findMany({
     take: 1,
     skip: count * (page + 1 - 1),
     where: {
@@ -72,7 +72,7 @@ const paginationUser = async (
     hasNext = { length: 0 };
 
   for (const { batchId } of getCoursePurchased) {
-    data = await prisma.courseTaskFile.findMany({
+    data = await prisma.submissionFile.findMany({
       where: {
         ...(by === "courseTaskId" ? { courseTaskId: id } : { id }),
         courseTask: {
@@ -91,7 +91,7 @@ const paginationUser = async (
         },
       },
     });
-    dataCount = await prisma.courseTaskFile.count({
+    dataCount = await prisma.submissionFile.count({
       where: {
         ...(by === "courseTaskId" ? { courseTaskId: id } : { id }),
         courseTask: {
@@ -110,7 +110,7 @@ const paginationUser = async (
         },
       },
     });
-    hasNext = await prisma.courseTaskFile.findMany({
+    hasNext = await prisma.submissionFile.findMany({
       take: 1,
       skip: count * (page + 1 - 1),
       where: {

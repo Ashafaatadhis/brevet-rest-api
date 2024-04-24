@@ -3,7 +3,7 @@ import { validationResult } from "express-validator";
 import prisma from "../../../config/prisma";
 
 const checkPayment = async (id: string, user: any) => {
-  const data = await prisma.courseTaskFile.findFirst({
+  const data = await prisma.submissionFile.findFirst({
     select: {
       courseTask: {
         select: {
@@ -66,8 +66,8 @@ export default async (req: Request, res: Response, next: NextFunction) => {
           .json({ success: false, message: "User not purchased this course" });
       }
     }
-
-    const data = await prisma.courseTaskFile.findFirst({
+    console.log(id);
+    const data = await prisma.submissionFile.findFirst({
       where: {
         id,
         deletedAt: {
@@ -75,6 +75,8 @@ export default async (req: Request, res: Response, next: NextFunction) => {
         },
       },
     });
+
+    console.log("DDD :", data);
     return res.json({ success: true, data });
   } catch (err) {
     return res

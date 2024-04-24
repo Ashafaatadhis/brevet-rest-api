@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginValidator = exports.updateValidator = exports.changePasswordValidator = exports.registerValidator = exports.addCourseValidator = exports.addCourseTaskFileValidator = exports.addCourseFileValidator = exports.addCourseTaskValidator = exports.addCourseFolderValidator = exports.editUserCourseValidator = exports.addUserCourseValidator = exports.addBatchCourseValidator = exports.editPaymentValidator = exports.addPaymentValidator = exports.addBatchValidator = void 0;
+exports.loginValidator = exports.updateValidator = exports.changePasswordValidator = exports.registerValidator = exports.addCourseValidator = exports.addCourseTaskFileValidator = exports.addSubmissionValidator = exports.addCourseFileValidator = exports.addCourseTaskValidator = exports.addCourseFolderValidator = exports.editUserCourseValidator = exports.addUserCourseValidator = exports.addBatchCourseValidator = exports.editPaymentValidator = exports.addPaymentValidator = exports.addBatchValidator = void 0;
 const express_validator_1 = require("express-validator");
 exports.addBatchValidator = [
     (0, express_validator_1.check)("name", "Invalid does not Empty").not().isEmpty(),
@@ -33,10 +33,10 @@ exports.editPaymentValidator = [
     (0, express_validator_1.check)("no_rek", "Invalid does not Empty").not().isEmpty(),
 ];
 exports.addBatchCourseValidator = [
-    (0, express_validator_1.check)("start_schedule", "Invalid does not Empty").not().isEmpty(),
-    (0, express_validator_1.check)("start_schedule", "Invalid format Date").isISO8601().toDate(),
-    (0, express_validator_1.check)("end_schedule", "Invalid does not Empty").not().isEmpty(),
-    (0, express_validator_1.check)("end_schedule", "Invalid format Date").isISO8601().toDate(),
+    // check("start_schedule", "Invalid does not Empty").not().isEmpty(),
+    // check("start_schedule", "Invalid format Date").isISO8601().toDate(),
+    // check("end_schedule", "Invalid does not Empty").not().isEmpty(),
+    // check("end_schedule", "Invalid format Date").isISO8601().toDate(),
     (0, express_validator_1.check)("courseId", "Invalid does not Empty").not().isEmpty(),
     (0, express_validator_1.check)("batchId", "Invalid does not Empty").not().isEmpty(),
 ];
@@ -60,6 +60,9 @@ exports.addCourseTaskValidator = [
 ];
 exports.addCourseFileValidator = [
     (0, express_validator_1.check)("courseFolderId", "Invalid does not Empty").not().isEmpty(),
+];
+exports.addSubmissionValidator = [
+    (0, express_validator_1.check)("taskId", "Invalid does not Empty").not().isEmpty(),
 ];
 exports.addCourseTaskFileValidator = [
     (0, express_validator_1.check)("courseTaskId", "Invalid does not Empty").not().isEmpty(),

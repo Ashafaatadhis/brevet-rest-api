@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 import prisma from "../../../config/prisma";
-import { uploadMultiple, uploadSingle } from "../../../middleware/uploadFile";
+import { deleteFiles, uploadSingle } from "../../../middleware/uploadFile";
 
 export default async (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req);
@@ -22,11 +22,13 @@ export default async (req: Request, res: Response, next: NextFunction) => {
           },
         },
       });
-      const urlImage: any = await uploadSingle(req, "courseTaskFile");
-      console.log(urlImage);
+
+      const urlImage: any = await uploadSingle(req, "submission");
+
       if (!urlImage) {
         req.body.file = thisUser?.file;
       } else {
+        if (thisUser) await deleteFiles(thisUser?.file);
         req.body.file = urlImage.secure_url;
         req.body.name = urlImage.name;
       }

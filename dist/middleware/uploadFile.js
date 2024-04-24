@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.uploadMultiple = exports.uploadSingle = void 0;
+exports.uploadMultiple = exports.deleteFiles = exports.uploadSingle = void 0;
 const cloudinary_1 = __importDefault(require("../config/cloudinary"));
 const streamifier_1 = __importDefault(require("streamifier"));
 function runMiddleware(req, res, fn) {
@@ -47,6 +47,14 @@ const uploadSingle = (req, folder) => __awaiter(void 0, void 0, void 0, function
     });
 });
 exports.uploadSingle = uploadSingle;
+const deleteFiles = (name) => __awaiter(void 0, void 0, void 0, function* () {
+    // const fi = name.split("/").reverse().slice(0, 2).reverse().join("/").split(".");
+    const arr = name.split("/");
+    const fi = arr.slice(arr.length - 2).join("/");
+    const removePrefix = fi.split(".")[0];
+    return yield cloudinary_1.default.uploader.destroy(removePrefix);
+});
+exports.deleteFiles = deleteFiles;
 const uploadMultiple = (req, folder) => __awaiter(void 0, void 0, void 0, function* () {
     // await runMiddleware(req, res, multer.single("image"));
     return new Promise((resolve, reject) => {

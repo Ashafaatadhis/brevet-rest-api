@@ -13,13 +13,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../../../config/prisma"));
+const uploadFile_1 = require("../../../middleware/uploadFile");
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req === null || req === void 0 ? void 0 : req.user;
     const id = req.params.id;
     if (!["ADMIN", "SUPERADMIN"].includes(user.role))
         return res.status(401).json({ success: false, message: "Unauthorized" });
     try {
-        const data = yield prisma_1.default.courseFile.update({
+        const dataBefore = yield prisma_1.default.courseFile.findFirst({
+            where: {
+                id,
+                deletedAt: {
+                    isSet: false,
+                },
+            },
+        });
+        if (!dataBefore)
+            return res.json({ success: true, message: "Data Not Found" });
+        yield prisma_1.default.courseFile.update({
             data: {
                 deletedAt: new Date().toISOString(),
             },
@@ -30,6 +41,7 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                 },
             },
         });
+        yield (0, uploadFile_1.deleteFiles)(dataBefore === null || dataBefore === void 0 ? void 0 : dataBefore.file);
         return res.json({ success: true, message: "Success deleted course" });
     }
     catch (err) {

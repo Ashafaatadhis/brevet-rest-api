@@ -34,12 +34,13 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                     },
                 },
             });
-            const urlImage = yield (0, uploadFile_1.uploadSingle)(req, "courseTaskFile");
-            console.log(urlImage);
+            const urlImage = yield (0, uploadFile_1.uploadSingle)(req, "submission");
             if (!urlImage) {
                 req.body.file = thisUser === null || thisUser === void 0 ? void 0 : thisUser.file;
             }
             else {
+                if (thisUser)
+                    yield (0, uploadFile_1.deleteFiles)(thisUser === null || thisUser === void 0 ? void 0 : thisUser.file);
                 req.body.file = urlImage.secure_url;
                 req.body.name = urlImage.name;
             }

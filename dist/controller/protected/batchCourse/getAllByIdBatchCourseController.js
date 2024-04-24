@@ -19,19 +19,19 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     const count = req.query.count ? parseInt(req.query.count) : 10;
     const page = req.query.page ? parseInt(req.query.page) : 1;
     try {
-        const data = yield prisma_1.default.courseFile.findMany({
+        const data = yield prisma_1.default.batchCourse.findMany({
             take: count,
             skip: count * (page - 1),
             where: Object.assign(Object.assign({}, (by === "batchId" ? { batchId: id } : { id })), { deletedAt: {
                     isSet: false,
                 } }),
         });
-        const dataCount = yield prisma_1.default.courseFile.count({
+        const dataCount = yield prisma_1.default.batchCourse.count({
             where: Object.assign(Object.assign({}, (by === "batchId" ? { batchId: id } : { id })), { deletedAt: {
                     isSet: false,
                 } }),
         });
-        const hasNext = yield prisma_1.default.courseFile.findMany({
+        const hasNext = yield prisma_1.default.batchCourse.findMany({
             take: 1,
             skip: count * (page + 1 - 1),
             where: Object.assign(Object.assign({}, (by === "batchId" ? { batchId: id } : { id })), { deletedAt: {

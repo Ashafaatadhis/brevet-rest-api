@@ -39,6 +39,15 @@ export const uploadSingle = async (req: Request, folder: string) => {
     streamifier.createReadStream(req.file.buffer).pipe(stream);
   });
 };
+
+export const deleteFiles = async (name: string) => {
+  // const fi = name.split("/").reverse().slice(0, 2).reverse().join("/").split(".");
+  const arr = name.split("/");
+  const fi = arr.slice(arr.length - 2).join("/");
+  const removePrefix = fi.split(".")[0];
+  return await cloudinary.uploader.destroy(removePrefix);
+};
+
 export const uploadMultiple = async (req: Request, folder: string) => {
   // await runMiddleware(req, res, multer.single("image"));
 

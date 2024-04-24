@@ -16,9 +16,16 @@ const prisma_1 = __importDefault(require("../../../config/prisma"));
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const count = req.query.count ? parseInt(req.query.count) : 10;
     const page = req.query.page ? parseInt(req.query.page) : 1;
+    const search = req.query.search ? req.query.search : "";
     try {
         const data = yield prisma_1.default.batch.findMany({
+            take: count,
+            skip: count * (page - 1),
             where: {
+                name: {
+                    contains: search,
+                    mode: "insensitive",
+                },
                 deletedAt: {
                     isSet: false,
                 },
@@ -26,6 +33,10 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         });
         const dataCount = yield prisma_1.default.batch.count({
             where: {
+                name: {
+                    contains: search,
+                    mode: "insensitive",
+                },
                 deletedAt: {
                     isSet: false,
                 },
@@ -35,6 +46,10 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
             take: 1,
             skip: count * (page + 1 - 1),
             where: {
+                name: {
+                    contains: search,
+                    mode: "insensitive",
+                },
                 deletedAt: {
                     isSet: false,
                 },

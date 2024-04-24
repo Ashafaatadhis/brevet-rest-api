@@ -51,8 +51,7 @@ model Batch {
 
 model BatchCourse {
     id      String   @id @default(auto()) @map("_id") @db.ObjectId
-    start_schedule DateTime
-   end_schedule DateTime
+ 
   courseId String @db.ObjectId
   course Course @relation(fields: [courseId], references: [id]) 
     batchId String @db.ObjectId

@@ -20,6 +20,7 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     const errors = (0, express_validator_1.validationResult)(req);
     if (errors.isEmpty()) {
         const user = req === null || req === void 0 ? void 0 : req.user;
+        console.log(req.body);
         if (!["ADMIN", "SUPERADMIN"].includes(user.role))
             return res.status(401).json({ success: false, message: "Unauthorized" });
         try {
@@ -35,11 +36,9 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
             // urlImage.forEach(async (value: any) => {
             //   req.body.name = value.originalName;
             //   req.body.file = value.link;
-            console.log(urlImage);
             const newData = urlImage.map((value) => {
-                return Object.assign(Object.assign({}, value), { courseTaskId: req.body.courseTaskId, taskId: req.body.taskId, userId: user.id });
+                return Object.assign(Object.assign({}, value), { taskId: req.body.taskId, userId: user.id });
             });
-            console.log(newData);
             yield prisma_1.default.submissionFile.createMany({
                 data: [...newData],
             });

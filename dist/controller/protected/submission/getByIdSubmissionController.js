@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../../../config/prisma"));
 const checkPayment = (id, user) => __awaiter(void 0, void 0, void 0, function* () {
-    const data = yield prisma_1.default.courseTaskFile.findFirst({
+    const data = yield prisma_1.default.submissionFile.findFirst({
         select: {
             courseTask: {
                 select: {
@@ -73,7 +73,8 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                     .json({ success: false, message: "User not purchased this course" });
             }
         }
-        const data = yield prisma_1.default.courseTaskFile.findFirst({
+        console.log(id);
+        const data = yield prisma_1.default.submissionFile.findFirst({
             where: {
                 id,
                 deletedAt: {
@@ -81,6 +82,7 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                 },
             },
         });
+        console.log("DDD :", data);
         return res.json({ success: true, data });
     }
     catch (err) {
