@@ -68,6 +68,7 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         }
         const data = yield prisma_1.default.courseFolder.findFirst({
             include: {
+                courseTask: true,
                 courseFile: true,
             },
             where: Object.assign(Object.assign({}, (by === "courseId" ? { courseId: id } : { id })), { deletedAt: {

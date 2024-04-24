@@ -20,6 +20,7 @@ model User {
   provider Provider @default(LOCAL)
   image String?
   phoneNumber String?
+  userAnswer UserAnswer[]
   userCourses UserCourses[]
   submissionFile SubmissionFile[]
   NPM String?
@@ -81,6 +82,7 @@ model CourseFolder {
     course Course @relation(fields: [courseId], references: [id]) 
     courseFile CourseFile[]
     courseTask CourseTask[]
+    pg PG[]
     createdAt   DateTime @default(now())
     updatedAt   DateTime @default(now())
     deletedAt   DateTime?
@@ -180,6 +182,57 @@ model Payment {
   deletedAt   DateTime?
 
   @@unique([deletedAt, userCoursesId])
+}
+
+model PG {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  courseFolderId String @db.ObjectId
+  courseFolder CourseFolder @relation(fields: [courseFolderId], references: [id])
+  question Question[]
+  points Int 
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  deletedAt   DateTime?
+}
+
+model Question {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  question String
+  questionAnswer QuestionAnswer[]
+  userAnswer UserAnswer[]
+  pgId String @db.ObjectId
+  pg PG @relation(fields: [pgId], references: [id])
+ 
+  // points Int 
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  deletedAt   DateTime?
+}
+
+model UserAnswer {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  questionAnswerId String @db.ObjectId
+  questionAnswer QuestionAnswer @relation(fields: [questionAnswerId], references: [id]) 
+   questionId String @db.ObjectId
+   question Question @relation(fields: [questionId], references: [id]) 
+   userId String @db.ObjectId
+  user User @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  deletedAt   DateTime?
+}
+
+model QuestionAnswer {
+   id      String   @id @default(auto()) @map("_id") @db.ObjectId
+   answer String
+   userAnswer UserAnswer[]
+   isCorrect Boolean @default(false)
+   questionId String @db.ObjectId
+   question Question @relation(fields: [questionId], references: [id])  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  deletedAt   DateTime?
+
 }
  
 

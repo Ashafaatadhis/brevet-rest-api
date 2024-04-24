@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginValidator = exports.updateValidator = exports.changePasswordValidator = exports.registerValidator = exports.addCourseValidator = exports.addCourseTaskFileValidator = exports.addSubmissionValidator = exports.addCourseFileValidator = exports.addCourseTaskValidator = exports.addCourseFolderValidator = exports.editUserCourseValidator = exports.addUserCourseValidator = exports.addBatchCourseValidator = exports.editPaymentValidator = exports.addPaymentValidator = exports.addBatchValidator = void 0;
+exports.loginValidator = exports.updateValidator = exports.changePasswordValidator = exports.registerValidator = exports.addCourseValidator = exports.addCourseTaskFileValidator = exports.addSubmissionValidator = exports.addPGValidator = exports.addQuestionAnswerValidator = exports.addUserAnswerValidator = exports.addQuestionValidator = exports.addCourseFileValidator = exports.addCourseTaskValidator = exports.addCourseFolderValidator = exports.editUserCourseValidator = exports.addUserCourseValidator = exports.addBatchCourseValidator = exports.editPaymentValidator = exports.addPaymentValidator = exports.addBatchValidator = void 0;
 const express_validator_1 = require("express-validator");
 exports.addBatchValidator = [
     (0, express_validator_1.check)("name", "Invalid does not Empty").not().isEmpty(),
@@ -60,6 +60,29 @@ exports.addCourseTaskValidator = [
 ];
 exports.addCourseFileValidator = [
     (0, express_validator_1.check)("courseFolderId", "Invalid does not Empty").not().isEmpty(),
+];
+exports.addQuestionValidator = [
+    (0, express_validator_1.check)("question", "Invalid does not Empty").not().isEmpty(),
+    (0, express_validator_1.check)("pgId", "Invalid does not Empty").not().isEmpty(),
+    // check("points", "Invalid does not Empty").not().isEmpty(),
+    // check("points", "Invalid does not Empty").isNumeric(),
+];
+exports.addUserAnswerValidator = [
+    (0, express_validator_1.check)("questionAnswerId", "Invalid does not Empty").not().isEmpty(),
+    (0, express_validator_1.check)("questionId", "Invalid does not Empty").not().isEmpty(),
+];
+exports.addQuestionAnswerValidator = [
+    (0, express_validator_1.check)("answer", "Invalid does not Empty").not().isEmpty(),
+    (0, express_validator_1.check)("isCorrect", "Invalid does not Empty").not().isEmpty(),
+    (0, express_validator_1.check)("isCorrect", "Only Boolean").isBoolean(),
+    (0, express_validator_1.check)("questionId", "Invalid does not Empty").not().isEmpty(),
+    // check("points", "Invalid does not Empty").not().isEmpty(),
+    // check("points", "Invalid does not Empty").isNumeric(),
+];
+exports.addPGValidator = [
+    (0, express_validator_1.check)("courseFolderId", "Invalid does not Empty").not().isEmpty(),
+    (0, express_validator_1.check)("points", "Invalid does not Empty").not().isEmpty(),
+    (0, express_validator_1.check)("points", "Numeric Only").isNumeric(),
 ];
 exports.addSubmissionValidator = [
     (0, express_validator_1.check)("taskId", "Invalid does not Empty").not().isEmpty(),

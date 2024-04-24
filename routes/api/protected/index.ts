@@ -16,6 +16,10 @@ import userCourses from "./userCourses";
 import courseTask from "./courseTask";
 import courseTaskFile from "./courseTaskFile";
 import submission from "./submission";
+import question from "./question";
+import questionAnswer from "./questionAnswer";
+import userAnswer from "./userAnswer";
+import pg from "./pg";
 import authJwt from "../../../middleware/authJwt";
 const router = express.Router();
 
@@ -45,5 +49,9 @@ router.use("/userCourses", userCourses);
 router.use("/courseTask", courseTask);
 router.use("/courseTaskFile", courseTaskFile);
 router.use("/submission", submission);
+router.use("/question", question);
+router.use("/questionAnswer", questionAnswer);
+router.use("/userAnswer", userAnswer);
+router.use("/pg", pg);
 
 export default router;

@@ -54,6 +54,30 @@ export const addCourseTaskValidator = [
 export const addCourseFileValidator = [
   check("courseFolderId", "Invalid does not Empty").not().isEmpty(),
 ];
+export const addQuestionValidator = [
+  check("question", "Invalid does not Empty").not().isEmpty(),
+  check("pgId", "Invalid does not Empty").not().isEmpty(),
+  // check("points", "Invalid does not Empty").not().isEmpty(),
+  // check("points", "Invalid does not Empty").isNumeric(),
+];
+export const addUserAnswerValidator = [
+  check("questionAnswerId", "Invalid does not Empty").not().isEmpty(),
+  check("questionId", "Invalid does not Empty").not().isEmpty(),
+];
+export const addQuestionAnswerValidator = [
+  check("answer", "Invalid does not Empty").not().isEmpty(),
+  check("isCorrect", "Invalid does not Empty").not().isEmpty(),
+  check("isCorrect", "Only Boolean").isBoolean(),
+  check("questionId", "Invalid does not Empty").not().isEmpty(),
+
+  // check("points", "Invalid does not Empty").not().isEmpty(),
+  // check("points", "Invalid does not Empty").isNumeric(),
+];
+export const addPGValidator = [
+  check("courseFolderId", "Invalid does not Empty").not().isEmpty(),
+  check("points", "Invalid does not Empty").not().isEmpty(),
+  check("points", "Numeric Only").isNumeric(),
+];
 
 export const addSubmissionValidator = [
   check("taskId", "Invalid does not Empty").not().isEmpty(),

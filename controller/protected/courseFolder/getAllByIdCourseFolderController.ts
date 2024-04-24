@@ -18,6 +18,7 @@ const paginationAdmin = async (
       },
     },
     include: {
+      courseTask: true,
       courseFile: true,
     },
   });
@@ -77,6 +78,7 @@ const paginationUser = async (
   for (const { batchId } of getCoursePurchased) {
     data = await prisma.courseFolder.findMany({
       include: {
+        courseTask: true,
         courseFile: true,
       },
       where: {

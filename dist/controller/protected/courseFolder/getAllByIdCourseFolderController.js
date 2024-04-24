@@ -21,6 +21,7 @@ const paginationAdmin = (page, count, by, id) => __awaiter(void 0, void 0, void 
                 isSet: false,
             } }),
         include: {
+            courseTask: true,
             courseFile: true,
         },
     });
@@ -61,6 +62,7 @@ const paginationUser = (page, count, user, by, id) => __awaiter(void 0, void 0, 
     for (const { batchId } of getCoursePurchased) {
         data = yield prisma_1.default.courseFolder.findMany({
             include: {
+                courseTask: true,
                 courseFile: true,
             },
             where: Object.assign(Object.assign({}, (by === "courseId" ? { courseId: id } : { id })), { course: {

@@ -66,6 +66,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
 
     const data = await prisma.courseFolder.findFirst({
       include: {
+        courseTask: true,
         courseFile: true,
       },
       where: {
