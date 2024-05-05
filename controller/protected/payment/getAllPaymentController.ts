@@ -21,9 +21,8 @@ const basicUser = async (
 ) => {
   const data = await prisma.payment.findMany({
     where: {
-      userCourses: {
-        userId: user.id,
-      },
+      userId: user.id,
+
       deletedAt: {
         isSet: false,
       },

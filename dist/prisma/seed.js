@@ -13,59 +13,61 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../config/prisma"));
-const bcrypt_1 = require("../utils/bcrypt");
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         // await prisma.user.deleteMany();
-        for (let i = 1; i <= 30; i++) {
-            yield prisma_1.default.user.create({
-                data: {
-                    email: `student${i}@gmail.com`,
-                    fullname: `student${i}`,
-                    password: (yield (0, bcrypt_1.hashPassword)(`student${i}@123`)),
-                    username: `student${i}`,
-                    role: "STUDENT",
-                },
-            });
-        }
-        yield prisma_1.default.user.create({
-            data: {
-                email: "teacher@gmail.com",
-                fullname: "teacher",
-                password: (yield (0, bcrypt_1.hashPassword)("teacher@123")),
-                username: "teacher",
-                role: "TEACHER",
-            },
-        });
-        yield prisma_1.default.user.create({
-            data: {
-                email: "student@gmail.com",
-                fullname: "student",
-                password: (yield (0, bcrypt_1.hashPassword)("student@123")),
-                username: "student",
-                role: "STUDENT",
-            },
-        });
-        yield prisma_1.default.user.create({
-            data: {
-                email: "admin@gmail.com",
-                fullname: "admin",
-                password: (yield (0, bcrypt_1.hashPassword)("admin@123")),
-                username: "admin",
-                role: "ADMIN",
-            },
-        });
-        yield prisma_1.default.user.create({
-            data: {
-                email: "superadmin@gmail.com",
-                fullname: "superadmin",
-                password: (yield (0, bcrypt_1.hashPassword)("superadmin@123")),
-                username: "superadmin",
-                role: "SUPERADMIN",
-            },
-        });
-        const allUsers = yield prisma_1.default.user.findMany();
-        console.dir(allUsers);
+        yield prisma_1.default.payment.deleteMany();
+        // await prisma.userCourses.deleteMany();
+        yield prisma_1.default.batch.deleteMany();
+        // for (let i = 1; i <= 30; i++) {
+        //   await prisma.user.create({
+        //     data: {
+        //       email: `student${i}@gmail.com`,
+        //       fullname: `student${i}`,
+        //       password: (await hashPassword(`student${i}@123`)) as string,
+        //       username: `student${i}`,
+        //       role: "STUDENT",
+        //     },
+        //   });
+        // }
+        // await prisma.user.create({
+        //   data: {
+        //     email: "teacher@gmail.com",
+        //     fullname: "teacher",
+        //     password: (await hashPassword("teacher@123")) as string,
+        //     username: "teacher",
+        //     role: "TEACHER",
+        //   },
+        // });
+        // await prisma.user.create({
+        //   data: {
+        //     email: "student@gmail.com",
+        //     fullname: "student",
+        //     password: (await hashPassword("student@123")) as string,
+        //     username: "student",
+        //     role: "STUDENT",
+        //   },
+        // });
+        // await prisma.user.create({
+        //   data: {
+        //     email: "admin@gmail.com",
+        //     fullname: "admin",
+        //     password: (await hashPassword("admin@123")) as string,
+        //     username: "admin",
+        //     role: "ADMIN",
+        //   },
+        // });
+        // await prisma.user.create({
+        //   data: {
+        //     email: "superadmin@gmail.com",
+        //     fullname: "superadmin",
+        //     password: (await hashPassword("superadmin@123")) as string,
+        //     username: "superadmin",
+        //     role: "SUPERADMIN",
+        //   },
+        // });
+        // const allUsers = await prisma.user.findMany();
+        // console.dir(allUsers);
     });
 }
 main()

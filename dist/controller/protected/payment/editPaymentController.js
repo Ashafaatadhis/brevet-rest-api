@@ -41,7 +41,6 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
             else {
                 req.body.bukti_bayar = urlImage.secure_url;
             }
-            console.log(req.body);
             const data = yield prisma_1.default.payment.update({
                 data: Object.assign(Object.assign({}, req.body), { updatedAt: new Date().toISOString() }),
                 where: {

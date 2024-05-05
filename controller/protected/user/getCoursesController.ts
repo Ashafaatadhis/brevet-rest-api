@@ -6,23 +6,17 @@ export default async (req: Request, res: Response) => {
   const courseId: string = req.params.courseId;
   const batchId: string = req.params.batchId;
   try {
-    const isUserPurchased = await prisma.userCourses.findFirst({
+    const isUserPurchased = await prisma.payment.findFirst({
       where: {
-        payment: {
-          every: {
-            status: {
-              equals: true,
-            },
-            deletedAt: {
-              isSet: false,
-            },
-          },
+        status: {
+          equals: true,
         },
         deletedAt: {
           isSet: false,
         },
+
         userId: user.id,
-        batchId,
+        courseId,
       },
     });
 
@@ -33,11 +27,7 @@ export default async (req: Request, res: Response) => {
     const data = await prisma.course.findFirst({
       where: {
         id: courseId,
-        batchCourse: {
-          every: {
-            batchId: isUserPurchased.batchId,
-          },
-        },
+
         deletedAt: {
           isSet: false,
         },

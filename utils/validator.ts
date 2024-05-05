@@ -3,19 +3,18 @@ import { check } from "express-validator";
 
 export const addBatchValidator = [
   check("name", "Invalid does not Empty").not().isEmpty(),
+  check("courseId", "Invalid does not Empty").not().isEmpty(),
   check("start_register", "Invalid does not Empty").not().isEmpty(),
   check("start_register", "Invalid format Date").isISO8601().toDate(),
   check("end_register", "Invalid does not Empty").not().isEmpty(),
   check("end_register", "Invalid format Date").isISO8601().toDate(),
-  check("price", "Invalid does not Empty").not().isEmpty(),
-  check("price", "Numeric only").isNumeric(),
   check("kuota", "Invalid does not Empty").not().isEmpty(),
 ];
 export const addPaymentValidator = [
   check("bank", "Invalid does not Empty").not().isEmpty(),
+  check("courseId", "Invalid does not Empty").not().isEmpty(),
   check("atas_nama", "Invalid does not Empty").not().isEmpty(),
   check("no_rek", "Invalid does not Empty").not().isEmpty(),
-  check("userCoursesId", "Invalid does not Empty").not().isEmpty(),
 ];
 export const editPaymentValidator = [
   check("bank", "Invalid does not Empty").not().isEmpty(),
@@ -89,6 +88,8 @@ export const addCourseTaskFileValidator = [
 
 export const addCourseValidator = [
   check("name", "Invalid does not Empty").not().isEmpty(),
+  // check("price", "Invalid does not Empty").not().isEmpty(),
+  // check("price", "Numeric only").isNumeric(),
   check("category", "Invalid does not Empty").not().isEmpty(),
   check("category", "Invalid does value category").isIn(["KURSUS", "WORKSHOP"]),
   check("methode", "Invalid does not Empty").not().isEmpty(),

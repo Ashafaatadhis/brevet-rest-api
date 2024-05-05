@@ -9,7 +9,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
   if (!["ADMIN", "SUPERADMIN"].includes(user.role))
     return res.status(401).json({ success: false, message: "Unauthorized" });
   try {
-    const dataBefore = await prisma.submissionFile.findFirst({
+    const dataBefore = await prisma.question.findFirst({
       where: {
         id,
         deletedAt: {
@@ -32,7 +32,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
         },
       },
     });
-    await deleteFiles(dataBefore?.file);
+
     return res.json({ success: true, message: "Success deleted course" });
   } catch (err) {
     return res

@@ -30,7 +30,6 @@ export default async (req: Request, res: Response, next: NextFunction) => {
         req.body.bukti_bayar = urlImage.secure_url;
       }
 
-      console.log(req.body);
       const data = await prisma.payment.update({
         data: { ...req.body, updatedAt: new Date().toISOString() },
         where: {

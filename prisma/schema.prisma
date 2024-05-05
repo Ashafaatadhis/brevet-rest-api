@@ -21,7 +21,7 @@ model User {
   image String?
   phoneNumber String?
   userAnswer UserAnswer[]
-  userCourses UserCourses[]
+  userCourses Payment[]
   submissionFile SubmissionFile[]
   NPM String?
   golongan Golongan @default(UMUM)
@@ -41,34 +41,37 @@ model Batch {
   start_register DateTime
   end_register DateTime
   kuota Int
-  price Float
-  userCourses UserCourses[]
-  batchCourse BatchCourse[]
+  // userCourses UserCourses[]
+  courseId String @db.ObjectId
+  course Course  @relation(fields: [courseId], references: [id]) 
+  // batchCourse BatchCourse[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
   deletedAt   DateTime?
 
 }
 
-model BatchCourse {
-    id      String   @id @default(auto()) @map("_id") @db.ObjectId
+// model BatchCourse {
+//     id      String   @id @default(auto()) @map("_id") @db.ObjectId
  
-  courseId String @db.ObjectId
-  course Course @relation(fields: [courseId], references: [id]) 
-    batchId String @db.ObjectId
-  batch Batch @relation(fields: [batchId], references: [id]) 
-   createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
-  deletedAt   DateTime?
-}
+//   courseId String @db.ObjectId
+//   course Course @relation(fields: [courseId], references: [id]) 
+//     batchId String @db.ObjectId
+//   batch Batch @relation(fields: [batchId], references: [id]) 
+//    createdAt   DateTime @default(now())
+//   updatedAt   DateTime @default(now())
+//   deletedAt   DateTime?
+// }
 
 model Course {
     id      String   @id @default(auto()) @map("_id") @db.ObjectId
     name String
     category CourseCategory
-    batchCourse BatchCourse[]
+    // batchCourse BatchCourse[]
+    batch Batch[]
+    Payment Payment[]
     courseFolder CourseFolder[]
-    link String?
+    // link String?
     methode  CourseMethode
     createdAt   DateTime @default(now())
     updatedAt   DateTime @default(now())
@@ -154,34 +157,36 @@ model SubmissionFile {
   deletedAt   DateTime? 
 }
 
-model UserCourses {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId String @db.ObjectId
-  user User @relation(fields: [userId], references: [id]) 
-  batchId String @db.ObjectId
-  batch Batch @relation(fields: [batchId], references: [id]) 
-  payment Payment[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
-  deletedAt   DateTime?
-}
+// model UserCourses {
+//   id      String   @id @default(auto()) @map("_id") @db.ObjectId
+//   userId String @db.ObjectId
+//   user User @relation(fields: [userId], references: [id]) 
+//   batchId String @db.ObjectId
+//   batch Batch @relation(fields: [batchId], references: [id]) 
+//   payment Payment[]
+//   createdAt   DateTime @default(now())
+//   updatedAt   DateTime @default(now())
+//   deletedAt   DateTime?
+// }
 
 model Payment {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
   bank String
   atas_nama String
-  
+  courseId String @db.ObjectId
+  course Course @relation(fields: [courseId], references: [id]) 
+  userId String @db.ObjectId
+  user User @relation(fields: [userId], references: [id]) 
   no_rek String
   status Boolean @default(false)
   bukti_bayar String
-  userCoursesId String @db.ObjectId
-  userCourses UserCourses @relation(fields: [userCoursesId], references: [id])  
+  // userCoursesId String @db.ObjectId
+  // userCourses UserCourses @relation(fields: [userCoursesId], references: [id])  
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
   deletedAt   DateTime?
 
-  @@unique([deletedAt, userCoursesId])
 }
 
 model PG {

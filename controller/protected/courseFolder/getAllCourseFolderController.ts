@@ -38,18 +38,15 @@ const paginationAdmin = async (page: number, count: number) => {
 };
 
 const paginationUser = async (page: number, count: number, user: any) => {
-  const getCoursePurchased = await prisma.userCourses.findMany({
+  const getCoursePurchased = await prisma.payment.findMany({
     select: {
-      batchId: true,
+      courseId: true,
     },
     where: {
-      payment: {
-        every: {
-          status: {
-            equals: true,
-          },
-        },
+      status: {
+        equals: true,
       },
+
       userId: user.id,
       deletedAt: {
         isSet: false,
@@ -61,7 +58,7 @@ const paginationUser = async (page: number, count: number, user: any) => {
     dataCount = 0,
     hasNext = { length: 0 };
 
-  for (const { batchId } of getCoursePurchased) {
+  for (const { courseId } of getCoursePurchased) {
     data = await prisma.courseFolder.findMany({
       include: {
         courseFile: true,
@@ -69,11 +66,7 @@ const paginationUser = async (page: number, count: number, user: any) => {
       },
       where: {
         course: {
-          batchCourse: {
-            every: {
-              batchId,
-            },
-          },
+          id: courseId,
         },
         deletedAt: {
           isSet: false,
@@ -83,11 +76,7 @@ const paginationUser = async (page: number, count: number, user: any) => {
     dataCount = await prisma.courseFolder.count({
       where: {
         course: {
-          batchCourse: {
-            every: {
-              batchId,
-            },
-          },
+          id: courseId,
         },
         deletedAt: {
           isSet: false,
@@ -99,11 +88,7 @@ const paginationUser = async (page: number, count: number, user: any) => {
       skip: count * (page + 1 - 1),
       where: {
         course: {
-          batchCourse: {
-            every: {
-              batchId,
-            },
-          },
+          id: courseId,
         },
         deletedAt: {
           isSet: false,

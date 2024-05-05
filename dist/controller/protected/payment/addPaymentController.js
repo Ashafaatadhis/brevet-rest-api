@@ -26,6 +26,7 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                 return next(new HttpError_1.default(404, "File not found"));
             }
             req.body.bukti_bayar = urlImage.secure_url;
+            req.body.userId = user.id;
             const data = yield prisma_1.default.payment.create({
                 data: req.body,
             });

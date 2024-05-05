@@ -13,19 +13,18 @@ exports.loginValidator = exports.updateValidator = exports.changePasswordValidat
 const express_validator_1 = require("express-validator");
 exports.addBatchValidator = [
     (0, express_validator_1.check)("name", "Invalid does not Empty").not().isEmpty(),
+    (0, express_validator_1.check)("courseId", "Invalid does not Empty").not().isEmpty(),
     (0, express_validator_1.check)("start_register", "Invalid does not Empty").not().isEmpty(),
     (0, express_validator_1.check)("start_register", "Invalid format Date").isISO8601().toDate(),
     (0, express_validator_1.check)("end_register", "Invalid does not Empty").not().isEmpty(),
     (0, express_validator_1.check)("end_register", "Invalid format Date").isISO8601().toDate(),
-    (0, express_validator_1.check)("price", "Invalid does not Empty").not().isEmpty(),
-    (0, express_validator_1.check)("price", "Numeric only").isNumeric(),
     (0, express_validator_1.check)("kuota", "Invalid does not Empty").not().isEmpty(),
 ];
 exports.addPaymentValidator = [
     (0, express_validator_1.check)("bank", "Invalid does not Empty").not().isEmpty(),
+    (0, express_validator_1.check)("courseId", "Invalid does not Empty").not().isEmpty(),
     (0, express_validator_1.check)("atas_nama", "Invalid does not Empty").not().isEmpty(),
     (0, express_validator_1.check)("no_rek", "Invalid does not Empty").not().isEmpty(),
-    (0, express_validator_1.check)("userCoursesId", "Invalid does not Empty").not().isEmpty(),
 ];
 exports.editPaymentValidator = [
     (0, express_validator_1.check)("bank", "Invalid does not Empty").not().isEmpty(),
@@ -92,6 +91,8 @@ exports.addCourseTaskFileValidator = [
 ];
 exports.addCourseValidator = [
     (0, express_validator_1.check)("name", "Invalid does not Empty").not().isEmpty(),
+    // check("price", "Invalid does not Empty").not().isEmpty(),
+    // check("price", "Numeric only").isNumeric(),
     (0, express_validator_1.check)("category", "Invalid does not Empty").not().isEmpty(),
     (0, express_validator_1.check)("category", "Invalid does value category").isIn(["KURSUS", "WORKSHOP"]),
     (0, express_validator_1.check)("methode", "Invalid does not Empty").not().isEmpty(),

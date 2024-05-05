@@ -20,28 +20,16 @@ const checkPayment = async (id: string, user: any, by: string) => {
     },
   });
 
-  const lemm = await prisma.batchCourse.findFirst({
-    where: {
-      courseId: data?.course.id,
-      deletedAt: {
-        isSet: false,
-      },
-    },
-  });
-
-  const bukti = await prisma.userCourses.findMany({
+  const bukti = await prisma.payment.findMany({
     where: {
       userId: user.id,
       deletedAt: {
         isSet: false,
       },
-      batchId: lemm?.batchId,
-      payment: {
-        every: {
-          status: {
-            equals: true,
-          },
-        },
+      courseId: data?.course.id,
+
+      status: {
+        equals: true,
       },
     },
   });

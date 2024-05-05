@@ -14,9 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../../../config/prisma"));
 const checkPayment = (id, user) => __awaiter(void 0, void 0, void 0, function* () {
-    const data = yield prisma_1.default.submissionFile.findFirst({
+    const data = yield prisma_1.default.question.findFirst({
         select: {
-            courseTask: {
+            pg: {
                 select: {
                     courseFolder: {
                         select: {
@@ -35,27 +35,15 @@ const checkPayment = (id, user) => __awaiter(void 0, void 0, void 0, function* (
             },
         },
     });
-    const lemm = yield prisma_1.default.batchCourse.findFirst({
-        where: {
-            courseId: data === null || data === void 0 ? void 0 : data.courseTask.courseFolder.course.id,
-            deletedAt: {
-                isSet: false,
-            },
-        },
-    });
-    const bukti = yield prisma_1.default.userCourses.findMany({
+    const bukti = yield prisma_1.default.payment.findMany({
         where: {
             userId: user.id,
             deletedAt: {
                 isSet: false,
             },
-            batchId: lemm === null || lemm === void 0 ? void 0 : lemm.batchId,
-            payment: {
-                every: {
-                    status: {
-                        equals: true,
-                    },
-                },
+            courseId: data === null || data === void 0 ? void 0 : data.pg.courseFolder.course.id,
+            status: {
+                equals: true,
             },
         },
     });

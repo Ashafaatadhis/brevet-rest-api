@@ -18,23 +18,16 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const courseId = req.params.courseId;
     const batchId = req.params.batchId;
     try {
-        const isUserPurchased = yield prisma_1.default.userCourses.findFirst({
+        const isUserPurchased = yield prisma_1.default.payment.findFirst({
             where: {
-                payment: {
-                    every: {
-                        status: {
-                            equals: true,
-                        },
-                        deletedAt: {
-                            isSet: false,
-                        },
-                    },
+                status: {
+                    equals: true,
                 },
                 deletedAt: {
                     isSet: false,
                 },
                 userId: user.id,
-                batchId,
+                courseId,
             },
         });
         if (!isUserPurchased) {

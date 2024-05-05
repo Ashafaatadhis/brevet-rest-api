@@ -11,10 +11,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     if (!["ADMIN", "SUPERADMIN"].includes(user.role))
       return res.status(401).json({ success: false, message: "Unauthorized" });
     try {
-      const thisUser = await prisma.submissionFile.findUnique({
-        select: {
-          file: true,
-        },
+      const thisUser = await prisma.question.findUnique({
         where: {
           id,
           deletedAt: {
@@ -23,17 +20,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
         },
       });
 
-      const urlImage: any = await uploadSingle(req, "submission");
-
-      if (!urlImage) {
-        req.body.file = thisUser?.file;
-      } else {
-        if (thisUser) await deleteFiles(thisUser?.file);
-        req.body.file = urlImage.secure_url;
-        req.body.name = urlImage.name;
-      }
-
-      const data = await prisma.submissionFile.update({
+      const data = await prisma.question.update({
         data: { ...req.body, updatedAt: new Date().toISOString() },
         where: {
           id,

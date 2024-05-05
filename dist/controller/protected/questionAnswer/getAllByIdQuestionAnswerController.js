@@ -14,19 +14,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../../../config/prisma"));
 const paginationAdmin = (page, count, by, id) => __awaiter(void 0, void 0, void 0, function* () {
-    const data = yield prisma_1.default.submissionFile.findMany({
+    const data = yield prisma_1.default.questionAnswer.findMany({
         take: count,
         skip: count * (page - 1),
         where: Object.assign(Object.assign({}, (by === "courseTaskId" ? { courseTaskId: id } : { id })), { deletedAt: {
                 isSet: false,
             } }),
     });
-    const dataCount = yield prisma_1.default.submissionFile.count({
+    const dataCount = yield prisma_1.default.questionAnswer.count({
         where: Object.assign(Object.assign({}, (by === "courseTaskId" ? { courseTaskId: id } : { id })), { deletedAt: {
                 isSet: false,
             } }),
     });
-    const hasNext = yield prisma_1.default.submissionFile.findMany({
+    const hasNext = yield prisma_1.default.questionAnswer.findMany({
         take: 1,
         skip: count * (page + 1 - 1),
         where: Object.assign(Object.assign({}, (by === "courseTaskId" ? { courseTaskId: id } : { id })), { deletedAt: {
@@ -36,17 +36,13 @@ const paginationAdmin = (page, count, by, id) => __awaiter(void 0, void 0, void 
     return { data, dataCount, hasNext };
 });
 const paginationUser = (page, count, user, by, id) => __awaiter(void 0, void 0, void 0, function* () {
-    const getCoursePurchased = yield prisma_1.default.userCourses.findMany({
+    const getCoursePurchased = yield prisma_1.default.payment.findMany({
         select: {
-            batchId: true,
+            courseId: true,
         },
         where: {
-            payment: {
-                every: {
-                    status: {
-                        equals: true,
-                    },
-                },
+            status: {
+                equals: true,
             },
             userId: user.id,
             deletedAt: {
@@ -55,15 +51,13 @@ const paginationUser = (page, count, user, by, id) => __awaiter(void 0, void 0, 
         },
     });
     let data, dataCount = 0, hasNext = { length: 0 };
-    for (const { batchId } of getCoursePurchased) {
-        data = yield prisma_1.default.submissionFile.findMany({
-            where: Object.assign(Object.assign({}, (by === "courseTaskId" ? { courseTaskId: id } : { id })), { courseTask: {
-                    courseFolder: {
-                        course: {
-                            batchCourse: {
-                                every: {
-                                    batchId,
-                                },
+    for (const { courseId } of getCoursePurchased) {
+        data = yield prisma_1.default.questionAnswer.findMany({
+            where: Object.assign(Object.assign({}, (by === "courseTaskId" ? { courseTaskId: id } : { id })), { question: {
+                    pg: {
+                        courseFolder: {
+                            course: {
+                                id: courseId,
                             },
                         },
                     },
@@ -71,14 +65,12 @@ const paginationUser = (page, count, user, by, id) => __awaiter(void 0, void 0, 
                     isSet: false,
                 } }),
         });
-        dataCount = yield prisma_1.default.submissionFile.count({
-            where: Object.assign(Object.assign({}, (by === "courseTaskId" ? { courseTaskId: id } : { id })), { courseTask: {
-                    courseFolder: {
-                        course: {
-                            batchCourse: {
-                                every: {
-                                    batchId,
-                                },
+        dataCount = yield prisma_1.default.questionAnswer.count({
+            where: Object.assign(Object.assign({}, (by === "courseTaskId" ? { courseTaskId: id } : { id })), { question: {
+                    pg: {
+                        courseFolder: {
+                            course: {
+                                id: courseId,
                             },
                         },
                     },
@@ -86,16 +78,14 @@ const paginationUser = (page, count, user, by, id) => __awaiter(void 0, void 0, 
                     isSet: false,
                 } }),
         });
-        hasNext = yield prisma_1.default.submissionFile.findMany({
+        hasNext = yield prisma_1.default.questionAnswer.findMany({
             take: 1,
             skip: count * (page + 1 - 1),
-            where: Object.assign(Object.assign({}, (by === "courseTaskId" ? { courseTaskId: id } : { id })), { courseTask: {
-                    courseFolder: {
-                        course: {
-                            batchCourse: {
-                                every: {
-                                    batchId,
-                                },
+            where: Object.assign(Object.assign({}, (by === "courseTaskId" ? { courseTaskId: id } : { id })), { question: {
+                    pg: {
+                        courseFolder: {
+                            course: {
+                                id: courseId,
                             },
                         },
                     },

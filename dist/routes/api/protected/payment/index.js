@@ -10,7 +10,7 @@ const payment_1 = require("../../../../controller/protected/payment");
 const multer_1 = __importDefault(require("../../../../config/multer"));
 const router = express_1.default.Router();
 router.post("/", multer_1.default.single("bukti_bayar"), validator_1.addPaymentValidator, (0, errorHandler_1.default)(payment_1.addPaymentController));
-router.put("/:id", multer_1.default.single("bukti_bayar"), validator_1.addPaymentValidator, (0, errorHandler_1.default)(payment_1.editPaymentController));
+router.put("/:id", multer_1.default.single("bukti_bayar"), validator_1.editPaymentValidator, (0, errorHandler_1.default)(payment_1.editPaymentController));
 router.delete("/:id", (0, errorHandler_1.default)(payment_1.deletePaymentController));
 router.get("/", (0, errorHandler_1.default)(payment_1.getAllPaymentController));
 router.get("/:id", (0, errorHandler_1.default)(payment_1.getByIdPaymentController));

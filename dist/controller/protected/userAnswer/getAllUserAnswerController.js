@@ -40,17 +40,13 @@ const paginationAdmin = (page, count) => __awaiter(void 0, void 0, void 0, funct
     return { data, dataCount, hasNext };
 });
 const paginationUser = (page, count, user) => __awaiter(void 0, void 0, void 0, function* () {
-    const getCoursePurchased = yield prisma_1.default.userCourses.findMany({
+    const getCoursePurchased = yield prisma_1.default.payment.findMany({
         select: {
-            batchId: true,
+            courseId: true,
         },
         where: {
-            payment: {
-                every: {
-                    status: {
-                        equals: true,
-                    },
-                },
+            status: {
+                equals: true,
             },
             userId: user.id,
             deletedAt: {
@@ -59,18 +55,14 @@ const paginationUser = (page, count, user) => __awaiter(void 0, void 0, void 0, 
         },
     });
     let data, dataCount = 0, hasNext = { length: 0 };
-    for (const { batchId } of getCoursePurchased) {
+    for (const { courseId } of getCoursePurchased) {
         data = yield prisma_1.default.userAnswer.findMany({
             where: {
                 question: {
                     pg: {
                         courseFolder: {
                             course: {
-                                batchCourse: {
-                                    every: {
-                                        batchId,
-                                    },
-                                },
+                                id: courseId,
                             },
                         },
                     },
@@ -86,11 +78,7 @@ const paginationUser = (page, count, user) => __awaiter(void 0, void 0, void 0, 
                     pg: {
                         courseFolder: {
                             course: {
-                                batchCourse: {
-                                    every: {
-                                        batchId,
-                                    },
-                                },
+                                id: courseId,
                             },
                         },
                     },
@@ -108,11 +96,7 @@ const paginationUser = (page, count, user) => __awaiter(void 0, void 0, void 0, 
                     pg: {
                         courseFolder: {
                             course: {
-                                batchCourse: {
-                                    every: {
-                                        batchId,
-                                    },
-                                },
+                                id: courseId,
                             },
                         },
                     },

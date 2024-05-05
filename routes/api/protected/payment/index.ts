@@ -24,7 +24,7 @@ router.post(
 router.put(
   "/:id",
   multer.single("bukti_bayar"),
-  addPaymentValidator,
+  editPaymentValidator,
   errorHandler(editPaymentController)
 );
 router.delete("/:id", errorHandler(deletePaymentController));

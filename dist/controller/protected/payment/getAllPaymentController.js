@@ -26,9 +26,7 @@ const superUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
 const basicUser = (req, res, next, user) => __awaiter(void 0, void 0, void 0, function* () {
     const data = yield prisma_1.default.payment.findMany({
         where: {
-            userCourses: {
-                userId: user.id,
-            },
+            userId: user.id,
             deletedAt: {
                 isSet: false,
             },

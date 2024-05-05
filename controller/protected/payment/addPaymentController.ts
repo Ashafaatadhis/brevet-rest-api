@@ -17,6 +17,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
       }
 
       req.body.bukti_bayar = urlImage.secure_url;
+      req.body.userId = user.id;
 
       const data = await prisma.payment.create({
         data: req.body,

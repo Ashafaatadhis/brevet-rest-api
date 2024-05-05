@@ -3,9 +3,9 @@ import { validationResult } from "express-validator";
 import prisma from "../../../config/prisma";
 
 const checkPayment = async (id: string, user: any) => {
-  const data = await prisma.submissionFile.findFirst({
+  const data = await prisma.question.findFirst({
     select: {
-      courseTask: {
+      pg: {
         select: {
           courseFolder: {
             select: {
@@ -25,28 +25,16 @@ const checkPayment = async (id: string, user: any) => {
     },
   });
 
-  const lemm = await prisma.batchCourse.findFirst({
-    where: {
-      courseId: data?.courseTask.courseFolder.course.id,
-      deletedAt: {
-        isSet: false,
-      },
-    },
-  });
-
-  const bukti = await prisma.userCourses.findMany({
+  const bukti = await prisma.payment.findMany({
     where: {
       userId: user.id,
       deletedAt: {
         isSet: false,
       },
-      batchId: lemm?.batchId,
-      payment: {
-        every: {
-          status: {
-            equals: true,
-          },
-        },
+      courseId: data?.pg.courseFolder.course.id,
+
+      status: {
+        equals: true,
       },
     },
   });
