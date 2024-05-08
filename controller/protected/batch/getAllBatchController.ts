@@ -53,6 +53,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
       meta: { hasNextPage: hasNext.length > 0, count: dataCount },
     });
   } catch (err) {
+    console.log(err);
     return res
       .status(400)
       .json({ success: false, message: "Batch Error occured" });

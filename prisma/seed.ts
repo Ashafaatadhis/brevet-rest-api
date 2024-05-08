@@ -3,7 +3,7 @@ import { hashPassword } from "../utils/bcrypt";
 async function main() {
   // await prisma.user.deleteMany();
 
-  await prisma.payment.deleteMany();
+  // await prisma.payment.deleteMany();
   // await prisma.userCourses.deleteMany();
   await prisma.batch.deleteMany();
 

@@ -62,6 +62,7 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         });
     }
     catch (err) {
+        console.log(err);
         return res
             .status(400)
             .json({ success: false, message: "Batch Error occured" });

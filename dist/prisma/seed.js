@@ -16,7 +16,7 @@ const prisma_1 = __importDefault(require("../config/prisma"));
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         // await prisma.user.deleteMany();
-        yield prisma_1.default.payment.deleteMany();
+        // await prisma.payment.deleteMany();
         // await prisma.userCourses.deleteMany();
         yield prisma_1.default.batch.deleteMany();
         // for (let i = 1; i <= 30; i++) {
