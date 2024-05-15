@@ -17,6 +17,17 @@ app.use(logger_1.default);
 app.use((0, cors_1.default)({
     credentials: true,
     origin: ["http://localhost:3000", "https://tax-center-brevet.vercel.app"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
+    allowedHeaders: [
+        "Content-Type",
+        "Origin",
+        "X-Requested-With",
+        "Accept",
+        "x-client-key",
+        "x-client-token",
+        "x-client-secret",
+        "Authorization",
+    ],
 }));
 app.use((0, express_session_1.default)({
     secret: config_1.default.secret.session_secret,

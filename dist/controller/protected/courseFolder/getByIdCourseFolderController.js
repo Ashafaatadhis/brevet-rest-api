@@ -26,15 +26,32 @@ const checkPayment = (id, user, by) => __awaiter(void 0, void 0, void 0, functio
                 isSet: false,
             } }),
     });
+<<<<<<< HEAD
+=======
+    const lemm = yield prisma_1.default.batchCourse.findFirst({
+        where: {
+            courseId: data === null || data === void 0 ? void 0 : data.course.id,
+            deletedAt: {
+                isSet: false,
+            },
+        },
+    });
+>>>>>>> 02861ccee35cfb04eee816b7b616a73608c4be87
     const bukti = yield prisma_1.default.payment.findMany({
         where: {
             userId: user.id,
             deletedAt: {
                 isSet: false,
             },
+<<<<<<< HEAD
             courseId: data === null || data === void 0 ? void 0 : data.course.id,
             status: {
                 equals: true,
+=======
+            batchId: lemm === null || lemm === void 0 ? void 0 : lemm.batchId,
+            status: {
+                equals: "PAID",
+>>>>>>> 02861ccee35cfb04eee816b7b616a73608c4be87
             },
         },
     });

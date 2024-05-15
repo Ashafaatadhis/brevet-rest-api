@@ -42,7 +42,11 @@ const paginationUser = (page, count, user, by, id) => __awaiter(void 0, void 0, 
         },
         where: {
             status: {
+<<<<<<< HEAD
                 equals: true,
+=======
+                equals: "PAID",
+>>>>>>> 02861ccee35cfb04eee816b7b616a73608c4be87
             },
             userId: user.id,
             deletedAt: {
@@ -51,6 +55,7 @@ const paginationUser = (page, count, user, by, id) => __awaiter(void 0, void 0, 
         },
     });
     let data, dataCount = 0, hasNext = { length: 0 };
+<<<<<<< HEAD
     for (const { courseId } of getCoursePurchased) {
         data = yield prisma_1.default.userAnswer.findMany({
             where: Object.assign(Object.assign({}, (by === "courseTaskId" ? { courseTaskId: id } : { id })), { question: {
@@ -58,6 +63,20 @@ const paginationUser = (page, count, user, by, id) => __awaiter(void 0, void 0, 
                         courseFolder: {
                             course: {
                                 id: courseId,
+=======
+    for (const { batchId } of getCoursePurchased) {
+        data = yield prisma_1.default.submissionFile.findMany({
+            where: Object.assign(Object.assign({}, (by === "courseTaskId" ? { courseTaskId: id } : { id })), { courseTask: {
+                    courseFolder: {
+                        course: {
+                            batchCourse: {
+                                some: {
+                                    batchId,
+                                    deletedAt: {
+                                        isSet: false,
+                                    },
+                                },
+>>>>>>> 02861ccee35cfb04eee816b7b616a73608c4be87
                             },
                         },
                     },
@@ -65,12 +84,26 @@ const paginationUser = (page, count, user, by, id) => __awaiter(void 0, void 0, 
                     isSet: false,
                 } }),
         });
+<<<<<<< HEAD
         dataCount = yield prisma_1.default.userAnswer.count({
             where: Object.assign(Object.assign({}, (by === "courseTaskId" ? { courseTaskId: id } : { id })), { question: {
                     pg: {
                         courseFolder: {
                             course: {
                                 id: courseId,
+=======
+        dataCount = yield prisma_1.default.submissionFile.count({
+            where: Object.assign(Object.assign({}, (by === "courseTaskId" ? { courseTaskId: id } : { id })), { courseTask: {
+                    courseFolder: {
+                        course: {
+                            batchCourse: {
+                                some: {
+                                    batchId,
+                                    deletedAt: {
+                                        isSet: false,
+                                    },
+                                },
+>>>>>>> 02861ccee35cfb04eee816b7b616a73608c4be87
                             },
                         },
                     },
@@ -81,11 +114,24 @@ const paginationUser = (page, count, user, by, id) => __awaiter(void 0, void 0, 
         hasNext = yield prisma_1.default.userAnswer.findMany({
             take: 1,
             skip: count * (page + 1 - 1),
+<<<<<<< HEAD
             where: Object.assign(Object.assign({}, (by === "courseTaskId" ? { courseTaskId: id } : { id })), { question: {
                     pg: {
                         courseFolder: {
                             course: {
                                 id: courseId,
+=======
+            where: Object.assign(Object.assign({}, (by === "courseTaskId" ? { courseTaskId: id } : { id })), { courseTask: {
+                    courseFolder: {
+                        course: {
+                            batchCourse: {
+                                some: {
+                                    batchId,
+                                    deletedAt: {
+                                        isSet: false,
+                                    },
+                                },
+>>>>>>> 02861ccee35cfb04eee816b7b616a73608c4be87
                             },
                         },
                     },

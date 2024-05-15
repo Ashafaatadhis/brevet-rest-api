@@ -22,9 +22,34 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         const data = yield prisma_1.default.batchCourse.findMany({
             take: count,
             skip: count * (page - 1),
+            select: {
+                id: true,
+                course: {
+                    select: {
+                        name: true,
+                        id: true,
+                    },
+                },
+                batch: {
+                    select: {
+                        name: true,
+                        id: true,
+                    },
+                },
+            },
             where: Object.assign(Object.assign({}, (by === "batchId" ? { batchId: id } : { id })), { deletedAt: {
                     isSet: false,
                 } }),
+        });
+        let newData = [];
+        data.map((value) => {
+            newData.push({
+                id: value.id,
+                courseId: value.course.id,
+                batchId: value.batch.id,
+                course: value.course.name,
+                batch: value.batch.name,
+            });
         });
         const dataCount = yield prisma_1.default.batchCourse.count({
             where: Object.assign(Object.assign({}, (by === "batchId" ? { batchId: id } : { id })), { deletedAt: {
@@ -40,7 +65,7 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         });
         return res.json({
             status: 200,
-            data,
+            data: newData,
             meta: { hasNextPage: hasNext.length > 0, count: dataCount },
         });
     }

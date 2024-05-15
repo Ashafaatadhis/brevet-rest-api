@@ -42,7 +42,11 @@ const paginationUser = (page, count, user, by, id) => __awaiter(void 0, void 0, 
         },
         where: {
             status: {
+<<<<<<< HEAD
                 equals: true,
+=======
+                equals: "PAID",
+>>>>>>> 02861ccee35cfb04eee816b7b616a73608c4be87
             },
             userId: user.id,
             deletedAt: {
@@ -55,12 +59,23 @@ const paginationUser = (page, count, user, by, id) => __awaiter(void 0, void 0, 
         data = yield prisma_1.default.courseFile.findMany({
             where: Object.assign(Object.assign({}, (by === "courseFolderId" ? { courseFolderId: id } : { id })), { courseFolder: {
                     course: {
+<<<<<<< HEAD
                         // batchCourse: {
                         //   every: {
                         //     batchId,
                         //   },
                         // },
                         id: courseId,
+=======
+                        batchCourse: {
+                            some: {
+                                batchId,
+                                deletedAt: {
+                                    isSet: false,
+                                },
+                            },
+                        },
+>>>>>>> 02861ccee35cfb04eee816b7b616a73608c4be87
                     },
                 }, deletedAt: {
                     isSet: false,
@@ -69,7 +84,18 @@ const paginationUser = (page, count, user, by, id) => __awaiter(void 0, void 0, 
         dataCount = yield prisma_1.default.courseFile.count({
             where: Object.assign(Object.assign({}, (by === "courseFolderId" ? { courseFolderId: id } : { id })), { courseFolder: {
                     course: {
+<<<<<<< HEAD
                         id: courseId,
+=======
+                        batchCourse: {
+                            some: {
+                                batchId,
+                                deletedAt: {
+                                    isSet: false,
+                                },
+                            },
+                        },
+>>>>>>> 02861ccee35cfb04eee816b7b616a73608c4be87
                     },
                 }, deletedAt: {
                     isSet: false,
@@ -80,7 +106,18 @@ const paginationUser = (page, count, user, by, id) => __awaiter(void 0, void 0, 
             skip: count * (page + 1 - 1),
             where: Object.assign(Object.assign({}, (by === "courseFolderId" ? { courseFolderId: id } : { id })), { courseFolder: {
                     course: {
+<<<<<<< HEAD
                         id: courseId,
+=======
+                        batchCourse: {
+                            some: {
+                                batchId,
+                                deletedAt: {
+                                    isSet: false,
+                                },
+                            },
+                        },
+>>>>>>> 02861ccee35cfb04eee816b7b616a73608c4be87
                     },
                 }, deletedAt: {
                     isSet: false,

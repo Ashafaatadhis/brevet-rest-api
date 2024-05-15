@@ -13,11 +13,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../../../config/prisma"));
-const paginationAdmin = (page, count) => __awaiter(void 0, void 0, void 0, function* () {
+const pagination = (page, count, user, search) => __awaiter(void 0, void 0, void 0, function* () {
     const data = yield prisma_1.default.courseFolder.findMany({
         take: count,
         skip: count * (page - 1),
         where: {
+            name: {
+                contains: search,
+                mode: "insensitive",
+            },
             deletedAt: {
                 isSet: false,
             },
@@ -29,6 +33,10 @@ const paginationAdmin = (page, count) => __awaiter(void 0, void 0, void 0, funct
     });
     const dataCount = yield prisma_1.default.courseFolder.count({
         where: {
+            name: {
+                contains: search,
+                mode: "insensitive",
+            },
             deletedAt: {
                 isSet: false,
             },
@@ -38,6 +46,10 @@ const paginationAdmin = (page, count) => __awaiter(void 0, void 0, void 0, funct
         take: 1,
         skip: count * (page + 1 - 1),
         where: {
+            name: {
+                contains: search,
+                mode: "insensitive",
+            },
             deletedAt: {
                 isSet: false,
             },
@@ -45,6 +57,7 @@ const paginationAdmin = (page, count) => __awaiter(void 0, void 0, void 0, funct
     });
     return { data, dataCount, hasNext };
 });
+<<<<<<< HEAD
 const paginationUser = (page, count, user) => __awaiter(void 0, void 0, void 0, function* () {
     const getCoursePurchased = yield prisma_1.default.payment.findMany({
         select: {
@@ -107,12 +120,18 @@ const pagination = (page, count, user) => __awaiter(void 0, void 0, void 0, func
     }
     return yield paginationAdmin(page, count);
 });
+=======
+>>>>>>> 02861ccee35cfb04eee816b7b616a73608c4be87
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.user;
+    const search = req.query.search ? req.query.search : "";
     const count = req.query.count ? parseInt(req.query.count) : 10;
     const page = req.query.page ? parseInt(req.query.page) : 1;
     try {
-        const { data, dataCount, hasNext } = yield pagination(page, count, user);
+        if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
+            return res.status(401).json({ success: false, message: "Unauthorized" });
+        }
+        const { data, dataCount, hasNext } = yield pagination(page, count, user, search);
         return res.json({
             status: 200,
             data,

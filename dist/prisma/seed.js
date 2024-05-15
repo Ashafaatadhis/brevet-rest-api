@@ -15,10 +15,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../config/prisma"));
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
+<<<<<<< HEAD
         // await prisma.user.deleteMany();
         // await prisma.payment.deleteMany();
         // await prisma.userCourses.deleteMany();
         yield prisma_1.default.batch.deleteMany();
+=======
+        // await prisma.batchCourse.deleteMany();
+        // await prisma.submissionFile.deleteMany();
+        // await prisma.courseTaskFile.deleteMany();
+        // await prisma.courseTask.deleteMany();
+        // await prisma.userAnswer.deleteMany();
+        // await prisma.questionAnswer.deleteMany();
+        // await prisma.question.deleteMany();
+        // await prisma.pG.deleteMany();
+        // await prisma.courseFile.deleteMany();
+        // await prisma.courseFolder.deleteMany();
+        // await prisma.course.deleteMany();
+        yield prisma_1.default.batchCourse.deleteMany();
+        // await prisma.courseFile.deleteMany();
+>>>>>>> 02861ccee35cfb04eee816b7b616a73608c4be87
         // for (let i = 1; i <= 30; i++) {
         //   await prisma.user.create({
         //     data: {

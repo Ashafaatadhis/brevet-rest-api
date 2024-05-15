@@ -23,7 +23,11 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 },
                 userId: user.id,
                 status: {
+<<<<<<< HEAD
                     equals: true,
+=======
+                    equals: "PAID",
+>>>>>>> 02861ccee35cfb04eee816b7b616a73608c4be87
                 },
             },
         });

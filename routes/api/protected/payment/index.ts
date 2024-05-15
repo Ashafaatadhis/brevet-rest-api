@@ -11,24 +11,27 @@ import {
   editPaymentController,
   getAllPaymentController,
   getByIdPaymentController,
+  getCurrentPayment,
 } from "../../../../controller/protected/payment";
 import multer from "../../../../config/multer";
 const router = express.Router();
 
 router.post(
   "/",
-  multer.single("bukti_bayar"),
+  // multer.single("bukti_bayar"),
   addPaymentValidator,
   errorHandler(addPaymentController)
 );
 router.put(
   "/:id",
-  multer.single("bukti_bayar"),
+  // multer.single("bukti_bayar"),
   editPaymentValidator,
   errorHandler(editPaymentController)
 );
 router.delete("/:id", errorHandler(deletePaymentController));
 router.get("/", errorHandler(getAllPaymentController));
+router.get("/current", errorHandler(getCurrentPayment));
+
 router.get("/:id", errorHandler(getByIdPaymentController));
 
 export default router;

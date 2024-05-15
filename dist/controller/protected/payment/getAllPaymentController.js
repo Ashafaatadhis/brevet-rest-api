@@ -23,6 +23,7 @@ const superUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     });
     return res.json({ success: true, data });
 });
+<<<<<<< HEAD
 const basicUser = (req, res, next, user) => __awaiter(void 0, void 0, void 0, function* () {
     const data = yield prisma_1.default.payment.findMany({
         where: {
@@ -34,11 +35,12 @@ const basicUser = (req, res, next, user) => __awaiter(void 0, void 0, void 0, fu
     });
     return res.json({ success: true, data });
 });
+=======
+>>>>>>> 02861ccee35cfb04eee816b7b616a73608c4be87
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.user;
     if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
-        return basicUser(req, res, next, user);
-        // return res.status(401).json({ message: "Unauthorized" });
+        return res.status(401).json({ message: "Unauthorized" });
     }
     try {
         superUser(req, res, next);

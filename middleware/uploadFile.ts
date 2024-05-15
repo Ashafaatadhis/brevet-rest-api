@@ -22,9 +22,11 @@ export const uploadSingle = async (req: Request, folder: string) => {
     if (!req?.file) {
       return resolve(false);
     }
+    const extension = req.file.originalname.split(".").reverse()[0];
     const stream = cloudinary.uploader.upload_stream(
       {
-        resource_type: "auto",
+        format: extension,
+        resource_type: "raw",
         folder,
       },
       (error, result) => {
@@ -44,8 +46,10 @@ export const deleteFiles = async (name: string) => {
   // const fi = name.split("/").reverse().slice(0, 2).reverse().join("/").split(".");
   const arr = name.split("/");
   const fi = arr.slice(arr.length - 2).join("/");
-  const removePrefix = fi.split(".")[0];
-  return await cloudinary.uploader.destroy(removePrefix);
+
+  return await cloudinary.uploader.destroy(fi, {
+    resource_type: "raw",
+  });
 };
 
 export const uploadMultiple = async (req: Request, folder: string) => {
@@ -60,9 +64,12 @@ export const uploadMultiple = async (req: Request, folder: string) => {
       const newAll: any[] = [];
 
       req.files.forEach((file, index) => {
+        const extension = file.originalname.split(".").reverse()[0];
+
         const stream = cloudinary.uploader.upload_stream(
           {
-            resource_type: "auto",
+            format: extension,
+            resource_type: "raw",
             folder,
           },
           (error, result) => {

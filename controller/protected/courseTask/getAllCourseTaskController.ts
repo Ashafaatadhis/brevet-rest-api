@@ -40,11 +40,11 @@ const paginationAdmin = async (page: number, count: number) => {
 const paginationUser = async (page: number, count: number, user: any) => {
   const getCoursePurchased = await prisma.payment.findMany({
     select: {
-      courseId: true,
+      batchId: true,
     },
     where: {
       status: {
-        equals: true,
+        equals: "PAID",
       },
 
       userId: user.id,
@@ -58,7 +58,7 @@ const paginationUser = async (page: number, count: number, user: any) => {
     dataCount = 0,
     hasNext = { length: 0 };
 
-  for (const { courseId } of getCoursePurchased) {
+  for (const { batchId } of getCoursePurchased) {
     data = await prisma.courseTask.findMany({
       include: {
         courseTaskFile: true,
@@ -67,7 +67,14 @@ const paginationUser = async (page: number, count: number, user: any) => {
       where: {
         courseFolder: {
           course: {
-            id: courseId,
+            batchCourse: {
+              some: {
+                batchId,
+                deletedAt: {
+                  isSet: false,
+                },
+              },
+            },
           },
         },
         deletedAt: {
@@ -79,7 +86,14 @@ const paginationUser = async (page: number, count: number, user: any) => {
       where: {
         courseFolder: {
           course: {
-            id: courseId,
+            batchCourse: {
+              some: {
+                batchId,
+                deletedAt: {
+                  isSet: false,
+                },
+              },
+            },
           },
         },
         deletedAt: {
@@ -93,7 +107,14 @@ const paginationUser = async (page: number, count: number, user: any) => {
       where: {
         courseFolder: {
           course: {
-            id: courseId,
+            batchCourse: {
+              some: {
+                batchId,
+                deletedAt: {
+                  isSet: false,
+                },
+              },
+            },
           },
         },
         deletedAt: {

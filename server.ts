@@ -15,6 +15,17 @@ app.use(
   cors({
     credentials: true,
     origin: ["http://localhost:3000", "https://tax-center-brevet.vercel.app"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type",
+      "Origin",
+      "X-Requested-With",
+      "Accept",
+      "x-client-key",
+      "x-client-token",
+      "x-client-secret",
+      "Authorization",
+    ],
   })
 );
 app.use(

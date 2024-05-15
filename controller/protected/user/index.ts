@@ -5,6 +5,7 @@ import getByIdController from "./getByIdController";
 import getBatchController from "./getBatchController";
 import getCoursesController from "./getCoursesController";
 import changePasswordByIdController from "./changePasswordByIdController";
+import getCurrentUser from "./getCurrentUser";
 
 export {
   changePasswordByIdController,
@@ -13,5 +14,6 @@ export {
   getAllController,
   getCoursesController,
   getBatchController,
+  getCurrentUser,
   getByIdController,
 };

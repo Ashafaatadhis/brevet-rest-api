@@ -11,7 +11,7 @@ const userBasic = async (
   const data = await prisma.course.findMany({
     take: count,
     skip: count * (page - 1),
-
+    
     where: {
       name: {
         contains: search,

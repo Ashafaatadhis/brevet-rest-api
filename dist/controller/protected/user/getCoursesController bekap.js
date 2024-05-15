@@ -21,7 +21,11 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const isUserPurchased = yield prisma_1.default.payment.findFirst({
             where: {
                 status: {
+<<<<<<< HEAD
                     equals: true,
+=======
+                    equals: "PAID",
+>>>>>>> 02861ccee35cfb04eee816b7b616a73608c4be87
                 },
                 deletedAt: {
                     isSet: false,
@@ -37,8 +41,11 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             where: {
                 id: courseId,
                 batchCourse: {
-                    every: {
+                    some: {
                         batchId: isUserPurchased.batchId,
+                        deletedAt: {
+                            isSet: false,
+                        },
                     },
                 },
                 deletedAt: {

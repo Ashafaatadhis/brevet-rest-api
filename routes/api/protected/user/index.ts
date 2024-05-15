@@ -12,6 +12,7 @@ import {
   editByIdController,
   getAllController,
   getBatchController,
+  getCurrentUser,
   getByIdController,
   getCoursesController,
 } from "../../../../controller/protected/user";
@@ -41,6 +42,7 @@ router.put(
   errorHandler(editByIdController)
 );
 router.get("/get-batch", errorHandler(getBatchController));
+router.get("/current", errorHandler(getCurrentUser));
 router.get("/:id", errorHandler(getByIdController));
 router.get(
   "/get-courses/:batchId/:courseId",

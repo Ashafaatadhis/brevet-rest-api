@@ -31,8 +31,10 @@ const uploadSingle = (req, folder) => __awaiter(void 0, void 0, void 0, function
         if (!(req === null || req === void 0 ? void 0 : req.file)) {
             return resolve(false);
         }
+        const extension = req.file.originalname.split(".").reverse()[0];
         const stream = cloudinary_1.default.uploader.upload_stream({
-            resource_type: "auto",
+            format: extension,
+            resource_type: "raw",
             folder,
         }, (error, result) => {
             var _a;
@@ -51,8 +53,9 @@ const deleteFiles = (name) => __awaiter(void 0, void 0, void 0, function* () {
     // const fi = name.split("/").reverse().slice(0, 2).reverse().join("/").split(".");
     const arr = name.split("/");
     const fi = arr.slice(arr.length - 2).join("/");
-    const removePrefix = fi.split(".")[0];
-    return yield cloudinary_1.default.uploader.destroy(removePrefix);
+    return yield cloudinary_1.default.uploader.destroy(fi, {
+        resource_type: "raw",
+    });
 });
 exports.deleteFiles = deleteFiles;
 const uploadMultiple = (req, folder) => __awaiter(void 0, void 0, void 0, function* () {
@@ -65,8 +68,10 @@ const uploadMultiple = (req, folder) => __awaiter(void 0, void 0, void 0, functi
         if (Array.isArray(req.files)) {
             const newAll = [];
             req.files.forEach((file, index) => {
+                const extension = file.originalname.split(".").reverse()[0];
                 const stream = cloudinary_1.default.uploader.upload_stream({
-                    resource_type: "auto",
+                    format: extension,
+                    resource_type: "raw",
                     folder,
                 }, (error, result) => {
                     var _a;

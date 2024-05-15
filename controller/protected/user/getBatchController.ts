@@ -13,7 +13,7 @@ export default async (req: Request, res: Response) => {
         userId: user.id,
 
         status: {
-          equals: true,
+          equals: "PAID",
         },
       },
     });

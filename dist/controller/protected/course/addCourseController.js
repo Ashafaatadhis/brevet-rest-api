@@ -18,11 +18,11 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     const errors = (0, express_validator_1.validationResult)(req);
     if (errors.isEmpty()) {
         const user = req === null || req === void 0 ? void 0 : req.user;
-        if (!["ADMIN", "SUPERADMIN"].includes(user.role))
+        if (!["TEACHER", "SUPERADMIN"].includes(user.role))
             return res.status(401).json({ success: false, message: "Unauthorized" });
         try {
             const data = yield prisma_1.default.course.create({
-                data: req.body,
+                data: Object.assign(Object.assign({}, req.body), { teacherId: user.id }),
             });
             return res.json({ success: true, data });
         }

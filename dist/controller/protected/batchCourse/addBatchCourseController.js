@@ -21,6 +21,18 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         if (!["ADMIN", "SUPERADMIN"].includes(user.role))
             return res.status(401).json({ success: false, message: "Unauthorized" });
         try {
+            const findCourse = yield prisma_1.default.course.findUnique({
+                where: { id: req.body.courseId, deletedAt: { isSet: false } },
+            });
+            const findBatch = yield prisma_1.default.batch.findUnique({
+                where: {
+                    id: req.body.batchId,
+                    deletedAt: { isSet: false },
+                },
+            });
+            if (!findBatch || !findCourse) {
+                throw new Error("Not exist");
+            }
             const data = yield prisma_1.default.batchCourse.create({
                 data: req.body,
             });

@@ -14,18 +14,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_validator_1 = require("express-validator");
 const prisma_1 = __importDefault(require("../../../config/prisma"));
-const uploadFile_1 = require("../../../middleware/uploadFile");
-const HttpError_1 = __importDefault(require("../../../utils/errors/HttpError"));
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = (0, express_validator_1.validationResult)(req);
     if (errors.isEmpty()) {
         const user = req === null || req === void 0 ? void 0 : req.user;
         try {
-            const urlImage = yield (0, uploadFile_1.uploadSingle)(req, "payment");
-            if (!urlImage) {
-                return next(new HttpError_1.default(404, "File not found"));
+            const findBatch = yield prisma_1.default.batch.findUnique({
+                where: {
+                    id: req.body.batchId,
+                    deletedAt: { isSet: false },
+                },
+            });
+            if (!findBatch) {
+                throw new Error("Not exist");
             }
+<<<<<<< HEAD
             req.body.bukti_bayar = urlImage.secure_url;
+=======
+>>>>>>> 02861ccee35cfb04eee816b7b616a73608c4be87
             req.body.userId = user.id;
             const data = yield prisma_1.default.payment.create({
                 data: req.body,

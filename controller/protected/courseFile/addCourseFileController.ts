@@ -30,6 +30,17 @@ export default async (req: Request, res: Response, next: NextFunction) => {
         return { ...value, courseFolderId: req.body.courseFolderId };
       });
 
+      const findCourseFolder = await prisma.courseFolder.findUnique({
+        where: {
+          id: req.body.courseFolderId,
+          deletedAt: { isSet: false },
+        },
+      });
+
+      if (!findCourseFolder) {
+        throw new Error("Not exist");
+      }
+
       await prisma.courseFile.createMany({
         data: [...newData],
       });

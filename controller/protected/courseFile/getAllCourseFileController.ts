@@ -33,11 +33,11 @@ const paginationAdmin = async (page: number, count: number) => {
 const paginationUser = async (page: number, count: number, user: any) => {
   const getCoursePurchased = await prisma.payment.findMany({
     select: {
-      courseId: true,
+      batchId: true,
     },
     where: {
       status: {
-        equals: true,
+        equals: "PAID",
       },
 
       userId: user.id,
@@ -47,16 +47,45 @@ const paginationUser = async (page: number, count: number, user: any) => {
     },
   });
 
-  let data,
+  console.log(getCoursePurchased);
+
+  let data: any[] = [],
     dataCount = 0,
     hasNext = { length: 0 };
 
-  for (const { courseId } of getCoursePurchased) {
-    data = await prisma.courseFile.findMany({
+  for (const { batchId } of getCoursePurchased) {
+    // const fetch = await prisma.batchCourse.findMany({
+    //   where: {
+    //     batchId,
+    //     deletedAt: {
+    //       isSet: false,
+    //     },
+    //   },
+
+    //   select: {
+    //     course: {
+    //       include: {
+    //         courseFolder: {
+    //           select: {
+    //             courseFile: true,
+    //           },
+    //         },
+    //       },
+    //     },
+    //   },
+    // });
+    const fetch = await prisma.courseFile.findMany({
       where: {
         courseFolder: {
           course: {
-            id: courseId,
+            batchCourse: {
+              some: {
+                batchId,
+                deletedAt: {
+                  isSet: false,
+                },
+              },
+            },
           },
         },
 
@@ -65,11 +94,19 @@ const paginationUser = async (page: number, count: number, user: any) => {
         },
       },
     });
-    dataCount = await prisma.courseFile.count({
+
+    dataCount += await prisma.courseFile.count({
       where: {
         courseFolder: {
           course: {
-            id: courseId,
+            batchCourse: {
+              some: {
+                batchId,
+                deletedAt: {
+                  isSet: false,
+                },
+              },
+            },
           },
         },
         deletedAt: {
@@ -77,13 +114,22 @@ const paginationUser = async (page: number, count: number, user: any) => {
         },
       },
     });
+
+    data.push(...fetch);
     hasNext = await prisma.courseFile.findMany({
       take: 1,
       skip: count * (page + 1 - 1),
       where: {
         courseFolder: {
           course: {
-            id: courseId,
+            batchCourse: {
+              some: {
+                batchId,
+                deletedAt: {
+                  isSet: false,
+                },
+              },
+            },
           },
         },
         deletedAt: {
@@ -92,7 +138,7 @@ const paginationUser = async (page: number, count: number, user: any) => {
       },
     });
   }
-
+  console.log(data.length);
   return { data, dataCount, hasNext };
 };
 
@@ -110,6 +156,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
   const page = req.query.page ? parseInt(req.query.page as string) : 1;
   try {
     const { data, dataCount, hasNext } = await pagination(page, count, user);
+
     return res.json({
       status: 200,
       data,

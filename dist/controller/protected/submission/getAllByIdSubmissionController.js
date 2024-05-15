@@ -42,7 +42,11 @@ const paginationUser = (page, count, user, by, id) => __awaiter(void 0, void 0, 
         },
         where: {
             status: {
+<<<<<<< HEAD
                 equals: true,
+=======
+                equals: "PAID",
+>>>>>>> 02861ccee35cfb04eee816b7b616a73608c4be87
             },
             userId: user.id,
             deletedAt: {
@@ -56,7 +60,18 @@ const paginationUser = (page, count, user, by, id) => __awaiter(void 0, void 0, 
             where: Object.assign(Object.assign({}, (by === "courseTaskId" ? { courseTaskId: id } : { id })), { courseTask: {
                     courseFolder: {
                         course: {
+<<<<<<< HEAD
                             id: courseId,
+=======
+                            batchCourse: {
+                                some: {
+                                    batchId,
+                                    deletedAt: {
+                                        isSet: false,
+                                    },
+                                },
+                            },
+>>>>>>> 02861ccee35cfb04eee816b7b616a73608c4be87
                         },
                     },
                 }, deletedAt: {
@@ -67,7 +82,18 @@ const paginationUser = (page, count, user, by, id) => __awaiter(void 0, void 0, 
             where: Object.assign(Object.assign({}, (by === "courseTaskId" ? { courseTaskId: id } : { id })), { courseTask: {
                     courseFolder: {
                         course: {
+<<<<<<< HEAD
                             id: courseId,
+=======
+                            batchCourse: {
+                                some: {
+                                    batchId,
+                                    deletedAt: {
+                                        isSet: false,
+                                    },
+                                },
+                            },
+>>>>>>> 02861ccee35cfb04eee816b7b616a73608c4be87
                         },
                     },
                 }, deletedAt: {
@@ -80,7 +106,18 @@ const paginationUser = (page, count, user, by, id) => __awaiter(void 0, void 0, 
             where: Object.assign(Object.assign({}, (by === "courseTaskId" ? { courseTaskId: id } : { id })), { courseTask: {
                     courseFolder: {
                         course: {
+<<<<<<< HEAD
                             id: courseId,
+=======
+                            batchCourse: {
+                                some: {
+                                    batchId,
+                                    deletedAt: {
+                                        isSet: false,
+                                    },
+                                },
+                            },
+>>>>>>> 02861ccee35cfb04eee816b7b616a73608c4be87
                         },
                     },
                 }, deletedAt: {

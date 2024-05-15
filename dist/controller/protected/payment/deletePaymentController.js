@@ -13,14 +13,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../../../config/prisma"));
-const uploadFile_1 = require("../../../middleware/uploadFile");
+const deleteFiles_1 = __importDefault(require("../../../utils/deleteFiles"));
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const user = req === null || req === void 0 ? void 0 : req.user;
     const id = req.params.id;
     if (!["ADMIN", "SUPERADMIN"].includes(user.role))
         return res.status(401).json({ success: false, message: "Unauthorized" });
     try {
         const dataBefore = yield prisma_1.default.payment.findFirst({
+            select: {
+                proofPayment: {
+                    select: {
+                        file: true,
+                    },
+                },
+            },
             where: {
                 id,
                 deletedAt: {
@@ -28,8 +36,11 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                 },
             },
         });
-        if (!dataBefore)
+        if (!(dataBefore === null || dataBefore === void 0 ? void 0 : dataBefore.proofPayment))
             return res.json({ success: true, message: "Data Not Found" });
+        if (!(yield (0, deleteFiles_1.default)((_a = dataBefore.proofPayment) === null || _a === void 0 ? void 0 : _a.file))) {
+            return res.json({ success: true, message: "Data Not Found" });
+        }
         yield prisma_1.default.payment.update({
             data: {
                 deletedAt: new Date().toISOString(),
@@ -41,7 +52,6 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                 },
             },
         });
-        yield (0, uploadFile_1.deleteFiles)(dataBefore === null || dataBefore === void 0 ? void 0 : dataBefore.bukti_bayar);
         return res.json({ success: true, message: "Success deleted Payment" });
     }
     catch (err) {

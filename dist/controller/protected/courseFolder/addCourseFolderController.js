@@ -21,6 +21,15 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         if (!["ADMIN", "SUPERADMIN"].includes(user.role))
             return res.status(401).json({ success: false, message: "Unauthorized" });
         try {
+            const findCourse = yield prisma_1.default.course.findUnique({
+                where: {
+                    id: req.body.courseId,
+                    deletedAt: { isSet: false },
+                },
+            });
+            if (!findCourse) {
+                throw new Error("Not exist");
+            }
             const data = yield prisma_1.default.courseFolder.create({
                 data: req.body,
             });
