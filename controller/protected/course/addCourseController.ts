@@ -6,11 +6,11 @@ export default async (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req);
   if (errors.isEmpty()) {
     const user: any = req?.user;
-    if (!["ADMIN", "SUPERADMIN"].includes(user.role))
+    if (!["TEACHER", "SUPERADMIN"].includes(user.role))
       return res.status(401).json({ success: false, message: "Unauthorized" });
     try {
       const data = await prisma.course.create({
-        data: req.body,
+        data: { ...req.body, teacherId: user.id },
       });
 
       return res.json({ success: true, data });

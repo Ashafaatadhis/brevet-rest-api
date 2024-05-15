@@ -14,34 +14,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_validator_1 = require("express-validator");
 const prisma_1 = __importDefault(require("../../../config/prisma"));
-const uploadFile_1 = require("../../../middleware/uploadFile");
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = (0, express_validator_1.validationResult)(req);
     if (errors.isEmpty()) {
         const user = req === null || req === void 0 ? void 0 : req.user;
         const id = req.params.id;
-        if (!["ADMIN", "SUPERADMIN"].includes(user.role))
-            return res.status(401).json({ success: false, message: "Unauthorized" });
+        // if (!["ADMIN", "SUPERADMIN"].includes(user.role))
+        //   return res.status(401).json({ success: false, message: "Unauthorized" });
         try {
-            const thisUser = yield prisma_1.default.payment.findFirst({
-                select: {
-                    bukti_bayar: true,
-                },
-                where: {
-                    id,
-                    deletedAt: {
-                        isSet: false,
-                    },
-                },
-            });
-            const urlImage = yield (0, uploadFile_1.uploadSingle)(req, "payment");
-            if (!urlImage) {
-                req.body.bukti_bayar = thisUser === null || thisUser === void 0 ? void 0 : thisUser.bukti_bayar;
-            }
-            else {
-                req.body.bukti_bayar = urlImage.secure_url;
-            }
-            console.log(req.body);
             const data = yield prisma_1.default.payment.update({
                 data: Object.assign(Object.assign({}, req.body), { updatedAt: new Date().toISOString() }),
                 where: {

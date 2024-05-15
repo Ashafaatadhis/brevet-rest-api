@@ -5,21 +5,15 @@ export default async (req: Request, res: Response) => {
   const user: any = req.user;
 
   try {
-    const data = await prisma.userCourses.findMany({
+    const data = await prisma.payment.findMany({
       where: {
         deletedAt: {
           isSet: false,
         },
         userId: user.id,
-        payment: {
-          every: {
-            status: {
-              equals: true,
-            },
-            deletedAt: {
-              isSet: false,
-            },
-          },
+
+        status: {
+          equals: "PAID",
         },
       },
     });

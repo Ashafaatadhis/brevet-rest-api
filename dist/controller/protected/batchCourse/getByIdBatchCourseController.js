@@ -18,11 +18,36 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     const by = req.query.by;
     try {
         const data = yield prisma_1.default.batchCourse.findFirst({
+            select: {
+                id: true,
+                course: {
+                    select: {
+                        name: true,
+                        id: true,
+                    },
+                },
+                batch: {
+                    select: {
+                        name: true,
+                        id: true,
+                    },
+                },
+            },
             where: Object.assign(Object.assign({}, (by === "batchId" ? { batchId: id } : { id })), { deletedAt: {
                     isSet: false,
                 } }),
         });
-        return res.json({ success: true, data });
+        let newData = {};
+        if (data) {
+            newData = {
+                id: data.id,
+                courseId: data.course.id,
+                batchId: data.batch.id,
+                course: data.course.name,
+                batch: data.batch.name,
+            };
+        }
+        return res.json({ success: true, data: newData });
     }
     catch (err) {
         return res

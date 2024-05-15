@@ -16,21 +16,14 @@ const prisma_1 = __importDefault(require("../../../config/prisma"));
 exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.user;
     try {
-        const data = yield prisma_1.default.userCourses.findMany({
+        const data = yield prisma_1.default.payment.findMany({
             where: {
                 deletedAt: {
                     isSet: false,
                 },
                 userId: user.id,
-                payment: {
-                    every: {
-                        status: {
-                            equals: true,
-                        },
-                        deletedAt: {
-                            isSet: false,
-                        },
-                    },
+                status: {
+                    equals: "PAID",
                 },
             },
         });

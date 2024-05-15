@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 import prisma from "../../../config/prisma";
+import { BatchCourse } from "./getAllBatchCourseController";
 
 export default async (req: Request, res: Response, next: NextFunction) => {
   const id: string = req.params.id;
@@ -13,6 +14,21 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     const data = await prisma.batchCourse.findMany({
       take: count,
       skip: count * (page - 1),
+      select: {
+        id: true,
+        course: {
+          select: {
+            name: true,
+            id: true,
+          },
+        },
+        batch: {
+          select: {
+            name: true,
+            id: true,
+          },
+        },
+      },
       where: {
         ...(by === "batchId" ? { batchId: id } : { id }),
         deletedAt: {
@@ -20,6 +36,18 @@ export default async (req: Request, res: Response, next: NextFunction) => {
         },
       },
     });
+
+    let newData: BatchCourse[] = [];
+    data.map((value) => {
+      newData.push({
+        id: value.id,
+        courseId: value.course.id,
+        batchId: value.batch.id,
+        course: value.course.name,
+        batch: value.batch.name,
+      });
+    });
+
     const dataCount = await prisma.batchCourse.count({
       where: {
         ...(by === "batchId" ? { batchId: id } : { id }),
@@ -42,7 +70,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
 
     return res.json({
       status: 200,
-      data,
+      data: newData,
       meta: { hasNextPage: hasNext.length > 0, count: dataCount },
     });
   } catch (err) {

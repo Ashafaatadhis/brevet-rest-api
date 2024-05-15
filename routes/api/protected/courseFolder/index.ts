@@ -10,6 +10,7 @@ import {
   getAllCourseFolderController,
   getByIdCourseFolderController,
 } from "../../../../controller/protected/courseFolder";
+import getCurrentCourseFolder from "../../../../controller/protected/courseFolder/getCurrentCourseFolder";
 const router = express.Router();
 
 router.post(
@@ -24,6 +25,7 @@ router.put(
 );
 router.delete("/:id", errorHandler(deleteCourseFolderController));
 router.get("/", errorHandler(getAllCourseFolderController));
+router.get("/current", errorHandler(getCurrentCourseFolder));
 router.get("/:id", errorHandler(getByIdCourseFolderController));
 router.get("/all/:id", errorHandler(getAllByIdCourseFolderController));
 

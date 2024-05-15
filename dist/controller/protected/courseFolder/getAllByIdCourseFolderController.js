@@ -40,17 +40,13 @@ const paginationAdmin = (page, count, by, id) => __awaiter(void 0, void 0, void 
     return { data, dataCount, hasNext };
 });
 const paginationUser = (page, count, user, by, id) => __awaiter(void 0, void 0, void 0, function* () {
-    const getCoursePurchased = yield prisma_1.default.userCourses.findMany({
+    const getCoursePurchased = yield prisma_1.default.payment.findMany({
         select: {
             batchId: true,
         },
         where: {
-            payment: {
-                every: {
-                    status: {
-                        equals: true,
-                    },
-                },
+            status: {
+                equals: "PAID",
             },
             userId: user.id,
             deletedAt: {
@@ -67,8 +63,11 @@ const paginationUser = (page, count, user, by, id) => __awaiter(void 0, void 0, 
             },
             where: Object.assign(Object.assign({}, (by === "courseId" ? { courseId: id } : { id })), { course: {
                     batchCourse: {
-                        every: {
+                        some: {
                             batchId,
+                            deletedAt: {
+                                isSet: false,
+                            },
                         },
                     },
                 }, deletedAt: {
@@ -78,8 +77,11 @@ const paginationUser = (page, count, user, by, id) => __awaiter(void 0, void 0, 
         dataCount = yield prisma_1.default.courseFolder.count({
             where: Object.assign(Object.assign({}, (by === "courseId" ? { courseId: id } : { id })), { course: {
                     batchCourse: {
-                        every: {
+                        some: {
                             batchId,
+                            deletedAt: {
+                                isSet: false,
+                            },
                         },
                     },
                 }, deletedAt: {
@@ -91,8 +93,11 @@ const paginationUser = (page, count, user, by, id) => __awaiter(void 0, void 0, 
             skip: count * (page + 1 - 1),
             where: Object.assign(Object.assign({}, (by === "courseId" ? { courseId: id } : { id })), { course: {
                     batchCourse: {
-                        every: {
+                        some: {
                             batchId,
+                            deletedAt: {
+                                isSet: false,
+                            },
                         },
                     },
                 }, deletedAt: {

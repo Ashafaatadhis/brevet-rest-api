@@ -1,19 +1,13 @@
 import { NextFunction, Request, Response } from "express";
-import { validationResult } from "express-validator";
 import prisma from "../../../config/prisma";
 
 export default async (req: Request, res: Response, next: NextFunction) => {
-  const id: string = req.params.id;
-  const by: string = req.params.by;
   const user: any = req.user;
-  try {
-    if (!["ADMIN", "SUPERADMIN"].includes(user.role)) {
-      return res.status(401).json({ success: false, message: "Unauthorized" });
-    }
 
-    const data = await prisma.userCourses.findFirst({
+  try {
+    const data = await prisma.payment.findMany({
       where: {
-        id,
+        userId: user.id,
         deletedAt: {
           isSet: false,
         },
@@ -24,6 +18,6 @@ export default async (req: Request, res: Response, next: NextFunction) => {
   } catch (err) {
     return res
       .status(400)
-      .json({ success: false, message: "Course not exist" });
+      .json({ success: false, message: "Payment Error occured" });
   }
 };

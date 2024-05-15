@@ -40,17 +40,13 @@ const paginationAdmin = (page, count) => __awaiter(void 0, void 0, void 0, funct
     return { data, dataCount, hasNext };
 });
 const paginationUser = (page, count, user) => __awaiter(void 0, void 0, void 0, function* () {
-    const getCoursePurchased = yield prisma_1.default.userCourses.findMany({
+    const getCoursePurchased = yield prisma_1.default.payment.findMany({
         select: {
             batchId: true,
         },
         where: {
-            payment: {
-                every: {
-                    status: {
-                        equals: true,
-                    },
-                },
+            status: {
+                equals: "PAID",
             },
             userId: user.id,
             deletedAt: {
@@ -65,8 +61,11 @@ const paginationUser = (page, count, user) => __awaiter(void 0, void 0, void 0, 
                 courseFolder: {
                     course: {
                         batchCourse: {
-                            every: {
+                            some: {
                                 batchId,
+                                deletedAt: {
+                                    isSet: false,
+                                },
                             },
                         },
                     },
@@ -81,8 +80,11 @@ const paginationUser = (page, count, user) => __awaiter(void 0, void 0, void 0, 
                 courseFolder: {
                     course: {
                         batchCourse: {
-                            every: {
+                            some: {
                                 batchId,
+                                deletedAt: {
+                                    isSet: false,
+                                },
                             },
                         },
                     },
@@ -99,8 +101,11 @@ const paginationUser = (page, count, user) => __awaiter(void 0, void 0, void 0, 
                 courseFolder: {
                     course: {
                         batchCourse: {
-                            every: {
+                            some: {
                                 batchId,
+                                deletedAt: {
+                                    isSet: false,
+                                },
                             },
                         },
                     },

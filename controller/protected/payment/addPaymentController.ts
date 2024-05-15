@@ -10,14 +10,18 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     const user: any = req?.user;
 
     try {
-      const urlImage: any = await uploadSingle(req, "payment");
+      const findBatch = await prisma.batch.findUnique({
+        where: {
+          id: req.body.batchId,
+          deletedAt: { isSet: false },
+        },
+      });
 
-      if (!urlImage) {
-        return next(new HttpError(404, "File not found"));
+      if (!findBatch) {
+        throw new Error("Not exist");
       }
 
-      req.body.bukti_bayar = urlImage.secure_url;
-
+      req.body.userId = user.id;
       const data = await prisma.payment.create({
         data: req.body,
       });

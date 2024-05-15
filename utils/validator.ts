@@ -7,20 +7,21 @@ export const addBatchValidator = [
   check("start_register", "Invalid format Date").isISO8601().toDate(),
   check("end_register", "Invalid does not Empty").not().isEmpty(),
   check("end_register", "Invalid format Date").isISO8601().toDate(),
-  check("price", "Invalid does not Empty").not().isEmpty(),
-  check("price", "Numeric only").isNumeric(),
+  // check("price", "Invalid does not Empty").not().isEmpty(),
+  // check("price", "Numeric only").isNumeric(),
   check("kuota", "Invalid does not Empty").not().isEmpty(),
 ];
 export const addPaymentValidator = [
   check("bank", "Invalid does not Empty").not().isEmpty(),
   check("atas_nama", "Invalid does not Empty").not().isEmpty(),
   check("no_rek", "Invalid does not Empty").not().isEmpty(),
-  check("userCoursesId", "Invalid does not Empty").not().isEmpty(),
+  check("batchId", "Invalid does not Empty").not().isEmpty(),
 ];
 export const editPaymentValidator = [
-  check("bank", "Invalid does not Empty").not().isEmpty(),
-  check("atas_nama", "Invalid does not Empty").not().isEmpty(),
-  check("no_rek", "Invalid does not Empty").not().isEmpty(),
+  check("bank", "Invalid does not Empty").not().isEmpty().optional(),
+  check("atas_nama", "Invalid does not Empty").not().isEmpty().optional(),
+  check("no_rek", "Invalid does not Empty").not().isEmpty().optional(),
+  check("status", "Invalid does not Empty").not().isEmpty().optional(),
 ];
 
 export const addBatchCourseValidator = [
@@ -46,6 +47,10 @@ export const addCourseFolderValidator = [
   check("name", "Invalid does not Empty").not().isEmpty(),
   check("courseId", "Invalid does not Empty").not().isEmpty(),
 ];
+export const editCourseFolderValidator = [
+  check("name", "Invalid does not Empty").not().isEmpty(),
+  check("courseId", "Invalid does not Empty").not().isEmpty(),
+];
 export const addCourseTaskValidator = [
   check("title", "Invalid does not Empty").not().isEmpty(),
   check("description", "Invalid does not Empty").not().isEmpty(),
@@ -54,6 +59,11 @@ export const addCourseTaskValidator = [
 export const addCourseFileValidator = [
   check("courseFolderId", "Invalid does not Empty").not().isEmpty(),
 ];
+
+export const addProofPaymentValidator = [
+  check("paymentId", "Invalid does not Empty").not().isEmpty(),
+];
+
 export const addQuestionValidator = [
   check("question", "Invalid does not Empty").not().isEmpty(),
   check("pgId", "Invalid does not Empty").not().isEmpty(),

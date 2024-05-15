@@ -20,8 +20,9 @@ model User {
   provider Provider @default(LOCAL)
   image String?
   phoneNumber String?
+  course Course[]
   userAnswer UserAnswer[]
-  userCourses UserCourses[]
+  userCourses Payment[]
   submissionFile SubmissionFile[]
   NPM String?
   golongan Golongan @default(UMUM)
@@ -41,8 +42,8 @@ model Batch {
   start_register DateTime
   end_register DateTime
   kuota Int
-  price Float
-  userCourses UserCourses[]
+  price Price?
+  payment Payment[]
   batchCourse BatchCourse[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
@@ -50,22 +51,37 @@ model Batch {
 
 }
 
+model Price {
+    id      String   @id @default(auto()) @map("_id") @db.ObjectId
+    price Float
+    type Golongan @unique
+    batchId String @db.ObjectId @unique
+    batch Batch @relation(fields: [batchId], references: [id], onDelete: Cascade, onUpdate: Cascade) 
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @default(now())
+    deletedAt   DateTime?
+}
+
 model BatchCourse {
     id      String   @id @default(auto()) @map("_id") @db.ObjectId
  
   courseId String @db.ObjectId
-  course Course @relation(fields: [courseId], references: [id]) 
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade, onUpdate: Cascade) 
     batchId String @db.ObjectId
-  batch Batch @relation(fields: [batchId], references: [id]) 
+  batch Batch @relation(fields: [batchId], references: [id], onDelete: Cascade, onUpdate: Cascade) 
    createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
   deletedAt   DateTime?
+
+  @@unique([batchId, courseId, deletedAt])
 }
 
 model Course {
     id      String   @id @default(auto()) @map("_id") @db.ObjectId
     name String
     category CourseCategory
+    teacherId String @db.ObjectId
+    teacher User @relation(fields: [teacherId], references: [id]) 
     batchCourse BatchCourse[]
     courseFolder CourseFolder[]
     link String?
@@ -79,7 +95,7 @@ model CourseFolder {
     id      String   @id @default(auto()) @map("_id") @db.ObjectId
     name  String
     courseId String @db.ObjectId
-    course Course @relation(fields: [courseId], references: [id]) 
+    course Course @relation(fields: [courseId], references: [id], onDelete: Cascade, onUpdate: Cascade) 
     courseFile CourseFile[]
     courseTask CourseTask[]
     pg PG[]
@@ -93,7 +109,7 @@ model CourseFile {
   file  String
   name String
   courseFolderId String @db.ObjectId
-  courseFolder CourseFolder @relation(fields: [courseFolderId], references: [id])
+  courseFolder CourseFolder @relation(fields: [courseFolderId], references: [id] , onDelete: Cascade, onUpdate: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
   deletedAt   DateTime? 
@@ -104,7 +120,7 @@ model CourseTask {
   title String
   description String
   courseFolderId String @db.ObjectId
-  courseFolder CourseFolder @relation(fields: [courseFolderId], references: [id])
+  courseFolder CourseFolder @relation(fields: [courseFolderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   courseTaskFile CourseTaskFile[]
   submissionFile SubmissionFile[]
   createdAt   DateTime @default(now())
@@ -117,7 +133,7 @@ model CourseTaskFile {
   file  String
   name String
   courseTaskId String @db.ObjectId
-  courseTask CourseTask @relation(fields: [courseTaskId], references: [id])
+  courseTask CourseTask @relation(fields: [courseTaskId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
   deletedAt   DateTime? 
@@ -146,7 +162,7 @@ model SubmissionFile {
   file  String
   name String
   taskId String @db.ObjectId
-  courseTask CourseTask @relation(fields: [taskId], references: [id])
+  courseTask CourseTask @relation(fields: [taskId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String @db.ObjectId
   user User @relation(fields: [userId], references: [id])
   createdAt   DateTime @default(now())
@@ -154,40 +170,50 @@ model SubmissionFile {
   deletedAt   DateTime? 
 }
 
-model UserCourses {
+// model UserCourses {
+//   id      String   @id @default(auto()) @map("_id") @db.ObjectId
+//   userId String @db.ObjectId
+//   user User @relation(fields: [userId], references: [id]) 
+//   batchId String @db.ObjectId
+//   batch Batch @relation(fields: [batchId], references: [id]) 
+//   payment Payment[]
+//   createdAt   DateTime @default(now())
+//   updatedAt   DateTime @default(now())
+//   deletedAt   DateTime?
+// }
+
+model ProofPayment {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId String @db.ObjectId
-  user User @relation(fields: [userId], references: [id]) 
-  batchId String @db.ObjectId
-  batch Batch @relation(fields: [batchId], references: [id]) 
-  payment Payment[]
+  file  String
+  name String
+  paymentId String @db.ObjectId @unique
+  payment Payment @relation(fields: [paymentId], references: [id],  onDelete: Cascade, onUpdate: Cascade) 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
-  deletedAt   DateTime?
+  deletedAt   DateTime? 
 }
 
 model Payment {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
   bank String
   atas_nama String
-  
+  userId String @db.ObjectId
+  user User @relation(fields: [userId], references: [id],  onDelete: Cascade, onUpdate: Cascade) 
+  batchId String @db.ObjectId
+  batch Batch @relation(fields: [batchId], references: [id],  onDelete: Cascade, onUpdate: Cascade) 
+  proofPayment ProofPayment?
   no_rek String
-  status Boolean @default(false)
-  bukti_bayar String
-  userCoursesId String @db.ObjectId
-  userCourses UserCourses @relation(fields: [userCoursesId], references: [id])  
-
+  status PaymentStatus @default(UNPAID)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
   deletedAt   DateTime?
 
-  @@unique([deletedAt, userCoursesId])
 }
 
 model PG {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
   courseFolderId String @db.ObjectId
-  courseFolder CourseFolder @relation(fields: [courseFolderId], references: [id])
+  courseFolder CourseFolder @relation(fields: [courseFolderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   question Question[]
   points Int 
   createdAt   DateTime @default(now())
@@ -201,7 +227,7 @@ model Question {
   questionAnswer QuestionAnswer[]
   userAnswer UserAnswer[]
   pgId String @db.ObjectId
-  pg PG @relation(fields: [pgId], references: [id])
+  pg PG @relation(fields: [pgId], references: [id], onDelete: Cascade, onUpdate: Cascade)
  
   // points Int 
   createdAt   DateTime @default(now())
@@ -212,11 +238,11 @@ model Question {
 model UserAnswer {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
   questionAnswerId String @db.ObjectId
-  questionAnswer QuestionAnswer @relation(fields: [questionAnswerId], references: [id]) 
+  questionAnswer QuestionAnswer @relation(fields: [questionAnswerId], references: [id], onDelete: Cascade, onUpdate: Cascade) 
    questionId String @db.ObjectId
-   question Question @relation(fields: [questionId], references: [id]) 
+   question Question @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade) 
    userId String @db.ObjectId
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
   deletedAt   DateTime?
@@ -228,7 +254,7 @@ model QuestionAnswer {
    userAnswer UserAnswer[]
    isCorrect Boolean @default(false)
    questionId String @db.ObjectId
-   question Question @relation(fields: [questionId], references: [id])  
+   question Question @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)  
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
   deletedAt   DateTime?
@@ -265,4 +291,9 @@ enum Role {
   STUDENT
 }
 
+enum PaymentStatus {
+  PAID
+  UNPAID
+  PENDING
+}
  

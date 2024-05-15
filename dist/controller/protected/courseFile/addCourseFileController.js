@@ -38,6 +38,15 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
             const newData = urlImage.map((value) => {
                 return Object.assign(Object.assign({}, value), { courseFolderId: req.body.courseFolderId });
             });
+            const findCourseFolder = yield prisma_1.default.courseFolder.findUnique({
+                where: {
+                    id: req.body.courseFolderId,
+                    deletedAt: { isSet: false },
+                },
+            });
+            if (!findCourseFolder) {
+                throw new Error("Not exist");
+            }
             yield prisma_1.default.courseFile.createMany({
                 data: [...newData],
             });

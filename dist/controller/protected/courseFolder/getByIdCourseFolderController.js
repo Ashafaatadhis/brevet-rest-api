@@ -34,19 +34,15 @@ const checkPayment = (id, user, by) => __awaiter(void 0, void 0, void 0, functio
             },
         },
     });
-    const bukti = yield prisma_1.default.userCourses.findMany({
+    const bukti = yield prisma_1.default.payment.findMany({
         where: {
             userId: user.id,
             deletedAt: {
                 isSet: false,
             },
             batchId: lemm === null || lemm === void 0 ? void 0 : lemm.batchId,
-            payment: {
-                every: {
-                    status: {
-                        equals: true,
-                    },
-                },
+            status: {
+                equals: "PAID",
             },
         },
     });

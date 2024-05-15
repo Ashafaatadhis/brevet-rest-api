@@ -7,8 +7,13 @@ export default async (req: Request, res: Response, next: NextFunction) => {
   if (errors.isEmpty()) {
     const user: any = req?.user;
     const id: string = req.params.id;
-    if (!["ADMIN", "SUPERADMIN"].includes(user.role))
+    if (!["ADMIN", "SUPERADMIN", "TEACHER"].includes(user.role))
       return res.status(401).json({ success: false, message: "Unauthorized" });
+
+    if (user.id != id) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
     try {
       const data = await prisma.course.update({
         data: {
