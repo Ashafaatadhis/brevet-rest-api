@@ -19,6 +19,7 @@ const questionAnswer_1 = __importDefault(require("./questionAnswer"));
 const userAnswer_1 = __importDefault(require("./userAnswer"));
 const proofPayment_1 = __importDefault(require("./proofPayment"));
 const pg_1 = __importDefault(require("./pg"));
+const batchesForStudent_1 = __importDefault(require("./batchesForStudent"));
 const authJwt_1 = __importDefault(require("../../../middleware/authJwt"));
 const router = express_1.default.Router();
 // router.post(
@@ -48,4 +49,5 @@ router.use("/questionAnswer", questionAnswer_1.default);
 router.use("/userAnswer", userAnswer_1.default);
 router.use("/pg", pg_1.default);
 router.use("/proofPayment", proofPayment_1.default);
+router.use("/batchesForStudent", batchesForStudent_1.default);
 exports.default = router;

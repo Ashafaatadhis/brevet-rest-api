@@ -11,6 +11,18 @@ export const addBatchValidator = [
   // check("price", "Numeric only").isNumeric(),
   check("kuota", "Invalid does not Empty").not().isEmpty(),
 ];
+export const editBatchValidator = [
+  check("name", "Invalid does not Empty").not().isEmpty().optional(),
+  check("start_register", "Invalid does not Empty").not().isEmpty().optional(),
+  check("start_register", "Invalid format Date")
+    .isISO8601()
+    .toDate()
+    .optional(),
+  check("end_register", "Invalid does not Empty").not().isEmpty().optional(),
+  check("end_register", "Invalid format Date").isISO8601().toDate().optional(),
+
+  check("kuota", "Invalid does not Empty").not().isEmpty().optional(),
+];
 export const addPaymentValidator = [
   check("bank", "Invalid does not Empty").not().isEmpty(),
   check("atas_nama", "Invalid does not Empty").not().isEmpty(),

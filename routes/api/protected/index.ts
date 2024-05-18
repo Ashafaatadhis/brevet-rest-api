@@ -21,6 +21,7 @@ import questionAnswer from "./questionAnswer";
 import userAnswer from "./userAnswer";
 import proofPayment from "./proofPayment";
 import pg from "./pg";
+import batchesForStudent from "./batchesForStudent";
 import authJwt from "../../../middleware/authJwt";
 const router = express.Router();
 
@@ -55,5 +56,6 @@ router.use("/questionAnswer", questionAnswer);
 router.use("/userAnswer", userAnswer);
 router.use("/pg", pg);
 router.use("/proofPayment", proofPayment);
+router.use("/batchesForStudent", batchesForStudent);
 
 export default router;

@@ -4,6 +4,7 @@ import errorHandler from "../../../../middleware/errorHandler";
 import {
   addBatchValidator,
   addCourseValidator,
+  editBatchValidator,
 } from "../../../../utils/validator";
 import {
   addBatchController,
@@ -17,7 +18,7 @@ const router = express.Router();
 
 router.post("/", addBatchValidator, errorHandler(addBatchController));
 router.get("/search", errorHandler(searchBatchController));
-router.put("/:id", addBatchValidator, errorHandler(editBatchController));
+router.put("/:id", editBatchValidator, errorHandler(editBatchController));
 router.delete("/:id", errorHandler(deleteBatchController));
 router.get("/", errorHandler(getAllBatchController));
 router.get("/:id", errorHandler(getByIdBatchController));
