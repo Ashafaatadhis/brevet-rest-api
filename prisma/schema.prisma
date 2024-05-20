@@ -42,7 +42,10 @@ model Batch {
   start_register DateTime
   end_register DateTime
   kuota Int
-  price Price?
+
+  // priceId String @db.ObjectId
+  // price Price @relation(fields: [priceId], references: [id], onDelete: Cascade, onUpdate: Cascade) 
+    
   payment Payment[]
   batchCourse BatchCourse[]
   createdAt   DateTime @default(now())
@@ -54,12 +57,12 @@ model Batch {
 model Price {
     id      String   @id @default(auto()) @map("_id") @db.ObjectId
     price Float
-    type Golongan @unique
-    batchId String @db.ObjectId @unique
-    batch Batch @relation(fields: [batchId], references: [id], onDelete: Cascade, onUpdate: Cascade) 
+    // Batch Batch[]
+    type Golongan 
     createdAt   DateTime @default(now())
     updatedAt   DateTime @default(now())
     deletedAt   DateTime?
+    @@unique([type, deletedAt])
 }
 
 model BatchCourse {

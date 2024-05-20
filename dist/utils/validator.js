@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginValidator = exports.updateValidator = exports.changePasswordValidator = exports.registerValidator = exports.addCourseValidator = exports.addCourseTaskFileValidator = exports.addSubmissionValidator = exports.addPGValidator = exports.addQuestionAnswerValidator = exports.addUserAnswerValidator = exports.addQuestionValidator = exports.addProofPaymentValidator = exports.addCourseFileValidator = exports.addCourseTaskValidator = exports.editCourseFolderValidator = exports.addCourseFolderValidator = exports.editUserCourseValidator = exports.addUserCourseValidator = exports.addBatchCourseValidator = exports.editPaymentValidator = exports.addPaymentValidator = exports.editBatchValidator = exports.addBatchValidator = void 0;
+exports.loginValidator = exports.updateValidator = exports.changePasswordValidator = exports.registerValidator = exports.addCourseValidator = exports.addCourseTaskFileValidator = exports.addSubmissionValidator = exports.addPGValidator = exports.addQuestionAnswerValidator = exports.addUserAnswerValidator = exports.addQuestionValidator = exports.addProofPaymentValidator = exports.addCourseFileValidator = exports.addCourseTaskValidator = exports.editCourseFolderValidator = exports.addCourseFolderValidator = exports.editUserCourseValidator = exports.addUserCourseValidator = exports.addBatchCourseValidator = exports.editPriceValidator = exports.addPriceValidator = exports.editPaymentValidator = exports.addPaymentValidator = exports.editBatchValidator = exports.addBatchValidator = void 0;
 const express_validator_1 = require("express-validator");
 exports.addBatchValidator = [
     (0, express_validator_1.check)("name", "Invalid does not Empty").not().isEmpty(),
@@ -43,6 +43,20 @@ exports.editPaymentValidator = [
     (0, express_validator_1.check)("atas_nama", "Invalid does not Empty").not().isEmpty().optional(),
     (0, express_validator_1.check)("no_rek", "Invalid does not Empty").not().isEmpty().optional(),
     (0, express_validator_1.check)("status", "Invalid does not Empty").not().isEmpty().optional(),
+];
+exports.addPriceValidator = [
+    (0, express_validator_1.check)("price", "Invalid does not Empty").not().isEmpty(),
+    (0, express_validator_1.check)("price", "Invalid does not Empty").isNumeric(),
+    (0, express_validator_1.check)("type", "Invalid does not Empty").not().isEmpty(),
+    (0, express_validator_1.check)("type", "Invalid value Type").isIn(["ALUMNI", "MAHASISWA", "UMUM"]),
+];
+exports.editPriceValidator = [
+    (0, express_validator_1.check)("price", "Invalid does not Empty").not().isEmpty().optional(),
+    (0, express_validator_1.check)("price", "Invalid does not Empty").isNumeric().optional(),
+    (0, express_validator_1.check)("type", "Invalid does not Empty").not().isEmpty().optional(),
+    (0, express_validator_1.check)("type", "Invalid value Type")
+        .isIn(["ALUMNI", "MAHASISWA", "UMUM"])
+        .optional(),
 ];
 exports.addBatchCourseValidator = [
     // check("start_schedule", "Invalid does not Empty").not().isEmpty(),

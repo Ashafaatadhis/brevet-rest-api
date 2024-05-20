@@ -36,6 +36,21 @@ export const editPaymentValidator = [
   check("status", "Invalid does not Empty").not().isEmpty().optional(),
 ];
 
+export const addPriceValidator = [
+  check("price", "Invalid does not Empty").not().isEmpty(),
+  check("price", "Invalid does not Empty").isNumeric(),
+  check("type", "Invalid does not Empty").not().isEmpty(),
+  check("type", "Invalid value Type").isIn(["ALUMNI", "MAHASISWA", "UMUM"]),
+];
+export const editPriceValidator = [
+  check("price", "Invalid does not Empty").not().isEmpty().optional(),
+  check("price", "Invalid does not Empty").isNumeric().optional(),
+  check("type", "Invalid does not Empty").not().isEmpty().optional(),
+  check("type", "Invalid value Type")
+    .isIn(["ALUMNI", "MAHASISWA", "UMUM"])
+    .optional(),
+];
+
 export const addBatchCourseValidator = [
   // check("start_schedule", "Invalid does not Empty").not().isEmpty(),
   // check("start_schedule", "Invalid format Date").isISO8601().toDate(),

@@ -26,7 +26,8 @@ function main() {
         // await prisma.courseFile.deleteMany();
         // await prisma.courseFolder.deleteMany();
         // await prisma.course.deleteMany();
-        yield prisma_1.default.batchCourse.deleteMany();
+        // await prisma.batchCourse.deleteMany();
+        yield prisma_1.default.batch.deleteMany();
         // await prisma.courseFile.deleteMany();
         // for (let i = 1; i <= 30; i++) {
         //   await prisma.user.create({
