@@ -16,6 +16,32 @@ const prisma_1 = __importDefault(require("../../../config/prisma"));
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield prisma_1.default.batch.findMany({
+            include: {
+                batchCourse: {
+                    include: {
+                        course: {
+                            include: {
+                                teacher: {
+                                    select: {
+                                        createdAt: true,
+                                        deletedAt: true,
+                                        email: true,
+                                        fullname: true,
+                                        golongan: true,
+                                        id: true,
+                                        image: true,
+                                        NPM: true,
+                                        phoneNumber: true,
+                                        provider: true,
+                                        role: true,
+                                        username: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
             where: {
                 kuota: {
                     gt: 0,

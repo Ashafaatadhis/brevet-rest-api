@@ -6,6 +6,32 @@ export default async (req: Request, res: Response, next: NextFunction) => {
   const id: string = req.params.id;
   try {
     const data = await prisma.batch.findFirst({
+      include: {
+        batchCourse: {
+          include: {
+            course: {
+              include: {
+                teacher: {
+                  select: {
+                    createdAt: true,
+                    deletedAt: true,
+                    email: true,
+                    fullname: true,
+                    golongan: true,
+                    id: true,
+                    image: true,
+                    NPM: true,
+                    phoneNumber: true,
+                    provider: true,
+                    role: true,
+                    username: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
       where: {
         id,
         kuota: {
