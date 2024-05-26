@@ -13,6 +13,7 @@ const uploadFile_1 = require("../middleware/uploadFile");
 function cloudinaryDelete(file) {
     return __awaiter(this, void 0, void 0, function* () {
         const { result } = yield (0, uploadFile_1.deleteFiles)(file);
+        console.log(result);
         if (result !== "ok") {
             return false;
         }

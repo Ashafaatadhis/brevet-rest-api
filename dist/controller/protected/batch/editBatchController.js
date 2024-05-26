@@ -14,6 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_validator_1 = require("express-validator");
 const prisma_1 = __importDefault(require("../../../config/prisma"));
+const uploadFile_1 = require("../../../middleware/uploadFile");
+const deleteFiles_1 = __importDefault(require("../../../utils/deleteFiles"));
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = (0, express_validator_1.validationResult)(req);
     if (errors.isEmpty()) {
@@ -22,6 +24,33 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         if (!["ADMIN", "SUPERADMIN"].includes(user.role))
             return res.status(401).json({ success: false, message: "Unauthorized" });
         try {
+            if (req.body.kuota) {
+                req.body.kuota = parseInt(req.body.kuota);
+            }
+            const thisUser = yield prisma_1.default.batch.findUnique({
+                select: {
+                    image: true,
+                },
+                where: {
+                    id,
+                    deletedAt: {
+                        isSet: false,
+                    },
+                },
+            });
+            if (!thisUser) {
+                return res.json({ success: true, message: "Data Not Found" });
+            }
+            const urlImage = yield (0, uploadFile_1.uploadSingle)(req, "batch");
+            if (!urlImage) {
+                req.body.image = thisUser === null || thisUser === void 0 ? void 0 : thisUser.image;
+            }
+            else {
+                if (!(yield (0, deleteFiles_1.default)(thisUser.image))) {
+                    return res.json({ success: true, message: "Data Not Found" });
+                }
+                req.body.image = urlImage.secure_url;
+            }
             const data = yield prisma_1.default.batch.update({
                 data: Object.assign(Object.assign({}, req.body), { updatedAt: new Date().toISOString() }),
                 where: {

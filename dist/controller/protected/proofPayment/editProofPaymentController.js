@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_validator_1 = require("express-validator");
 const prisma_1 = __importDefault(require("../../../config/prisma"));
 const uploadFile_1 = require("../../../middleware/uploadFile");
+const deleteFiles_1 = __importDefault(require("../../../utils/deleteFiles"));
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = (0, express_validator_1.validationResult)(req);
     if (errors.isEmpty()) {
@@ -54,11 +55,17 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                     },
                 },
             });
+            if (!thisUser) {
+                return res.json({ success: true, message: "Data Not Found" });
+            }
             const urlImage = yield (0, uploadFile_1.uploadSingle)(req, "payment");
             if (!urlImage) {
                 req.body.file = thisUser === null || thisUser === void 0 ? void 0 : thisUser.file;
             }
             else {
+                if (!(yield (0, deleteFiles_1.default)(thisUser.file))) {
+                    return res.json({ success: true, message: "Data Not Found" });
+                }
                 req.body.file = urlImage.secure_url;
                 req.body.name = urlImage.name;
             }

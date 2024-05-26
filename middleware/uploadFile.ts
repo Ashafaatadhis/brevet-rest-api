@@ -46,7 +46,7 @@ export const deleteFiles = async (name: string) => {
   // const fi = name.split("/").reverse().slice(0, 2).reverse().join("/").split(".");
   const arr = name.split("/");
   const fi = arr.slice(arr.length - 2).join("/");
-
+  console.log(fi);
   return await cloudinary.uploader.destroy(fi, {
     resource_type: "raw",
   });

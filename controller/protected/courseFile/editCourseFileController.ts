@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 import prisma from "../../../config/prisma";
 import { uploadMultiple, uploadSingle } from "../../../middleware/uploadFile";
+import cloudinaryDelete from "../../../utils/deleteFiles";
 
 export default async (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req);
@@ -22,11 +23,18 @@ export default async (req: Request, res: Response, next: NextFunction) => {
           },
         },
       });
+      if (!thisUser) {
+        return res.json({ success: true, message: "Data Not Found" });
+      }
+
       const urlImage: any = await uploadSingle(req, "courseFile");
-      console.log(urlImage);
+
       if (!urlImage) {
-        req.body.file = thisUser?.file;
+        req.body.file = thisUser.file;
       } else {
+        if (!(await cloudinaryDelete(thisUser.file))) {
+          return res.json({ success: true, message: "Data Not Found" });
+        }
         req.body.file = urlImage.secure_url;
         req.body.name = urlImage.name;
       }
@@ -45,7 +53,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     } catch (err) {
       return res
         .status(400)
-        .json({ success: false, message: "Failed Edit Course Folder" });
+        .json({ success: false, message: "Failed Edit Course File" });
     }
   }
   res.status(422).json({ success: false, error: errors.array() });

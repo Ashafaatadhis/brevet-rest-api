@@ -8,11 +8,15 @@ import {
   getByIdCourseController,
   getAllByIdController,
 } from "../../../../controller/protected/course";
-import { addCourseValidator } from "../../../../utils/validator";
+import {
+  addCourseValidator,
+  editCourseValidator,
+} from "../../../../utils/validator";
+import multerFile from "../../../../config/multerFile";
 const router = express.Router();
 
 router.post("/", addCourseValidator, errorHandler(addCourseController));
-router.put("/:id", addCourseValidator, errorHandler(editCourseController));
+router.put("/:id", editCourseValidator, errorHandler(editCourseController));
 router.delete("/:id", errorHandler(deleteCourseController));
 router.get("/", errorHandler(getAllCourseController));
 router.get("/all/:id", errorHandler(getAllByIdController));

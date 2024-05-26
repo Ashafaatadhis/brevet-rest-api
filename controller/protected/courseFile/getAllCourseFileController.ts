@@ -39,6 +39,7 @@ const paginationUser = async (page: number, count: number, user: any) => {
       status: {
         equals: "PAID",
       },
+
       userId: user.id,
       deletedAt: {
         isSet: false,
@@ -87,6 +88,7 @@ const paginationUser = async (page: number, count: number, user: any) => {
             },
           },
         },
+
         deletedAt: {
           isSet: false,
         },

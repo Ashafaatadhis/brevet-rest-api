@@ -13,12 +13,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../../../config/prisma"));
+const deleteFiles_1 = __importDefault(require("../../../utils/deleteFiles"));
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req === null || req === void 0 ? void 0 : req.user;
     const id = req.params.id;
     if (!["ADMIN", "SUPERADMIN"].includes(user.role))
         return res.status(401).json({ success: false, message: "Unauthorized" });
     try {
+        const dataBefore = yield prisma_1.default.batch.findFirst({
+            where: {
+                id,
+                deletedAt: {
+                    isSet: false,
+                },
+            },
+        });
+        if (!dataBefore)
+            return res.json({ success: true, message: "Data Not Found" });
+        if (!(yield (0, deleteFiles_1.default)(dataBefore.image))) {
+            return res.json({ success: true, message: "Data Not Found" });
+        }
         yield prisma_1.default.batch.update({
             data: {
                 deletedAt: new Date().toISOString(),

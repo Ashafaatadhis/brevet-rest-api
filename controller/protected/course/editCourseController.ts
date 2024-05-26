@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 import prisma from "../../../config/prisma";
+import { uploadSingle } from "../../../middleware/uploadFile";
 
 export default async (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req);
@@ -10,8 +11,12 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     if (!["ADMIN", "SUPERADMIN", "TEACHER"].includes(user.role))
       return res.status(401).json({ success: false, message: "Unauthorized" });
 
-    if (user.id != id) {
-      return res.status(401).json({ success: false, message: "Unauthorized" });
+    if (!["TEACHER"].includes(user.role)) {
+      if (user.id != id) {
+        return res
+          .status(401)
+          .json({ success: false, message: "Unauthorized" });
+      }
     }
 
     try {

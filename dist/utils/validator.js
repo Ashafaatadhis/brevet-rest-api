@@ -9,11 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginValidator = exports.updateValidator = exports.changePasswordValidator = exports.registerValidator = exports.addCourseValidator = exports.addCourseTaskFileValidator = exports.addSubmissionValidator = exports.addPGValidator = exports.addQuestionAnswerValidator = exports.addUserAnswerValidator = exports.addQuestionValidator = exports.addProofPaymentValidator = exports.addCourseFileValidator = exports.addCourseTaskValidator = exports.editCourseFolderValidator = exports.addCourseFolderValidator = exports.editUserCourseValidator = exports.addUserCourseValidator = exports.addBatchCourseValidator = exports.editPriceValidator = exports.addPriceValidator = exports.editPaymentValidator = exports.addPaymentValidator = exports.editBatchValidator = exports.addBatchValidator = void 0;
+exports.loginValidator = exports.updateValidator = exports.changePasswordValidator = exports.registerValidator = exports.editCourseValidator = exports.addCourseValidator = exports.addCourseTaskFileValidator = exports.addSubmissionValidator = exports.addPGValidator = exports.addQuestionAnswerValidator = exports.addUserAnswerValidator = exports.addQuestionValidator = exports.addProofPaymentValidator = exports.addCourseFileValidator = exports.addCourseTaskValidator = exports.editCourseFolderValidator = exports.addCourseFolderValidator = exports.editUserCourseValidator = exports.addUserCourseValidator = exports.addBatchCourseValidator = exports.editPriceValidator = exports.addPriceValidator = exports.editPaymentValidator = exports.addPaymentValidator = exports.editBatchValidator = exports.addBatchValidator = void 0;
 const express_validator_1 = require("express-validator");
 exports.addBatchValidator = [
     (0, express_validator_1.check)("name", "Invalid does not Empty").not().isEmpty(),
     (0, express_validator_1.check)("start_register", "Invalid does not Empty").not().isEmpty(),
+    (0, express_validator_1.check)("description", "Invalid does not Empty").not().isEmpty(),
     (0, express_validator_1.check)("start_register", "Invalid format Date").isISO8601().toDate(),
     (0, express_validator_1.check)("end_register", "Invalid does not Empty").not().isEmpty(),
     (0, express_validator_1.check)("end_register", "Invalid format Date").isISO8601().toDate(),
@@ -23,6 +24,7 @@ exports.addBatchValidator = [
 ];
 exports.editBatchValidator = [
     (0, express_validator_1.check)("name", "Invalid does not Empty").not().isEmpty().optional(),
+    (0, express_validator_1.check)("description", "Invalid does not Empty").not().isEmpty().optional(),
     (0, express_validator_1.check)("start_register", "Invalid does not Empty").not().isEmpty().optional(),
     (0, express_validator_1.check)("start_register", "Invalid format Date")
         .isISO8601()
@@ -126,9 +128,22 @@ exports.addCourseTaskFileValidator = [
 exports.addCourseValidator = [
     (0, express_validator_1.check)("name", "Invalid does not Empty").not().isEmpty(),
     (0, express_validator_1.check)("category", "Invalid does not Empty").not().isEmpty(),
+    (0, express_validator_1.check)("description", "Invalid does not Empty").not().isEmpty(),
     (0, express_validator_1.check)("category", "Invalid does value category").isIn(["KURSUS", "WORKSHOP"]),
     (0, express_validator_1.check)("methode", "Invalid does not Empty").not().isEmpty(),
     (0, express_validator_1.check)("methode", "Invalid does value category").isIn(["OFFLINE", "ONLINE"]),
+];
+exports.editCourseValidator = [
+    (0, express_validator_1.check)("name", "Invalid does not Empty").not().isEmpty().optional(),
+    (0, express_validator_1.check)("description", "Invalid does not Empty").not().isEmpty().optional(),
+    (0, express_validator_1.check)("category", "Invalid does not Empty").not().isEmpty().optional(),
+    (0, express_validator_1.check)("category", "Invalid does value category")
+        .isIn(["KURSUS", "WORKSHOP"])
+        .optional(),
+    (0, express_validator_1.check)("methode", "Invalid does not Empty").not().isEmpty().optional(),
+    (0, express_validator_1.check)("methode", "Invalid does value category")
+        .isIn(["OFFLINE", "ONLINE"])
+        .optional(),
 ];
 exports.registerValidator = [
     (0, express_validator_1.check)("fullname", "Invalid does not Empty").not().isEmpty(),

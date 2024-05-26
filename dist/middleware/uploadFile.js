@@ -53,6 +53,7 @@ const deleteFiles = (name) => __awaiter(void 0, void 0, void 0, function* () {
     // const fi = name.split("/").reverse().slice(0, 2).reverse().join("/").split(".");
     const arr = name.split("/");
     const fi = arr.slice(arr.length - 2).join("/");
+    console.log(fi);
     return yield cloudinary_1.default.uploader.destroy(fi, {
         resource_type: "raw",
     });

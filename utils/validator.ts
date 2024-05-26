@@ -4,6 +4,7 @@ import { check } from "express-validator";
 export const addBatchValidator = [
   check("name", "Invalid does not Empty").not().isEmpty(),
   check("start_register", "Invalid does not Empty").not().isEmpty(),
+  check("description", "Invalid does not Empty").not().isEmpty(),
   check("start_register", "Invalid format Date").isISO8601().toDate(),
   check("end_register", "Invalid does not Empty").not().isEmpty(),
   check("end_register", "Invalid format Date").isISO8601().toDate(),
@@ -13,6 +14,7 @@ export const addBatchValidator = [
 ];
 export const editBatchValidator = [
   check("name", "Invalid does not Empty").not().isEmpty().optional(),
+  check("description", "Invalid does not Empty").not().isEmpty().optional(),
   check("start_register", "Invalid does not Empty").not().isEmpty().optional(),
   check("start_register", "Invalid format Date")
     .isISO8601()
@@ -127,9 +129,22 @@ export const addCourseTaskFileValidator = [
 export const addCourseValidator = [
   check("name", "Invalid does not Empty").not().isEmpty(),
   check("category", "Invalid does not Empty").not().isEmpty(),
+  check("description", "Invalid does not Empty").not().isEmpty(),
   check("category", "Invalid does value category").isIn(["KURSUS", "WORKSHOP"]),
   check("methode", "Invalid does not Empty").not().isEmpty(),
   check("methode", "Invalid does value category").isIn(["OFFLINE", "ONLINE"]),
+];
+export const editCourseValidator = [
+  check("name", "Invalid does not Empty").not().isEmpty().optional(),
+  check("description", "Invalid does not Empty").not().isEmpty().optional(),
+  check("category", "Invalid does not Empty").not().isEmpty().optional(),
+  check("category", "Invalid does value category")
+    .isIn(["KURSUS", "WORKSHOP"])
+    .optional(),
+  check("methode", "Invalid does not Empty").not().isEmpty().optional(),
+  check("methode", "Invalid does value category")
+    .isIn(["OFFLINE", "ONLINE"])
+    .optional(),
 ];
 
 export const registerValidator = [

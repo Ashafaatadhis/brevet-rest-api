@@ -17,6 +17,20 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     const user = req.user;
     try {
         const data = yield prisma_1.default.payment.findMany({
+            include: {
+                batch: {
+                    select: {
+                        id: true,
+                        name: true,
+                    },
+                },
+                user: {
+                    select: {
+                        id: true,
+                        username: true,
+                    },
+                },
+            },
             where: {
                 userId: user.id,
                 deletedAt: {

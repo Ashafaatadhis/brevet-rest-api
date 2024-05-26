@@ -14,6 +14,7 @@ async function main() {
   // await prisma.course.deleteMany();
   // await prisma.batchCourse.deleteMany();
   await prisma.batch.deleteMany();
+  await prisma.course.deleteMany();
   // await prisma.courseFile.deleteMany();
   // for (let i = 1; i <= 30; i++) {
   //   await prisma.user.create({

@@ -6,6 +6,20 @@ export default async (req: Request, res: Response, next: NextFunction) => {
 
   try {
     const data = await prisma.payment.findMany({
+      include: {
+        batch: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+      },
       where: {
         userId: user.id,
         deletedAt: {

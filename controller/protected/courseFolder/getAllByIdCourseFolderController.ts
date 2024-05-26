@@ -165,7 +165,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
       by,
       id
     );
-
+    console.log(data);
     return res.json({
       status: 200,
       data,

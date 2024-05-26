@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 import prisma from "../../../config/prisma";
+import { uploadSingle } from "../../../middleware/uploadFile";
+import HttpError from "../../../utils/errors/HttpError";
 
 export default async (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req);

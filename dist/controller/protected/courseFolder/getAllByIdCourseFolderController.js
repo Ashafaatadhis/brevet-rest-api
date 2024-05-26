@@ -121,6 +121,7 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     const by = req.query.by;
     try {
         const { data, dataCount, hasNext } = yield pagination(page, count, user, by, id);
+        console.log(data);
         return res.json({
             status: 200,
             data,

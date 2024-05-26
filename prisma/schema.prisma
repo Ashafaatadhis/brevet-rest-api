@@ -42,6 +42,8 @@ model Batch {
   start_register DateTime
   end_register DateTime
   kuota Int
+  image String
+  description String
 
   // priceId String @db.ObjectId
   // price Price @relation(fields: [priceId], references: [id], onDelete: Cascade, onUpdate: Cascade) 
@@ -89,6 +91,7 @@ model Course {
     courseFolder CourseFolder[]
     link String?
     methode  CourseMethode
+    description String
     createdAt   DateTime @default(now())
     updatedAt   DateTime @default(now())
     deletedAt   DateTime?

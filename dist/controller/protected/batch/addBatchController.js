@@ -14,6 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_validator_1 = require("express-validator");
 const prisma_1 = __importDefault(require("../../../config/prisma"));
+const uploadFile_1 = require("../../../middleware/uploadFile");
+const HttpError_1 = __importDefault(require("../../../utils/errors/HttpError"));
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = (0, express_validator_1.validationResult)(req);
     if (errors.isEmpty()) {
@@ -21,12 +23,19 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         if (!["ADMIN", "SUPERADMIN"].includes(user.role))
             return res.status(401).json({ success: false, message: "Unauthorized" });
         try {
+            const urlImage = yield (0, uploadFile_1.uploadSingle)(req, "batch");
+            if (!urlImage) {
+                return next(new HttpError_1.default(404, "File not found"));
+            }
+            req.body.image = urlImage.secure_url;
+            req.body.kuota = parseInt(req.body.kuota);
             const data = yield prisma_1.default.batch.create({
                 data: req.body,
             });
             return res.json({ success: true, data });
         }
         catch (err) {
+            console.log(err);
             return res
                 .status(400)
                 .json({ success: false, message: "Failed Add Batch" });

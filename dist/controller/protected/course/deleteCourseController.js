@@ -18,8 +18,10 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     const id = req.params.id;
     if (!["ADMIN", "SUPERADMIN", "TEACHER"].includes(user.role))
         return res.status(401).json({ success: false, message: "Unauthorized" });
-    if (user.id != id) {
-        return res.status(401).json({ success: false, message: "Unauthorized" });
+    if (!["TEACHER"].includes(user.role)) {
+        if (user.id != id) {
+            return res.status(401).json({ success: false, message: "Unauthorized" });
+        }
     }
     try {
         yield prisma_1.default.course.update({
